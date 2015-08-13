@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{07259ACF-FE12-45D2-B65D-39C788D18747}</ProjectGuid>
+    <ProjectGuid>{EF6872FC-C439-47E2-9A28-90FE971645E7}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DbExport.Database</RootNamespace>
-    <AssemblyName>DbExport.Database</AssemblyName>
+    <RootNamespace>DbExport.CSV</RootNamespace>
+    <AssemblyName>DbExport.CSV</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
