@@ -1,8 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Express 2013 for Windows Desktop
-VisualStudioVersion = 12.0.31101.0
-MinimumVisualStudioVersion = 10.0.40219.1
+# Visual Studio Express 2012 for Windows Desktop
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DBExport", "DBExport\DBExport.csproj", "{C6D68574-9A10-4BCC-915D-36688799C604}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbExport.Database", "DbExport.Database\DbExport.Database.csproj", "{07259ACF-FE12-45D2-B65D-39C788D18747}"
@@ -15,6 +13,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{98237C
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbExport.CSV", "DbExport.CSV\DbExport.CSV.csproj", "{EF6872FC-C439-47E2-9A28-90FE971645E7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbExport.Interfaces", "DbExport.Interfaces\DbExport.Interfaces.csproj", "{23BAA8A3-8505-458E-8E5A-E3FFCDF80ECB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -34,6 +34,10 @@ Global
 		{EF6872FC-C439-47E2-9A28-90FE971645E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EF6872FC-C439-47E2-9A28-90FE971645E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EF6872FC-C439-47E2-9A28-90FE971645E7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{23BAA8A3-8505-458E-8E5A-E3FFCDF80ECB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{23BAA8A3-8505-458E-8E5A-E3FFCDF80ECB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{23BAA8A3-8505-458E-8E5A-E3FFCDF80ECB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{23BAA8A3-8505-458E-8E5A-E3FFCDF80ECB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
