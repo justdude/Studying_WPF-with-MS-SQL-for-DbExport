@@ -4,46 +4,54 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using DbExport.Interfaces;
-using GenericParsing;
+//using DbExport.Interfaces;
+using Microsoft.VisualBasic.FileIO;
 
 namespace DbExport.CSV
 {
-	public class CParserGenericAdapter : IDataParser
+	public class CParserGenericAdapter //: IDataParser
 	{
 		#region Члены IDataParser
 
-		public System.Data.DataSet Parse(string path)
-		{
-			try
-			{
-				DataSet dsResult;
-
-				// Using an XML Config file. 
-				using (GenericParserAdapter parser = new GenericParserAdapter(path))
-				{
-					parser.Load(path);
-
-					parser.SetDataSource("MyData.txt");
-
-					//parser.ColumnDelimiter = "\t".ToCharArray();
-					parser.ColumnDelimiter = '|';
-					parser.FirstRowHasHeader = true;
-					parser.SkipStartingDataRows = 10;
-					parser.MaxBufferSize = 4096;
-					parser.MaxRows = 500;
-					parser.TextQualifier = '|';
-
-					dsResult = parser.GetDataSet();
-				}
-			}
-			catch (Exception ex)
-			{ 
-				
-			}
-		}
+		public DataTable GetDataTabletFromCSVFile(string csv_file_path)
+        {
+            DataTable csvData = new DataTable();
+            try
+            {
+              using(TextFieldParser csvReader = new TextFieldParser(csv_file_path))
+                 {
+                    csvReader.SetDelimiters(new string[] { "|" });
+                    csvReader.HasFieldsEnclosedInQuotes = false;
+					csvReader.TrimWhiteSpace = false;
+                    string[] colFields = csvReader.ReadFields();
+                    foreach (string column in colFields)
+                    {
+                        DataColumn datecolumn = new DataColumn(column);
+                        datecolumn.AllowDBNull = true;
+                        csvData.Columns.Add(datecolumn);
+                    }
+                    while (!csvReader.EndOfData)
+                    {
+                        string[] fieldData = csvReader.ReadFields();
+                        //Making empty value as null
+                        for (int i = 0; i < fieldData.Length; i++)
+                        {
+                            if (fieldData[i] == "")
+                            {
+                                fieldData[i] = null;
+                            }
+                        }
+                        csvData.Rows.Add(fieldData);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+            }
+            return csvData;
+        }
 
 		#endregion
 	}
-	}
 }
+

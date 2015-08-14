@@ -1,5 +1,8 @@
-﻿using System;
+﻿using DbExport.Common;
+using DbExport.CSV;
+using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,6 +26,16 @@ namespace DBExport.Main
 		public ctrMainWindow()
 		{
 			InitializeComponent();
+		}
+
+		private void Button_Click(object sender, RoutedEventArgs e)
+		{
+			CParserGenericAdapter proccesor = new CParserGenericAdapter();
+			string path = CFileHelper.GetPathFromDialog();
+			if (string.IsNullOrWhiteSpace(path))
+				return;
+
+			var data = proccesor.GetDataTabletFromCSVFile(path);
 		}
 	}
 }
