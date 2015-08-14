@@ -114,9 +114,9 @@
     <Resource Include="Task\ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DbExport.Common\DbExport.Common.csproj">
-      <Project>{48569281-adba-4e54-bd69-8bb40cda3474}</Project>
-      <Name>DbExport.Common</Name>
+    <ProjectReference Include="..\DBExport.Common\DBExport.Common.csproj">
+      <Project>{12de7e30-f56c-456b-8c33-4eff1184283e}</Project>
+      <Name>DBExport.Common</Name>
     </ProjectReference>
     <ProjectReference Include="..\DbExport.CSV\DbExport.CSV.csproj">
       <Project>{ef6872fc-c439-47e2-9a28-90fe971645e7}</Project>

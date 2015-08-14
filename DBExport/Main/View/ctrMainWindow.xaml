@@ -5,18 +5,51 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
-    <Grid>
+	<UserControl.Resources>
+		<ResourceDictionary>
+			<ResourceDictionary.MergedDictionaries>
+				<ResourceDictionary Source="pack://application:,,,/DBExport.Common;component/Resources/TemplatesDict.xaml"/>
+			</ResourceDictionary.MergedDictionaries>
+		</ResourceDictionary>
+	</UserControl.Resources>
+	<Grid>
 		<Grid.ColumnDefinitions>
 
 			<ColumnDefinition Width="*"/>
+			<ColumnDefinition Width="auto"></ColumnDefinition>
 			<ColumnDefinition Width="*"/>
 
 		</Grid.ColumnDefinitions>
 		<Grid.RowDefinitions>
-			<RowDefinition></RowDefinition>
+			<RowDefinition Height="20"></RowDefinition>
 			<RowDefinition></RowDefinition>
 			<RowDefinition></RowDefinition>
 		</Grid.RowDefinitions>
-		<Button Click="Button_Click"></Button>
+		
+		<ListBox Grid.Column="0" 
+				 Grid.Row="1"
+				 Grid.RowSpan="2"
+				 Grid.ColumnSpan="2"
+				 MinWidth="200"
+				 MinHeight="270"
+				 HorizontalAlignment="Center"
+				 VerticalAlignment="Center"
+				 ItemsSource="{Binding Tables}"></ListBox>
+
+		<GridSplitter Grid.Row="0"
+					  Grid.Column="1"
+					  Grid.RowSpan="4"
+					  Height="Auto" 
+					  Width="4" 
+					  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
+					  Margin="0"/>
+
+		<StackPanel>
+			<Button Content="Filter" Style="{StaticResource btnStyle}"></Button>
+			<Button Content="Edit" Style="{StaticResource btnStyle}"></Button>
+			<Button Content="Delete" Style="{StaticResource btnStyle}"></Button>
+			<Button Content="Save" Style="{StaticResource btnStyle}"></Button>
+		</StackPanel>
+		<!--<Button Click="Button_Click"></Button>-->
     </Grid>
 </UserControl>
