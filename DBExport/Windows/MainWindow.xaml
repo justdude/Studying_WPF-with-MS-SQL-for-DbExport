@@ -1,0 +1,28 @@
+﻿<Window x:Class="DBExport.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+		xmlns:main="clr-namespace:DBExport.Main"
+        Title="MainWindow" Height="350" Width="525">
+	<Window.Resources>
+	<DataTemplate x:Key="crap">
+		<StackPanel Width="100" Height="18"></StackPanel>
+	</DataTemplate>
+
+	<Style x:Key="grdStyle" TargetType="{x:Type Grid}">
+		<Setter Property="Background" Value="SkyBlue"></Setter>
+	</Style>
+	</Window.Resources>
+
+	<Grid x:Name="LayoutRoot">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="*"></RowDefinition>
+			<RowDefinition Height="22"></RowDefinition>
+		</Grid.RowDefinitions>
+		<main:ctrMainWindow Grid.Row="0"></main:ctrMainWindow>
+		<StatusBar Grid.Row="1">
+			<StatusBarItem>
+				<TextBlock Text="Info"></TextBlock>
+			</StatusBarItem>
+		</StatusBar>
+	</Grid>
+</Window>
