@@ -15,6 +15,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using DBExport.Main.ViewModel;
 
 namespace DBExport.Main
 {
@@ -26,16 +27,17 @@ namespace DBExport.Main
 		public ctrMainWindow()
 		{
 			InitializeComponent();
+			this.Loaded += ctrMainWindow_Loaded;
+		}
+
+		void ctrMainWindow_Loaded(object sender, RoutedEventArgs e)
+		{
+			DataContext = new TablesHandleViewModel();
 		}
 
 		private void Button_Click(object sender, RoutedEventArgs e)
 		{
-			CParserGenericAdapter proccesor = new CParserGenericAdapter();
-			string path = CFileHelper.GetPathFromDialog();
-			if (string.IsNullOrWhiteSpace(path))
-				return;
 
-			var data = proccesor.GetDataTabletFromCSVFile(path);
 		}
 	}
 }

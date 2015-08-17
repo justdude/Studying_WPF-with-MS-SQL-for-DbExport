@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+			 xmlns:ctr="clr-namespace:DBExport.Common.Controls;assembly=DBExport.Common"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="550">
 	<UserControl.Resources>
@@ -29,12 +30,14 @@
 
 		<TextBlock>Select table</TextBlock>
 		<TextBlock Grid.Column="2">Table data</TextBlock>
-		
-		<ListBox Grid.Column="0" 
+
+		<ListBox Name="lstBoxTables"
+				 Grid.Column="0" 
 				 Grid.Row="1"
 				 Grid.RowSpan="1"
 				 HorizontalAlignment="Stretch"
 				 VerticalAlignment="Stretch"
+				 SelectedItem="{Binding SelectedTable}"
 				 ItemsSource="{Binding Tables}" Margin="10 5 10 10"/>
 
 		<GridSplitter Grid.Row="0"
@@ -46,15 +49,15 @@
 					  Margin="0"/>
 
 		<StackPanel Grid.Row="3" VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Horizontal" Margin="16,4,15,4">
-			<Button Content="Create" 
-					Command="{Binding CreateTable}" 
+			<Button Content="CreateTable" 
+					Command="{Binding AddCommand}" 
 					VerticalAlignment="Center" Style="{StaticResource btnStyle}">
 			</Button>
 			<Button Content="Edit" 
 					Command="{Binding EditTable}" 
 					VerticalAlignment="Center" Style="{StaticResource btnStyle}"></Button>
 			<Button Content="Delete" 
-					Command="{Binding DeleteTable}"
+					Command="{Binding DeleteCommand}"
 					VerticalAlignment="Center" 
 					Style="{StaticResource btnStyle}"></Button>
 		</StackPanel>
@@ -70,11 +73,31 @@
 				 Margin="5"
 				 HorizontalAlignment="Stretch"
 				 VerticalAlignment="Stretch" >
-			<ListView>
-				<ListView.View>
-					<GridView />
-				 </ListView.View>
-			</ListView>
+			<ctr:DataGridTemplated ItemsSource="{Binding SelectedTableView, IsAsync=True}"
+					  ColumnWidth="60"
+					  AutoGenerateColumns="True" 
+					  VirtualizingStackPanel.VirtualizationMode="Standard"
+					  EnableColumnVirtualization="True"
+					  EnableRowVirtualization="True">
+				 <!--<DataGrid.Columns>
+            <DataGridTextColumn Binding="{Binding Name}"
+                                Header="{Binding HeaderName}">
+                <DataGridTextColumn.HeaderTemplate>
+                    <DataTemplate>
+                        <StackPanel>
+                            <TextBlock Text="{Binding Content, RelativeSource=
+                                         {RelativeSource Mode=TemplatedParent}}"
+                                       Margin="5"/>
+                           <Button IsEnabled="{Binding Path=IsEnabled, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=TextBlock}}">...</Button>
+                        </StackPanel>
+                    </DataTemplate>
+                </DataGridTextColumn.HeaderTemplate>
+            </DataGridTextColumn>
+        </DataGrid.Columns>-->
+				<!--<ListView.View>
+					<GridView/>
+				 </ListView.View>-->
+		</ctr:DataGridTemplated>
 		</ScrollViewer>
 		
 		<StackPanel Grid.Column="2" Grid.Row="2" 
@@ -82,18 +105,19 @@
 					Margin="5 0 0 0"
 					Orientation="Horizontal">
 			<CheckBox Name="chkIsMerge" Command="{Binding SetMerge}" >IsMerge</CheckBox>
-			<ComboBox IsEnabled="{Binding ElementName=chkIsMerge, Path=IsChecked}" ItemsSource="{Binding Tables}" 
+			<ComboBox IsEnabled="{Binding ElementName=chkIsMerge, Path=IsChecked}" 
+					  ItemsSource="{Binding Path=Tables}" 
 					  VerticalAlignment="Center"
 					  HorizontalAlignment="Stretch"
 					  Width="130"
-					  Margin="10 0 0 0">Tables</ComboBox>
+					  Margin="10 0 0 0"></ComboBox>
 		</StackPanel>
 
 		<StackPanel Grid.Column="2" Grid.Row="3" 
 					VerticalAlignment="Center" HorizontalAlignment="Right"
 					Orientation="Horizontal" Margin="5 0">
 			<Button Content="Save" 
-					Command="{Binding SaveTable}"
+					Command="{Binding SaveCommand}"
 					VerticalAlignment="Center" 
 					Style="{StaticResource btnStyle}"></Button>
 		</StackPanel>
