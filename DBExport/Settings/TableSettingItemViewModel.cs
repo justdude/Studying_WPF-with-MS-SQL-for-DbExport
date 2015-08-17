@@ -13,7 +13,13 @@ namespace DBExport.Settings.ViewModel
 		private bool mvIsHasErrors;
 		private Type mvCurrentType;
 
-		public string Name { get; set; }
+		public string Name
+		{
+			get
+			{
+				return CurrentType.Name;
+			}
+		}
 
 		public Type CurrentType
 		{

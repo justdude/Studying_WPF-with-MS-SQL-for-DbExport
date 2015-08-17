@@ -10,6 +10,7 @@ using DbExport.CSV;
 using DbExport.Data;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
+using DBExport.Helpers;
 //using Microsoft.Practices.Prism.Commands;
 //using Microsoft.Practices.Prism.Mvvm;
 
@@ -22,9 +23,11 @@ namespace DBExport.Main.ViewModel
 		private readonly RelayCommand mvSaveCommand;
 		private readonly RelayCommand mvRefreshCommand;
 		private readonly RelayCommand mvCloseCommand;
+		private readonly RelayCommand mvSettingShowCommand;
 		private bool mvIsBlocked;
 		private bool mvIsHasError;
 		private TableViewModel mvSelectedTable;
+		private bool mvIsMerge;
 
 		public TablesHandleViewModel()
 		{
@@ -35,6 +38,7 @@ namespace DBExport.Main.ViewModel
 			mvSaveCommand = new RelayCommand(OnSaveSelected, CanSave);
 			mvRefreshCommand = new RelayCommand(OnRefresh, CanRefresh);
 			mvCloseCommand = new RelayCommand(OnClose);
+			mvSettingShowCommand = new RelayCommand(SettingShow, CanShowSettings);
 			//eventAggregator.GetEvent<StateChangedEvent>().Subscribe(OnDataChanged);
 			//eventAggregator.GetEvent<ItemChangedEvent>().Subscribe(OnSelectedChanged, ThreadOption.PublisherThread, true, Filter);
 			LoadData();
@@ -137,6 +141,24 @@ namespace DBExport.Main.ViewModel
 			}
 		}
 
+		public bool IsMerge
+		{
+			get
+			{
+				return mvIsMerge;
+			}
+			set
+			{
+				if (mvIsMerge == value)
+					return;
+
+				mvIsMerge = value;
+
+				this.RaisePropertyChanged(() => this.IsMerge);
+			}
+		}
+
+
 		//public bool IsChanged
 		//{
 		//	get
@@ -205,6 +227,14 @@ namespace DBExport.Main.ViewModel
 			get
 			{
 				return mvSaveCommand;
+			}
+		}
+
+		public RelayCommand SettingShowCommand
+		{
+			get
+			{
+				return mvSettingShowCommand;
 			}
 		}
 
@@ -301,6 +331,11 @@ namespace DBExport.Main.ViewModel
 			return IsEnabled && !IsHasError && IsSelected;
 		}
 
+		private bool CanShowSettings()
+		{
+			return true;
+		}
+
 		private bool CanDelete()
 		{
 			return IsEnabled && IsSelected;
@@ -380,13 +415,19 @@ namespace DBExport.Main.ViewModel
 			this.RaisePropertyChanged(() => this.SelectedTableView);
 		}
 
-		private void ExportDataFrom()
+		private void SettingShow()
 		{
-
+			Dictionary<string, Type> types = new Dictionary<string,Type>();
+			CWindowHelper.ShowEmployeWindow(out types);
+			foreach (DataColumn item in SelectedTable.Current.Data.Columns)
+			{
+				if (types.ContainsKey(item.ColumnName))
+				{
+					item.DataType = types[item.ColumnName];
+				}
+			}
 		}
 
 		#endregion
-
-
 	}
 }

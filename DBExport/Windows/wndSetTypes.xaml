@@ -8,13 +8,10 @@
 			<RowDefinition Height="*"></RowDefinition>
 			<RowDefinition Height="35"></RowDefinition>
 		</Grid.RowDefinitions>
-		<ListBox ItemsSource="{Binding Tables}"
-							   ScrollViewer.CanContentScroll="True"
-							   ScrollViewer.VerticalScrollBarVisibility="Disabled"
-							   ScrollViewer.HorizontalScrollBarVisibility="Auto">
+		<ListBox ItemsSource="{Binding Tables}">
 			<ListBox.ItemTemplate>
 				<DataTemplate>
-					<Border>
+					<Border VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
 						<Border.Style>
 							<Style TargetType="Border">
 								<Style.Triggers>
@@ -27,7 +24,7 @@
 						</Border.Style>
 						<Grid>
 							<Grid.ColumnDefinitions>
-								<ColumnDefinition Width="100*"></ColumnDefinition>
+								<ColumnDefinition Width="100"></ColumnDefinition>
 								<ColumnDefinition Width="150"></ColumnDefinition>
 							</Grid.ColumnDefinitions>
 							<TextBlock Grid.Column="0" Text="{Binding TypeName}"></TextBlock>
