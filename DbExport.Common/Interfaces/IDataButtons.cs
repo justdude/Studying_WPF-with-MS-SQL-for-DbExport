@@ -9,10 +9,10 @@ namespace DbExport.Common.Interfaces
 {
 	//public interface IDataButtons
 	//{
-	//	DelegateCommand AddCommand { get;}
-	//	DelegateCommand DeleteCommand { get;}
-	//	DelegateCommand SaveCommand { get;}
-	//	DelegateCommand RefreshCommand { get;}
-	//	DelegateCommand CloseCommand { get;}
+	//	RelayCommand AddCommand { get;}
+	//	RelayCommand DeleteCommand { get;}
+	//	RelayCommand SaveCommand { get;}
+	//	RelayCommand RefreshCommand { get;}
+	//	RelayCommand CloseCommand { get;}
 	//}
 }

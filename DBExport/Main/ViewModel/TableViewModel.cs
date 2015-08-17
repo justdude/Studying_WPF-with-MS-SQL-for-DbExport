@@ -4,11 +4,12 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using DbExport.Data;
-using Microsoft.Practices.Prism.Mvvm;
+//using Microsoft.Practices.Prism.Mvvm;
+using GalaSoft.MvvmLight;
 
 namespace DBExport.Main.ViewModel
 {
-	public class TableViewModel : BindableBase
+	public class TableViewModel : ViewModelBase
 	{
 
 		public TableViewModel(CTable table)
@@ -36,7 +37,7 @@ namespace DBExport.Main.ViewModel
 			{
 				Current.Name = value;
 
-				this.OnPropertyChanged(() => this.Name);
+				this.RaisePropertyChanged(() => this.Name);
 			}
 		}
 

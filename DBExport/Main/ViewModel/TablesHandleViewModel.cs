@@ -8,18 +8,20 @@ using DbExport.Common;
 using DbExport.Common.Interfaces;
 using DbExport.CSV;
 using DbExport.Data;
-using Microsoft.Practices.Prism.Commands;
-using Microsoft.Practices.Prism.Mvvm;
+using GalaSoft.MvvmLight;
+using GalaSoft.MvvmLight.Command;
+//using Microsoft.Practices.Prism.Commands;
+//using Microsoft.Practices.Prism.Mvvm;
 
 namespace DBExport.Main.ViewModel
 {
-	public class TablesHandleViewModel : BindableBase
+	public class TablesHandleViewModel : ViewModelBase
 	{
-		private readonly DelegateCommand mvAddCommand;
-		private readonly DelegateCommand mvDeleteCommand;
-		private readonly DelegateCommand mvSaveCommand;
-		private readonly DelegateCommand mvRefreshCommand;
-		private readonly DelegateCommand mvCloseCommand;
+		private readonly RelayCommand mvAddCommand;
+		private readonly RelayCommand mvDeleteCommand;
+		private readonly RelayCommand mvSaveCommand;
+		private readonly RelayCommand mvRefreshCommand;
+		private readonly RelayCommand mvCloseCommand;
 		private bool mvIsBlocked;
 		private bool mvIsHasError;
 		private TableViewModel mvSelectedTable;
@@ -28,11 +30,11 @@ namespace DBExport.Main.ViewModel
 		{
 			Tables = new ObservableCollection<TableViewModel>();
 
-			mvAddCommand = new DelegateCommand(OnAdd, CanAdd);
-			mvDeleteCommand = new DelegateCommand(OnDeleteSelected, CanDelete);
-			mvSaveCommand = new DelegateCommand(OnSaveSelected, CanSave);
-			mvRefreshCommand = new DelegateCommand(OnRefresh, CanRefresh);
-			mvCloseCommand = new DelegateCommand(OnClose);
+			mvAddCommand = new RelayCommand(OnAdd, CanAdd);
+			mvDeleteCommand = new RelayCommand(OnDeleteSelected, CanDelete);
+			mvSaveCommand = new RelayCommand(OnSaveSelected, CanSave);
+			mvRefreshCommand = new RelayCommand(OnRefresh, CanRefresh);
+			mvCloseCommand = new RelayCommand(OnClose);
 			//eventAggregator.GetEvent<StateChangedEvent>().Subscribe(OnDataChanged);
 			//eventAggregator.GetEvent<ItemChangedEvent>().Subscribe(OnSelectedChanged, ThreadOption.PublisherThread, true, Filter);
 			LoadData();
@@ -54,8 +56,8 @@ namespace DBExport.Main.ViewModel
 
 				mvSelectedTable = value;
 
-				this.OnPropertyChanged(() => this.SelectedTable);
-				this.OnPropertyChanged(() => this.SelectedTableView);
+				this.RaisePropertyChanged(() => this.SelectedTable);
+				this.RaisePropertyChanged(() => this.SelectedTableView);
 			}
 		}
 
@@ -114,7 +116,7 @@ namespace DBExport.Main.ViewModel
 
 				RaiseRefresh();
 
-				this.OnPropertyChanged(() => this.SelectedItemName);
+				this.RaisePropertyChanged(() => this.SelectedItemName);
 			}
 		}
 
@@ -131,7 +133,7 @@ namespace DBExport.Main.ViewModel
 
 				mvIsBlocked = value;
 
-				this.OnPropertyChanged(() => this.IsEnabled);
+				this.RaisePropertyChanged(() => this.IsEnabled);
 			}
 		}
 
@@ -158,7 +160,7 @@ namespace DBExport.Main.ViewModel
 
 				RefreshCommands();
 
-				this.OnPropertyChanged(() => this.IsHasError);
+				this.RaisePropertyChanged(() => this.IsHasError);
 			}
 		}
 
@@ -175,14 +177,14 @@ namespace DBExport.Main.ViewModel
 			if (IsSelected)
 				SelectedTable.RaisePropertyesChanged();
 
-			this.OnPropertyChanged(() => this.IsHasError);
-			this.OnPropertyChanged(() => this.IsSelected);
-			this.OnPropertyChanged(() => this.IsEnabled);
+			this.RaisePropertyChanged(() => this.IsHasError);
+			this.RaisePropertyChanged(() => this.IsSelected);
+			this.RaisePropertyChanged(() => this.IsEnabled);
 		}
 
 		#region Члены IDataButtons
 
-		public DelegateCommand AddCommand
+		public RelayCommand AddCommand
 		{
 			get
 			{
@@ -190,7 +192,7 @@ namespace DBExport.Main.ViewModel
 			}
 		}
 
-		public DelegateCommand DeleteCommand
+		public RelayCommand DeleteCommand
 		{
 			get
 			{
@@ -198,7 +200,7 @@ namespace DBExport.Main.ViewModel
 			}
 		}
 
-		public DelegateCommand SaveCommand
+		public RelayCommand SaveCommand
 		{
 			get
 			{
@@ -206,7 +208,7 @@ namespace DBExport.Main.ViewModel
 			}
 		}
 
-		public DelegateCommand RefreshCommand
+		public RelayCommand RefreshCommand
 		{
 			get
 			{
@@ -214,7 +216,7 @@ namespace DBExport.Main.ViewModel
 			}
 		}
 
-		public DelegateCommand CloseCommand
+		public RelayCommand CloseCommand
 		{
 			get
 			{
@@ -264,7 +266,7 @@ namespace DBExport.Main.ViewModel
 			//EmployesItemsViewModel vm = obj as EmployesItemsViewModel;
 			//if (vm != null && vm == this)
 			//{
-			//	this.OnPropertyChanged(() => IsHasError);
+			//	this.RaisePropertyChanged(() => IsHasError);
 			//	RefreshCommands();
 			//}
 		}
@@ -375,7 +377,7 @@ namespace DBExport.Main.ViewModel
 
 			this.Tables.Add(SelectedTable);
 			RaiseRefresh();
-			this.OnPropertyChanged(() => this.SelectedTableView);
+			this.RaisePropertyChanged(() => this.SelectedTableView);
 		}
 
 		private void ExportDataFrom()

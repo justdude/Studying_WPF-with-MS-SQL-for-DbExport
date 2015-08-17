@@ -1,0 +1,43 @@
+﻿<Window x:Class="DBExport.Windows.wndSetTypes"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+		xmlns:ctr="clr-namespace:DBExport.Common.Controls;assembly=DBExport.Common"
+        Title="wndSetTypes" Height="180" Width="400">
+	<Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="*"></RowDefinition>
+			<RowDefinition Height="35"></RowDefinition>
+		</Grid.RowDefinitions>
+		<ListBox ItemsSource="{Binding Tables}"
+							   ScrollViewer.CanContentScroll="True"
+							   ScrollViewer.VerticalScrollBarVisibility="Disabled"
+							   ScrollViewer.HorizontalScrollBarVisibility="Auto">
+			<ListBox.ItemTemplate>
+				<DataTemplate>
+					<Border>
+						<Border.Style>
+							<Style TargetType="Border">
+								<Style.Triggers>
+									<DataTrigger Binding="{Binding IsHasErrors}">
+										<Setter Property="BorderBrush" Value="Red">
+										</Setter>
+									</DataTrigger>
+								</Style.Triggers>
+							</Style>
+						</Border.Style>
+						<Grid>
+							<Grid.ColumnDefinitions>
+								<ColumnDefinition Width="100*"></ColumnDefinition>
+								<ColumnDefinition Width="150"></ColumnDefinition>
+							</Grid.ColumnDefinitions>
+							<TextBlock Grid.Column="0" Text="{Binding TypeName}"></TextBlock>
+							<ComboBox Grid.Column="1"
+								 SelectedItem="{Binding CurrentType}"
+								  ItemsSource="{Binding DataTypes, RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}}"></ComboBox>
+						</Grid>
+					</Border>
+				</DataTemplate>
+			</ListBox.ItemTemplate>
+		</ListBox>
+	</Grid>
+</Window>

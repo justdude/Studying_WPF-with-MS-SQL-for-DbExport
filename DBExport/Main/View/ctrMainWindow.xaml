@@ -168,7 +168,6 @@
 					VerticalAlignment="Center" HorizontalAlignment="Left"
 					Margin="5 0 0 0"
 					Orientation="Horizontal">
-			<CheckBox IsChecked="{Binding IsSetTypesManualy}" >IsSetTypesManualy</CheckBox>
 			<CheckBox Name="chkIsMerge" Command="{Binding SetMerge}" >IsMerge</CheckBox>
 			<ComboBox IsEnabled="{Binding ElementName=chkIsMerge, Path=IsChecked}" 
 					  ItemsSource="{Binding Path=Tables}" 
