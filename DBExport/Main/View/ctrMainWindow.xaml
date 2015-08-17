@@ -7,20 +7,73 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="550">
 	<UserControl.Resources>
-		<ControlTemplate  x:Key="dtgrTemplateHeader" TargetType="{x:Type DataGridColumnHeader}">
-			<StackPanel Orientation="Vertical">
-				<TextBlock Text="{Binding}"></TextBlock>
-			</StackPanel>
 
-			<!--<StackPanel>
-				<TextBlock Text="{Binding Content, RelativeSource=
-                                         {RelativeSource Mode=TemplatedParent}}"
-                                       Margin="5"/>
-				<Button IsEnabled="{Binding Path=IsEnabled, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=TextBlock}}">...</Button>
-			</StackPanel>-->
+		<ControlTemplate  x:Key="dtgrTemplateHeader" TargetType="{x:Type DataGridColumnHeader}">
+			<Grid>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="*" />
+					<ColumnDefinition Width="Auto" />
+				</Grid.ColumnDefinitions>
+				<Border x:Name="BackgroundBorder" BorderThickness="0,1,0,1" 
+                              Grid.ColumnSpan="2" />
+				<StackPanel Margin="6,3,6,3" VerticalAlignment="Center" 
+							Orientation="Horizontal">
+					<ContentPresenter/>
+				</StackPanel>
+				<Path x:Name="SortArrow" Visibility="Collapsed" Data="M0,0 L1,0 0.5,1 z" Stretch="Fill" 
+                            Grid.Column="1" Width="8" Height="6" Fill="White" Margin="0,0,8,0" 
+                            VerticalAlignment="Center" RenderTransformOrigin="0.5,0.4" 
+					  Stroke="Black"/>
+				<!--<Rectangle Width="1" Fill="#AAC377" HorizontalAlignment="Right" Grid.ColumnSpan="2" />
+
+				<Rectangle Width="1" Margin="0,0,1,0" Fill="#425B10" 
+                                 HorizontalAlignment="Right" Grid.ColumnSpan="2" />-->
+				<!--<Thumb x:Name="PART_LeftHeaderGripper" HorizontalAlignment="Left" />
+				<Thumb x:Name="PART_RightHeaderGripper" HorizontalAlignment="Right"/>-->
+			</Grid>
+			<ControlTemplate.Triggers>
+				<Trigger Property="SortDirection" Value="{x:Null}">
+				
+					<Setter TargetName="BackgroundBorder" Property="BorderBrush"  
+                                  Value="Transparent" />
+				</Trigger>
+				<MultiTrigger>
+					<MultiTrigger.Conditions>
+						<Condition Property="IsMouseOver" Value="True" />
+						<Condition Property="SortDirection" Value="{x:Null}" />
+					</MultiTrigger.Conditions>
+
+				</MultiTrigger>
+				<MultiTrigger>
+					<MultiTrigger.Conditions>
+						<Condition Property="IsMouseOver" Value="true" />
+						<Condition Property="SortDirection" Value="{x:Null}" />
+					</MultiTrigger.Conditions>
+
+				</MultiTrigger>
+
+				<Trigger Property="SortDirection" Value="Ascending">
+					<Setter TargetName="SortArrow" Property="Visibility" Value="Visible" />
+					<Setter TargetName="SortArrow" Property="RenderTransform">
+						<Setter.Value>
+							<RotateTransform Angle="180" />
+						</Setter.Value>
+					</Setter>
+				</Trigger>
+				<Trigger Property="SortDirection" Value="Descending">
+					<Setter TargetName="SortArrow" Property="Visibility" Value="Visible" />
+				</Trigger>
+				<!--<Trigger Property="DisplayIndex" Value="0">
+					<Setter Property="Visibility" Value="Collapsed" 
+                                  TargetName="PART_LeftHeaderGripper"></Setter>
+				</Trigger>-->
+			</ControlTemplate.Triggers>
 		</ControlTemplate>
 		
 		<Style x:Key="DGHeaderStyle" TargetType="{x:Type DataGrid}">
+			<Setter Property="ColumnWidth" Value="*"></Setter>
+			<Setter Property="MinColumnWidth" Value="100"></Setter>
+			<Setter Property="RowDetailsTemplate" Value="{DynamicResource tmplRowDetailsStyled}"/>
 			<Setter Property="ColumnHeaderStyle" Value="{DynamicResource DGCHeaderStyle}"/>
 		</Style>
 		<Style x:Key="DGCHeaderStyle" TargetType="DataGridColumnHeader">
@@ -85,7 +138,7 @@
 
 		<!---->
 			<DataGrid ItemsSource="{Binding SelectedTableView}"
-					
+					Style="{StaticResource DGHeaderStyle}"
 					ColumnWidth="60"
 					Grid.Row="1"
 					Grid.Column="2"
@@ -103,15 +156,11 @@
 					ScrollViewer.HorizontalScrollBarVisibility="Auto"
 					ScrollViewer.CanContentScroll="True"
 					IsReadOnly="True">
-				<!--<DataGrid.CellStyle>
-					<Style TargetType="DataGridCell">
-						<Setter Property="Template" >
-							<Setter.Value>
-								
-							</Setter.Value>
-						</Setter>
-					</Style>
-				</DataGrid.CellStyle>-->
+				 <!--<DataGrid.Resources>
+						<Style TargetType="Button" x:Key="{ComponentResourceKey ResourceId=DataGridSelectAllButtonStyle, TypeInTargetAssembly={x:Type DataGrid}}">
+							<Setter Property="Background" Value="Black" />
+						</Style>
+					</DataGrid.Resources>-->
 		</DataGrid>
 		
 		
