@@ -23,12 +23,13 @@ namespace DBExport.Common.Controls
 
 		protected override void OnAutoGeneratingColumn(DataGridAutoGeneratingColumnEventArgs e)
 		{
-			e.Cancel = true;
+			e.Cancel = CellTemplateSelector == null;
 			Columns.Add(new DataGridTemplateColumn
 			{
 				Header = e.Column.Header,
 				CellTemplateSelector = CellTemplateSelector
 			});
+			base.OnAutoGeneratingColumn(e);
 		}
 	}
 }
