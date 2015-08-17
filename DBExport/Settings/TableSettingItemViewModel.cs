@@ -15,10 +15,8 @@ namespace DBExport.Settings.ViewModel
 
 		public string Name
 		{
-			get
-			{
-				return CurrentType.Name;
-			}
+			get;
+			set;
 		}
 
 		public Type CurrentType

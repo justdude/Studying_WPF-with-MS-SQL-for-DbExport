@@ -1,4 +1,5 @@
-﻿using DBExport.Windows;
+﻿using DbExport.Data;
+using DBExport.Windows;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,9 +10,8 @@ namespace DBExport.Helpers
 {
 	public class CWindowHelper
 	{
-		public static void ShowEmployeWindow(out Dictionary<string, Type> selectedTypes)
+		public static void ShowEmployeWindow(CTable table, Func<object, bool> checkRightColl)
 		{
-			selectedTypes = new Dictionary<string, Type>();
 			var wind = new wndSetTypes();
 			//wind.Owner = App.Current.MainWindow;
 			//wind.Owner.Hide();
@@ -20,8 +20,8 @@ namespace DBExport.Helpers
 			//	wind.Owner.Show();
 			//	wind.Activate();
 			//};
-			wind.DataContext = new Settings.ViewModel.TableSettingViewModel(selectedTypes);
-			wind.ShowDialog();
+			wind.DataContext = new Settings.ViewModel.TableSettingViewModel(table, checkRightColl);
+			wind.Show();
 		}
 	}
 }

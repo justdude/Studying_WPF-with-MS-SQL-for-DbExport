@@ -117,6 +117,7 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Messages\" />
     <Folder Include="MVVM\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

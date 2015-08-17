@@ -27,14 +27,27 @@
 								<ColumnDefinition Width="100"></ColumnDefinition>
 								<ColumnDefinition Width="150"></ColumnDefinition>
 							</Grid.ColumnDefinitions>
-							<TextBlock Grid.Column="0" Text="{Binding TypeName}"></TextBlock>
+							<TextBlock Grid.Column="0" Text="{Binding Name}"></TextBlock>
 							<ComboBox Grid.Column="1"
 								 SelectedItem="{Binding CurrentType}"
-								  ItemsSource="{Binding DataTypes, RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}}"></ComboBox>
+								  ItemsSource="{Binding DataContext.DataTypes, RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}}"></ComboBox>
 						</Grid>
 					</Border>
 				</DataTemplate>
 			</ListBox.ItemTemplate>
 		</ListBox>
+
+		<StackPanel Grid.Column="2" Grid.Row="3" 
+					VerticalAlignment="Center" HorizontalAlignment="Right"
+					Orientation="Horizontal" Margin="5 0">
+			<Button Content="Setting up table" 
+					Command="{Binding SaveCommand}"
+					VerticalAlignment="Center" 
+					Style="{StaticResource btnStyle}"></Button>
+			<Button Content="Close" 
+					Command="{Binding CloseCommand}"
+					VerticalAlignment="Center" 
+					Style="{StaticResource btnStyle}"></Button>
+		</StackPanel>
 	</Grid>
 </Window>

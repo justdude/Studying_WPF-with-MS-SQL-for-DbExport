@@ -417,15 +417,7 @@ namespace DBExport.Main.ViewModel
 
 		private void SettingShow()
 		{
-			Dictionary<string, Type> types = new Dictionary<string,Type>();
-			CWindowHelper.ShowEmployeWindow(out types);
-			foreach (DataColumn item in SelectedTable.Current.Data.Columns)
-			{
-				if (types.ContainsKey(item.ColumnName))
-				{
-					item.DataType = types[item.ColumnName];
-				}
-			}
+			CWindowHelper.ShowEmployeWindow(SelectedTable.Current, null);
 		}
 
 		#endregion

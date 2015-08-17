@@ -1,4 +1,5 @@
-﻿using DBExport.Settings;
+﻿using DbExport.Data;
+using DBExport.Settings;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 //using Microsoft.Practices.Prism.Commands;
@@ -6,6 +7,7 @@ using GalaSoft.MvvmLight.Command;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,11 +18,13 @@ namespace DBExport.Settings.ViewModel
 	{
 		private readonly RelayCommand mvSaveCommand;
 		private readonly RelayCommand mvCloseCommand;
-		private Dictionary<string, Type> selectedTypes;
+		private Func<object, bool> modCheckIsRightCollumn;
+		private CTable modTable;
 
-		public TableSettingViewModel(Dictionary<string, Type> selectedTypes)
+		public TableSettingViewModel(CTable table, Func<object, bool> checkIsRightCollumn)
 		{
-			this.selectedTypes = selectedTypes;
+			mvSaveCommand = new RelayCommand(OnSaveSelected, CanSave);
+			mvCloseCommand = new RelayCommand(OnClose);
 
 			Tables = new ObservableCollection<TableSettingItemViewModel>();
 			DataTypes = new List<Type>()
@@ -32,12 +36,17 @@ namespace DBExport.Settings.ViewModel
 				typeof(bool)
 			};
 
-			mvSaveCommand = new RelayCommand(OnSaveSelected, CanSave);
-			mvCloseCommand = new RelayCommand(OnClose);
+			this.modCheckIsRightCollumn = checkIsRightCollumn;
+			this.modTable = table;
 
-			foreach (var item in Tables)
+			foreach (DataColumn item in table.Data.Columns)
 			{
-				item.CurrentType = DataTypes[0];
+				var tableSetting = new TableSettingItemViewModel()
+				{
+					Name = item.ColumnName,
+					CurrentType = item.DataType
+				};
+				Tables.Add(tableSetting);
 			}
 
 			//eventAggregator.GetEvent<StateChangedEvent>().Subscribe(OnDataChanged);
@@ -47,6 +56,22 @@ namespace DBExport.Settings.ViewModel
 		public ObservableCollection<TableSettingItemViewModel> Tables { get; set; }
 		public List<Type> DataTypes { get; set; }
 
+		public RelayCommand SaveCommand
+		{
+			get
+			{
+				return mvSaveCommand;
+			}
+		}
+
+		public RelayCommand CloseCommand
+		{
+			get
+			{
+				return mvCloseCommand;
+			}
+		}
+
 		private bool CanSave()
 		{
 			return Tables.Any(p => p.IsHasErrors) == false;
@@ -54,16 +79,21 @@ namespace DBExport.Settings.ViewModel
 
 		private void OnSaveSelected()
 		{
-			selectedTypes.Clear();
 			try
 			{
-				foreach (var item in Tables)
+				DataTable newTable = new DataTable(modTable.Name);
+				foreach (DataColumn item in modTable.Data.Columns)
 				{
-					selectedTypes.Add(item.Name, item.CurrentType);
+					var tableSetting = Tables.FirstOrDefault(p => p.Name == item.ColumnName);
+					
+					if (tableSetting == null)
+						continue;
+
+					item.DataType = tableSetting.CurrentType;
 				}
 			}
-			catch(Exception)
-			{ 
+			catch (Exception ex)
+			{
 
 			}
 
