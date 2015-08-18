@@ -24,6 +24,7 @@ namespace DbExport.Data
 		public string Id { get; set; }
 
 		public DataTable Data { get; set; }
+		public List<CColumn> Columns = new List<CColumn>();
 
 		#region Члены IObjectBase
 

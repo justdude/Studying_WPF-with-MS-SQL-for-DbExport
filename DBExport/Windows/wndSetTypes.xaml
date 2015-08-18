@@ -30,7 +30,7 @@
 							<TextBlock Grid.Column="0" Text="{Binding Name}"></TextBlock>
 							<ComboBox Grid.Column="1"
 								 SelectedItem="{Binding CurrentType}"
-								  ItemsSource="{Binding DataContext.DataTypes, RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}}"></ComboBox>
+								  ItemsSource="{Binding DataContext.DataTypes, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}}"></ComboBox>
 						</Grid>
 					</Border>
 				</DataTemplate>

@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CColumn.cs" />
     <Compile Include="CTable.cs" />
     <Compile Include="Engine.cs" />
     <Compile Include="modSQL.cs" />

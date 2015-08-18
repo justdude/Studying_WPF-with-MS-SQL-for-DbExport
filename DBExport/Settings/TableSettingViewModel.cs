@@ -1,4 +1,5 @@
 ﻿using DbExport.Data;
+using DbExport.Database;
 using DBExport.Common.Messages;
 using DBExport.Common.MVVM;
 using DBExport.Settings;
@@ -36,7 +37,6 @@ namespace DBExport.Settings.ViewModel
 			{
 				typeof(string),
 				typeof(float),
-				typeof(double),
 				typeof(int),
 				typeof(DateTime),
 				typeof(bool)
@@ -101,57 +101,12 @@ namespace DBExport.Settings.ViewModel
 			return Tables.Any(p => p.IsHasErrors) == false;
 		}
 
-		private static DataTable ConvertTableType(DataTable dt, Dictionary<string, Type> types)
-		{
-			DataTable newDt = dt.Clone();
-			//convert all columns' datatype
-
-			newDt.TableName = dt.TableName;
-
-			foreach (DataColumn dc in newDt.Columns)
-			{
-				if (types.ContainsKey(dc.ColumnName))
-				{
-					dc.DataType = types[dc.ColumnName];
-				}
-			}
-
-			//import data from original table
-			//foreach (DataRow dr in dt.Rows)
-			//{
-			//	newDt.ImportRow(dr);
-			//}
-
-			newDt.Load(dt.CreateDataReader(), System.Data.LoadOption.OverwriteChanges, ErrorHandler);
-
-			dt.Dispose();
-			return newDt;
-		}
-
-		private static void ErrorHandler(object sender, FillErrorEventArgs e)
-		{
-			
-			e.Continue = true;
-		}
-
 		private void OnSaveSelected()
 		{
 			try
 			{
-				var cultureInfo = Thread.CurrentThread.CurrentCulture;
-				cultureInfo.NumberFormat.NumberDecimalSeparator = NumberDecimalSeparator;
+				SetCultureNumbSeparator(NumberDecimalSeparator);
 
-				//DataTable newTable = new DataTable(modTable.Name);
-				//foreach (DataColumn item in modTable.Data.Columns)
-				//{
-				//	var tableSetting = Tables.FirstOrDefault(p => p.Name == item.ColumnName);
-
-				//	if (tableSetting == null)
-				//		continue;
-
-				//	newTable.DataType = tableSetting.CurrentType;
-
-				//}
 				Dictionary<string, Type> dict = new Dictionary<string, Type>();
 
 				foreach (var item in Tables)
@@ -161,8 +116,8 @@ namespace DBExport.Settings.ViewModel
 
 					dict.Add(item.Name, item.CurrentType);
 				}
-
-				modTable.Data = ConvertTableType(modTable.Data, dict);
+			
+				modTable.Data = CDataTableHelper.ConvertTableType(modTable.Data, dict);
 			}
 			catch (Exception ex)
 			{
@@ -170,6 +125,14 @@ namespace DBExport.Settings.ViewModel
 			}
 
 			MessengerInstance.Send<CloseWindowMessage>(new CloseWindowMessage(), Token);
+		}
+
+		private void SetCultureNumbSeparator(string numberDecimalSeparator)
+		{
+			var cultureInfo = Thread.CurrentThread.CurrentCulture.Clone() as CultureInfo;
+			cultureInfo.NumberFormat.NumberDecimalSeparator = numberDecimalSeparator;
+			cultureInfo.NumberFormat.CurrencyDecimalSeparator = numberDecimalSeparator;
+			Thread.CurrentThread.CurrentCulture = cultureInfo;
 		}
 
 		private void OnClose()
