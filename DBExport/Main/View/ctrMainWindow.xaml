@@ -111,7 +111,15 @@
 				 HorizontalAlignment="Stretch"
 				 VerticalAlignment="Stretch"
 				 SelectedItem="{Binding SelectedTable}"
-				 ItemsSource="{Binding Tables}" Margin="10 5 10 10"/>
+				 ItemsSource="{Binding Tables}" Margin="10 5 10 10">
+			<ListBox.ItemTemplate>
+				<DataTemplate>
+					<StackPanel Orientation="Horizontal">
+						<TextBlock Text="{Binding Name}"></TextBlock>
+					</StackPanel>
+				</DataTemplate>
+			</ListBox.ItemTemplate>	
+		</ListBox>
 
 		<GridSplitter Grid.Row="0"
 					  Grid.Column="1"
@@ -127,7 +135,7 @@
 					VerticalAlignment="Center" Style="{StaticResource btnStyle}">
 			</Button>
 			<Button Content="Edit" 
-					Command="{Binding EditTable}" 
+					Command="{Binding EditCommand}" 
 					VerticalAlignment="Center" Style="{StaticResource btnStyle}"></Button>
 			<Button Content="Delete" 
 					Command="{Binding DeleteCommand}"

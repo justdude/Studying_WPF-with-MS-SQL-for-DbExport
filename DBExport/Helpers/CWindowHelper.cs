@@ -26,5 +26,10 @@ namespace DBExport.Helpers
 			};
 			wind.Show();
 		}
+
+		public static void ShowEditSelectedTable(CTable cTable)
+		{
+
+		}
 	}
 }

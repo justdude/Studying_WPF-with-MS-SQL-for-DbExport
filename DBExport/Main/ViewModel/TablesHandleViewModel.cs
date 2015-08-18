@@ -19,6 +19,7 @@ namespace DBExport.Main.ViewModel
 	public class TablesHandleViewModel : ViewModelBase
 	{
 		private readonly RelayCommand mvAddCommand;
+		private readonly RelayCommand mvEditCommand;
 		private readonly RelayCommand mvDeleteCommand;
 		private readonly RelayCommand mvSaveCommand;
 		private readonly RelayCommand mvRefreshCommand;
@@ -34,6 +35,7 @@ namespace DBExport.Main.ViewModel
 			Tables = new ObservableCollection<TableViewModel>();
 
 			mvAddCommand = new RelayCommand(OnAdd, CanAdd);
+			mvEditCommand = new RelayCommand(OnEdit, CanEdit);
 			mvDeleteCommand = new RelayCommand(OnDeleteSelected, CanDelete);
 			mvSaveCommand = new RelayCommand(OnSaveSelected, CanSave);
 			mvRefreshCommand = new RelayCommand(OnRefresh, CanRefresh);
@@ -75,6 +77,8 @@ namespace DBExport.Main.ViewModel
 				return GetItems(SelectedTable.Current.Data, 0, 20).DefaultView;
 			}
 		}
+
+		public bool IsCreate { get; set; }
 
 		public DataTable GetItems(DataTable table, int offset, int count)
 		{
@@ -214,6 +218,14 @@ namespace DBExport.Main.ViewModel
 			}
 		}
 
+		public RelayCommand EditCommand
+		{
+			get
+			{
+				return mvEditCommand;
+			}
+		}
+
 		public RelayCommand DeleteCommand
 		{
 			get
@@ -316,6 +328,7 @@ namespace DBExport.Main.ViewModel
 		{
 			RefreshCommand.RaiseCanExecuteChanged();
 			SaveCommand.RaiseCanExecuteChanged();
+			EditCommand.RaiseCanExecuteChanged();
 			DeleteCommand.RaiseCanExecuteChanged();
 			AddCommand.RaiseCanExecuteChanged();
 			CloseCommand.RaiseCanExecuteChanged();
@@ -336,9 +349,14 @@ namespace DBExport.Main.ViewModel
 			return true;
 		}
 
-		private bool CanDelete()
+		private bool CanEdit()
 		{
 			return IsEnabled && IsSelected;
+		}
+
+		private bool CanDelete()
+		{
+			return false;
 		}
 
 		private bool CanAdd()
@@ -413,6 +431,11 @@ namespace DBExport.Main.ViewModel
 			this.Tables.Add(SelectedTable);
 			RaiseRefresh();
 			this.RaisePropertyChanged(() => this.SelectedTableView);
+		}
+
+		private void OnEdit()
+		{
+			CWindowHelper.ShowEditSelectedTable(SelectedTable.Current);
 		}
 
 		private void SettingShow()
