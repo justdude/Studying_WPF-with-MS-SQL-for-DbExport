@@ -1,4 +1,7 @@
-﻿using System;
+﻿using DBExport.Common.Messages;
+using DBExport.Common.MVVM;
+using GalaSoft.MvvmLight.Messaging;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -22,6 +25,31 @@ namespace DBExport.Windows
 		public wndSetTypes()
 		{
 			InitializeComponent();
+			this.Loaded += wndSetTypes_Loaded;
+			this.Closed += wndSetTypes_Closed;
+		}
+
+		void wndSetTypes_Loaded(object sender, RoutedEventArgs e)
+		{
+			Messenger.Default.Register<CloseWindowMessage>(this, Token, OnMessageCloseWind);
+		}
+
+		private void OnMessageCloseWind(CloseWindowMessage obj)
+		{
+			this.Close();
+		}
+
+		void wndSetTypes_Closed(object sender, EventArgs e)
+		{
+			Messenger.Default.Unregister(this);
+		}
+
+		public string Token
+		{
+			get
+			{
+				return ControlBehavior.GetToken(this);
+			}
 		}
 	}
 }

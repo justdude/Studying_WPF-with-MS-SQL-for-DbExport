@@ -78,6 +78,10 @@
     <Compile Include="Interfaces\IDataButtons.cs" />
     <Compile Include="Interfaces\IObjectBase.cs" />
     <Compile Include="Interfaces\IWindowsHelper.cs" />
+    <Compile Include="Messages\CloseWindowMessage.cs" />
+    <Compile Include="Messages\MessageExtended.cs" />
+    <Compile Include="MVVM\ControlBehavior.cs" />
+    <Compile Include="MVVM\ViewModelExtended.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -116,10 +120,7 @@
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Messages\" />
-    <Folder Include="MVVM\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

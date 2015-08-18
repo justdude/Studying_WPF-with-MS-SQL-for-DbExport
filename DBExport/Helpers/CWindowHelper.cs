@@ -20,7 +20,10 @@ namespace DBExport.Helpers
 			//	wind.Owner.Show();
 			//	wind.Activate();
 			//};
-			wind.DataContext = new Settings.ViewModel.TableSettingViewModel(table, checkRightColl);
+			wind.DataContext = new Settings.ViewModel.TableSettingViewModel(table, checkRightColl) 
+			{ 
+				Token = wind.Token 
+			};
 			wind.Show();
 		}
 	}
