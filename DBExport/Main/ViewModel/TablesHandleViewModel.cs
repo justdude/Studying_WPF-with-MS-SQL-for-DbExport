@@ -332,6 +332,7 @@ namespace DBExport.Main.ViewModel
 			DeleteCommand.RaiseCanExecuteChanged();
 			AddCommand.RaiseCanExecuteChanged();
 			CloseCommand.RaiseCanExecuteChanged();
+			SettingShowCommand.RaiseCanExecuteChanged();
 		}
 
 		private bool CanRefresh()
@@ -346,7 +347,7 @@ namespace DBExport.Main.ViewModel
 
 		private bool CanShowSettings()
 		{
-			return true;
+			return IsSelected;
 		}
 
 		private bool CanEdit()

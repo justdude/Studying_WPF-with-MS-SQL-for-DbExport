@@ -25,10 +25,10 @@ namespace DbExport.Database
 
 			try
 			{
-				if (modConnection.State == System.Data.ConnectionState.Closed)
-					modConnection.Open();
-				cmd = new SqlCommand(command, modConnection);
+				OpenIfClosed();
 
+				cmd = new SqlCommand(command, modConnection);
+				
 				reader = cmd.ExecuteReader();
 				return reader;
 			}
@@ -40,6 +40,32 @@ namespace DbExport.Database
 				Close();
 			}
 			return reader;
+		}
+
+		public SqlDataReader ExecuteBG(string command)
+		{
+			SqlCommand cmd = null;
+			SqlDataReader reader = null;
+
+			try
+			{
+				OpenIfClosed();
+
+				cmd = new SqlCommand(command, modConnection);
+
+				reader = cmd.ExecuteReader();
+				return reader;
+			}
+			catch (Exception ex)
+			{
+			}
+			return reader;
+		}
+
+		private void OpenIfClosed()
+		{
+			if (modConnection.State == System.Data.ConnectionState.Closed)
+				modConnection.Open();
 		}
 
 		public void Close()

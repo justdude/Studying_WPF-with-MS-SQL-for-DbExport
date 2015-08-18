@@ -10,9 +10,10 @@ namespace DbExport.Data
 	public class CColumn : IObjectBase
 	{
 		public string Id { get; set; }
-
 		public string Name { get; set; }
-		public Type CollType { get; set; }
+		public string TableId { get; set; }
+
+		public string CollType { get; set; }
 
 		public Status Status
 		{

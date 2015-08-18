@@ -10,6 +10,13 @@ namespace DbExport.Data
 {
 	public class CTable : IObjectBase
 	{
+
+		public CTable()
+		{
+			Columns = new List<CColumn>();
+			Rows = new List<CColumn>();
+		}
+
 		public string Name
 		{
 			get
@@ -24,7 +31,9 @@ namespace DbExport.Data
 		public string Id { get; set; }
 
 		public DataTable Data { get; set; }
-		public List<CColumn> Columns = new List<CColumn>();
+
+		public List<CColumn> Columns { get; set; }
+		public List<CValue> Rows { get; set; }
 
 		#region Члены IObjectBase
 
