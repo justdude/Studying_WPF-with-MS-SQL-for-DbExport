@@ -11,7 +11,7 @@ namespace DbExport.Database
 	{
 		private  SqlConnection modConnection;
 
-		public static string ConnectionString = @"Data Source=D:\Projects\DbExport\DbExport.Database\DbData.sdf";
+		public static string ConnectionString = @"Data Source=D:\Projects\DbExport\DbExport.Database\DbData#1.sdf";
 
 		public CDatabaseManager()
 		{
@@ -83,7 +83,6 @@ namespace DbExport.Database
 		public bool ExecuteNonQuery(string command)
 		{
 			SqlCommand cmd = null;
-			SqlDataReader reader = null;
 			int res = 0;
 
 			try
@@ -100,9 +99,6 @@ namespace DbExport.Database
 			}
 			finally
 			{
-				if (reader!=null)
-					reader.Close();
-
 				if (modConnection!=null)
 					modConnection.Close();
 			}

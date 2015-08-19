@@ -17,6 +17,7 @@ namespace DbExport.Data
 		public String StrValue { get; set; }
 		public bool BoolValue { get; set; }
 		public float FloatValue { get; set; }
+		public float IntValue { get; set; }
 
 		public CColumn Column { get; set; }
 		public Type ValueType { get; set; }

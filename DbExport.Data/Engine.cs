@@ -22,49 +22,6 @@ namespace DbExport.Data
 			Instance = new Engine();
 		}
 
-		//public IEnumerable<Employee> LoadEmployes()
-		//{
-		//	var list = new List<Employee>();
-
-		//	var reader = CDatabase.Instance.Execute(modSQL.SelectEmployes());
-
-		//	InitDatetime();
-
-		//	Employee employee = null;
-		//	try
-		//	{
-		//		while (reader.Read())
-		//		{
-		//			employee = new Employee();
-		//			employee.Id = reader.GetString(0);
-		//			employee.Name = reader.GetString(1);
-		//			employee.BirthDate = ConvertDateTime(reader);
-		//			employee.Salary = (float)reader.GetDouble(3);
-		//			employee.CountryID = reader.GetString(4);
-		//			employee.Status = Common.Interfaces.Status.Normal;
-		//			list.Add(employee);
-		//		}
-		//		reader.Close();
-		//	}
-		//	catch(Exception ex)
-		//	{
-		//		if (reader != null)
-		//			reader.Close();
-		//	}
-
-		//	//#region can remove
-		//	//if (list.Count == 0)
-		//	//{
-		//	//	for (int i = 0; i < 5; i++)
-		//	//	{
-		//	//		list.Add(Employee.CreateRand());
-		//	//	}
-		//	//}
-		//	//#endregion
-
-		//	return list;
-		//}
-
 		private static DateTime ConvertDateTime(System.Data.SqlClient.SqlDataReader reader)
 		{
 			return Convert.ToDateTime(reader.GetDateTime(2).ToString("dd.MM.yyyy"));
@@ -136,18 +93,19 @@ namespace DbExport.Data
 			SqlDataReader reader = null;
 			try
 			{
-				reader = CDatabase.Instance.Execute(modSQL.SelectTables());
+				reader = CDatabase.Instance.Execute(modSQL.SelectValues());
 
 				while (reader.Read())
 				{
 					item = new CValue();
 					item.Id = reader.GetString(0);
-					item.BoolValue = reader.GetBoolean(1);
-					item.DateValue = reader.GetDateTime(2);
-					item.FloatValue = reader.GetFloat(2);
-					item.StrValue = reader.GetString(2);
-					item.CollumnId = reader.GetString(9);
-					item.TableId = reader.GetString(10);
+					item.StrValue = reader.GetString(1);
+					item.BoolValue = reader.GetBoolean(2);
+					item.FloatValue = (float)reader.GetDouble(3);
+					item.DateValue = reader.GetConvertedDateTime(4);
+					item.IntValue = reader.GetInt32(5);
+					item.CollumnId = reader.GetString(6);
+					item.TableId = reader.GetString(7);
 					item.Status = Status.Normal;
 
 					list.Add(item);
@@ -170,14 +128,15 @@ namespace DbExport.Data
 			SqlDataReader reader = null;
 			try
 			{
-				reader = CDatabase.Instance.Execute(modSQL.SelectTables());
+				reader = CDatabase.Instance.Execute(modSQL.SelectCollumns());
 
 				while (reader.Read())
 				{
 					item = new CColumn();
 					item.Id = reader.GetString(0);
-					item.Name = reader.GetString(1);
-					item.CollType = reader.GetString(2);
+					item.CollType = reader.GetString(1);
+					item.TableId = reader.GetString(2);
+					item.Name = reader.GetString(3);
 					item.Status = Status.Normal;
 
 					list.Add(item);

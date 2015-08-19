@@ -44,7 +44,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CColumn.cs" />
+    <Compile Include="CObjectBaseExtension.cs" />
     <Compile Include="CTable.cs" />
+    <Compile Include="CValue.cs" />
     <Compile Include="Engine.cs" />
     <Compile Include="modSQL.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

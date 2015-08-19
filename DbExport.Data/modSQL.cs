@@ -39,7 +39,7 @@ namespace CRM.Database
 
 		public static string SelectTables()
 		{
-			return @"select * from Employes";
+			return @"select * from conf_tables";
 		}
 
 		//public static string InsertEmployes(Employee empl)
@@ -63,5 +63,30 @@ namespace CRM.Database
 
 		#endregion
 
+
+		internal static string InsertTable(DbExport.Data.CTable item)
+		{
+			throw new NotImplementedException();
+		}
+
+		internal static string UpdateTable(DbExport.Data.CTable cTable)
+		{
+			throw new NotImplementedException();
+		}
+
+		internal static string DeleteTable(string Id)
+		{
+			throw new NotImplementedException();
+		}
+
+		public static string SelectCollumns()
+		{
+			return @"select * from conf_tables_collumns";
+		}
+
+		public static string SelectValues()
+		{
+			return @"select * from conf_tables_values";
+		}
 	}
 }
