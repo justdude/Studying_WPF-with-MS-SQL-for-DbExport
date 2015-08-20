@@ -37,6 +37,44 @@ namespace DbExport.Data
 		public List<CColumn> Columns { get; set; }
 		public List<CValue> Rows { get; set; }
 
+		public CTable CreateDummy()
+		{
+			CTable table = new CTable();
+			table.Id = Generator.GenerateID();
+			table.Name = "Table" + DateTime.Now.Minute;
+
+			table.Columns = new List<CColumn>();
+			string[] Types = { "string", "int", "float", "bool", "DateTime" };
+
+			for (int i = 0; i < Types.Length; i++)
+			{
+				var coll = new CColumn();
+				coll.Id = Generator.GenerateID();
+				coll.TableId = table.Id;
+
+				coll.Name = "Coll" + i;
+				coll.CollType = Types[i];
+				
+				table.Columns.Add(coll);
+			}
+
+			for (int i = 0; i < table.Columns.Count; i++)
+			{
+				for (int j = 0; j < 5; j++)
+				{
+					//table.Columns[i]
+					CValue value = new CValue();
+					value.Id = Generator.GenerateID();
+					value.TableId = table.Id;
+
+					value.SetValue((object)nul);
+				}
+			}
+
+			return table;
+		}
+
+
 		#region Члены IObjectBase
 
 		public Status Status { get; set; }
