@@ -35,11 +35,11 @@ namespace CRM.Database
 
 		#endregion
 
-		#region Employe
+		#region Tables
 
 		public static string SelectTables()
 		{
-			return @"select * from conf_tables";
+			return @"select * from Conf_Dyn_Tables";
 		}
 
 		//public static string InsertEmployes(Employee empl)
@@ -61,10 +61,9 @@ namespace CRM.Database
 		//	return query;
 		//}
 
-		#endregion
 
 
-		internal static string InsertTable(DbExport.Data.CTable item)
+		public static string InsertTable(DbExport.Data.CTable item)
 		{
 			throw new NotImplementedException();
 		}
@@ -78,15 +77,21 @@ namespace CRM.Database
 		{
 			throw new NotImplementedException();
 		}
+		#endregion
 
-		public static string SelectCollumns()
+		#region Collumns
+		public static string SelectCollumns(string tableId)
 		{
-			return @"select * from conf_tables_collumns";
+			string str = string.Format(@"select * from Conf_Dyn_Properties t where t.Id = '{0}'", tableId);
+			return str;
 		}
 
-		public static string SelectValues()
+		#endregion
+
+		public static string SelectValues(string tableId)
 		{
-			return @"select * from conf_tables_values";
+			string str = string.Format(@"select * from Conf_Dyn_Values t where t.Id = '{0}'", tableId);
+			return str;
 		}
 	}
 }

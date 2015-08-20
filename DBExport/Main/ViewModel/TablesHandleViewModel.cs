@@ -29,6 +29,7 @@ namespace DBExport.Main.ViewModel
 		private bool mvIsHasError;
 		private TableViewModel mvSelectedTable;
 		private bool mvIsMerge;
+		private bool mvIsLoading;
 
 		public TablesHandleViewModel()
 		{
@@ -61,6 +62,7 @@ namespace DBExport.Main.ViewModel
 					return;
 
 				mvSelectedTable = value;
+				OnSelectedChanged(value);
 
 				this.RaisePropertyChanged(() => this.SelectedTable);
 				this.RaisePropertyChanged(() => this.SelectedTableView);
@@ -75,6 +77,23 @@ namespace DBExport.Main.ViewModel
 					return null;
 
 				return GetItems(SelectedTable.Current.Data, 0, 20).DefaultView;
+			}
+		}
+
+		public bool IsLoading 
+		{ 
+			get
+			{
+				return mvIsLoading;
+			}
+			set
+			{
+				if (mvIsLoading == value)
+					return;
+
+				mvIsLoading = value;
+
+				RaisePropertyChanged(() => this.IsLoading);
 			}
 		}
 
@@ -273,6 +292,7 @@ namespace DBExport.Main.ViewModel
 
 		private void LoadData()
 		{
+			IsLoading = true;
 			IsEnabled = false;
 
 			if (Tables == null)
@@ -282,14 +302,15 @@ namespace DBExport.Main.ViewModel
 
 			Tables.Clear();
 
-			var countries = Engine.Instance.LoadTables().Select(p => new TableViewModel(p));
+			var tables = Engine.Instance.LoadTables().Select(p => new TableViewModel(p));
 
-			foreach (var item in countries)
+			foreach (var item in tables)
 			{
 				Tables.Add(item);
 			}
 
 			IsEnabled = true;
+			IsLoading = false;
 		}
 
 		private void LoadTable(TableViewModel target)
@@ -313,7 +334,7 @@ namespace DBExport.Main.ViewModel
 			//}
 		}
 
-		private void OnSelectedChanged(object obj)
+		private void OnSelectedChanged(TableViewModel obj)
 		{
 			RefreshCommands();
 		}

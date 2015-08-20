@@ -58,6 +58,7 @@
     <Compile Include="CDatabase.cs" />
     <Compile Include="CDatabaseManager.cs" />
     <Compile Include="CDataTableHelper.cs" />
+    <Compile Include="CReaderExtension.cs" />
     <Compile Include="Generator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>

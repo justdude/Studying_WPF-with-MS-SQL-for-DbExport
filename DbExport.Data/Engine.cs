@@ -36,18 +36,9 @@ namespace DbExport.Data
 
 		public IEnumerable<CTable> LoadTables()
 		{
-			//#region can remove
-
-			//string[] cc = new string[] { "Ukraine", "USA", "Canada", "German", "Spain", "Poland" };
-
-			//#endregion
-
 			var list = new List<CTable>();
 
 			var reader = CDatabase.Instance.Execute(modSQL.SelectTables());
-
-			List<CColumn> columns = LoadCollumns().ToList();
-			List<CValue> rows = LoadValues().ToList();
 
 			CTable item = null;
 			try
@@ -56,56 +47,60 @@ namespace DbExport.Data
 				{
 					item = new CTable();
 					item.Id = reader.GetString(0);
-					item.Name = reader.GetString(1);
+					item.Name = reader.GetStringSafe(1);
 					item.Status = Status.Normal;
 
+					List<CColumn> columns = LoadCollumns(item.Id).ToList();
+					List<CValue> rows = LoadValues(item.Id).ToList();
+
 					FillBy(item, columns, rows);
+
+					item.Data = CTable.ToDataTable(item);
 
 					list.Add(item);
 				}
 
 				reader.Close();
 			}
-			catch
+			catch(Exception ex)
 			{
 				if (reader != null)
 					reader.Close();
 			}
 
-			//#region can remove
-			//if (list.Count == 0)
-			//{
-
-			//	for (int i = 0; i < cc.Length; i++)
-			//	{
-			//		list.Add(new Country() { Id = i.ToString(), Name = cc[i] });
-			//	}
-			//}
-			//#endregion
-
 			return list;
 		}
 
-		public IEnumerable<CValue> LoadValues()
+		public IEnumerable<CValue> LoadValues(string tableId)
 		{
 			List<CValue> list = new List<CValue>();
 			CValue item = null;
 			SqlDataReader reader = null;
 			try
 			{
-				reader = CDatabase.Instance.Execute(modSQL.SelectValues());
+				reader = CDatabase.Instance.Execute(modSQL.SelectValues(tableId));
 
 				while (reader.Read())
 				{
 					item = new CValue();
 					item.Id = reader.GetString(0);
-					item.StrValue = reader.GetString(1);
-					item.BoolValue = reader.GetBoolean(2);
-					item.FloatValue = (float)reader.GetDouble(3);
-					item.DateValue = reader.GetConvertedDateTime(4);
-					item.IntValue = reader.GetInt32(5);
-					item.CollumnId = reader.GetString(6);
-					item.TableId = reader.GetString(7);
+					item.TableId = reader.GetString(1);
+					item.CollumnId = reader.GetString(2);
+					item.RowNumb = reader.GetString(3);
+
+					try
+					{
+						item.FloatValue = reader.GetFloatSafe(4);
+						item.StrValue = reader.GetStringSafe(5);
+						item.DateValue = reader.GetDateTimeSafe(6); //reader.GetConvertedDateTime(6);
+						item.BoolValue = reader.GetBoolSafe(7);
+						item.IntValue = reader.GetIntSafe(8);
+					}
+					catch(Exception ex)
+					{
+
+					}
+
 					item.Status = Status.Normal;
 
 					list.Add(item);
@@ -121,14 +116,14 @@ namespace DbExport.Data
 			return list;
 		}
 
-		public IEnumerable<CColumn> LoadCollumns()
+		public IEnumerable<CColumn> LoadCollumns(string tableId)
 		{
 			List<CColumn> list = new List<CColumn>();
 			CColumn item = null;
 			SqlDataReader reader = null;
 			try
 			{
-				reader = CDatabase.Instance.Execute(modSQL.SelectCollumns());
+				reader = CDatabase.Instance.Execute(modSQL.SelectCollumns(tableId));
 
 				while (reader.Read())
 				{
@@ -157,8 +152,8 @@ namespace DbExport.Data
 			if (table == null)
 				return;
 
-			table.Columns = columns.Where(p=>p.TableId == table.Id).ToList();
-			table.Rows = rows.Where(p=>p.TableId == table.Id).ToList();
+			table.Columns = columns.Where(p => p.TableId == table.Id).ToList();
+			table.Rows = rows.Where(p => p.TableId == table.Id).ToList();
 
 			foreach (var item in table.Rows)
 			{

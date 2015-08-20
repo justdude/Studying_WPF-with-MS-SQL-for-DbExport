@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using CRM.Database;
 using DbExport.Common.Interfaces;
 using DbExport.Database;
+using DbExport.Data.Constants;
 
 namespace DbExport.Data
 {
@@ -54,7 +55,7 @@ namespace DbExport.Data
 
 				coll.Name = "Coll" + i;
 				coll.CollType = Types[i];
-				
+
 				table.Columns.Add(coll);
 			}
 
@@ -67,13 +68,128 @@ namespace DbExport.Data
 					value.Id = Generator.GenerateID();
 					value.TableId = table.Id;
 
-					value.SetValue((object)nul);
+					//value.SetValue((object)nul);
 				}
 			}
 
 			return table;
 		}
 
+		#region Converters
+
+		public static DataTable ToDataTable(CTable table)
+		{
+			DataTable dataTable = new DataTable(table.Name);
+
+			//dataTable.Columns = new DataColumnCollection();
+			//dataTable.Rows = new DataRowCollection();
+			try
+			{
+				for (int coll = 0; coll < table.Columns.Count; coll++)
+				{
+					dataTable.Columns.Add(table.Columns[coll].Name, table.Columns[coll].GetCollType());
+				}
+
+				List<List<CValue>> list = table.Rows.GroupBy(p => p.RowNumb).Select(p => p.ToList()).ToList();
+
+				foreach (List<CValue> collection in list)
+				{
+					object[] data = new object[dataTable.Columns.Count];
+					for (int coll = 0; coll < dataTable.Columns.Count; coll++)
+					{
+						CValue item = collection.FirstOrDefault(p => p.CollumnId == table.Columns[coll].Id);
+
+						data[coll] = item.GetValue();
+					}
+
+					var newRow = dataTable.Rows.Add();
+					newRow.ItemArray = data;
+				}
+			}
+			catch(Exception ex)
+			{
+
+			}
+
+
+			return dataTable;
+		}
+
+		
+		public static CTable ToDbTable(DataTable dataTable)
+		{
+			if (dataTable == null)
+				return null;
+
+			CTable table = new CTable();
+
+			table.Id = Generator.GenerateID();
+			table.Name = dataTable.TableName;
+
+			table.Data = dataTable;
+			table.Status = Status.Added;
+
+			table.Columns = new List<CColumn>();
+			table.Rows = new List<CValue>();
+
+			FillColumns(dataTable, table);
+			FillRows(dataTable, table);
+
+			return table;
+
+		}
+
+		private static void FillRows(DataTable dataTable, CTable table)
+		{
+			try
+			{
+				for (int row = 0; row < dataTable.Rows.Count; row++)
+				{
+					CValue value = null;
+
+					for (int coll = 0; coll < dataTable.Columns.Count; coll++)
+					{
+						value = new CValue();
+						value.Id = Generator.GenerateID();
+						value.TableId = table.Id;
+
+						value.SetValue(dataTable.Rows[row].ItemArray[coll]);
+
+						value.ValueType = table.Columns[coll].GetCollType();
+						value.Column = table.Columns[coll];
+
+						value.Status = Status.Added;
+
+						table.Rows.Add(value);
+					}
+				}
+			}
+			catch (Exception ex)
+			{ }
+		}
+
+		private static void FillColumns(DataTable dataTable, CTable table)
+		{
+			try
+			{
+				for (int i = 0; i < dataTable.Columns.Count; i++)
+				{
+					var coll = new CColumn();
+					coll.Id = Generator.GenerateID();
+					coll.TableId = table.Id;
+
+					coll.Name = dataTable.Columns[i].ColumnName;
+					coll.CollType = null;
+
+					coll.Status = Status.Added;
+
+					table.Columns.Add(coll);
+				}
+			}
+			catch (Exception ex)
+			{ }
+		}
+		#endregion
 
 		#region Члены IObjectBase
 
@@ -97,7 +213,7 @@ namespace DbExport.Data
 				//	break;
 				//case Status.Deleted:
 				//	res = DeleteTable(this);
-					//break;
+				//break;
 				default:
 					Status = Common.Interfaces.Status.Normal;
 					break;
@@ -139,5 +255,14 @@ namespace DbExport.Data
 			return table;
 		}
 		#endregion
+
+		public void LoadData()
+		{
+			//if (Status == Common.Interfaces.Status.Added && this.Data != null)
+			//{
+			//	return;
+			//}
+
+		}
 	}
 }

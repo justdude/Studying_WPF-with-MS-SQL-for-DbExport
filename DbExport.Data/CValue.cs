@@ -22,12 +22,14 @@ namespace DbExport.Data
 		public string Id { get; set; }
 		public string CollumnId { get; set; }
 		public string TableId { get; set; }
+		public string RowNumb { get; set; }
 
 		public DateTime DateValue { get; set; }
 		public String StrValue { get; set; }
 		public bool BoolValue { get; set; }
 		public float FloatValue { get; set; }
 		public float IntValue { get; set; }
+
 
 		public CColumn Column { get; set; }
 		public Type ValueType { get; set; }
@@ -59,5 +61,52 @@ namespace DbExport.Data
 			
 
 		//}
+
+		public void SetValue(object data)
+		{
+			if (data == null || data == DBNull.Value)
+				return;
+
+			var type = data.GetType();
+			switch (Type.GetTypeCode(type))
+			{
+				case TypeCode.Boolean:
+					BoolValue = (bool)data;
+					break;
+				case TypeCode.DateTime:
+					DateValue = (DateTime)data;
+					break;
+				case TypeCode.Int32:
+					IntValue = (int)data;
+					break;
+				case TypeCode.String:
+					StrValue = (string)data;
+					break;
+				case TypeCode.Single:
+					FloatValue = (float)data;
+					break;
+
+				case TypeCode.Byte:
+				case TypeCode.Char:
+				case TypeCode.DBNull:
+				case TypeCode.Decimal:
+				case TypeCode.Double:
+				case TypeCode.Empty:
+				case TypeCode.Int16:
+				case TypeCode.Int64:
+				case TypeCode.Object:
+				case TypeCode.SByte:
+				case TypeCode.UInt16:
+				case TypeCode.UInt32:
+				case TypeCode.UInt64:
+				default:
+					break;
+			}
+		}
+
+		public object GetValue()
+		{
+			throw new NotImplementedException();
+		}
 	}
 }

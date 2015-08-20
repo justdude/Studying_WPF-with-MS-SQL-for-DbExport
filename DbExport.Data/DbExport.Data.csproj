@@ -45,6 +45,7 @@
   <ItemGroup>
     <Compile Include="CColumn.cs" />
     <Compile Include="CObjectBaseExtension.cs" />
+    <Compile Include="Constants\CollumnTypes.cs" />
     <Compile Include="CTable.cs" />
     <Compile Include="CValue.cs" />
     <Compile Include="Engine.cs" />
