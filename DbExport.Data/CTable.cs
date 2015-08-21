@@ -237,13 +237,13 @@ namespace DbExport.Data
 
 		private bool UpdateTable(CTable item)
 		{
-			string str = modSQL.UpdateTable(this);
+			string str = modSQL.UpdateTable(item);
 			return CDatabase.Instance.ExecuteNonQuery(str);
 		}
 
 		private bool DeleteTable(string ud)
 		{
-			string str = modSQL.DeleteTable(Id);
+			string str = modSQL.DeleteTable(ud);
 			return CDatabase.Instance.ExecuteNonQuery(str);
 		}
 

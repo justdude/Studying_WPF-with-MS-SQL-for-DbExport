@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Data.SqlServerCe;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,26 +10,27 @@ namespace DbExport.Database
 {
 	public class CDatabaseManager
 	{
-		private  SqlConnection modConnection;
+		private SqlCeConnection modConnection;
 
 		//public static string ConnectionString = @"Data Source=C:\Users\ialbantov.LIZDEVNTD\Documents\DbExport\DbExport.Database\DbData#1.sdf";
-		public static string ConnectionString = @"Data Source=(localdb)\ProjectsV12;Initial Catalog=DbExportData;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False";
+		public static string ConnectionString = @"Data Source=D:\Projects\DbExport\DbExport.Database\DbEData.sdf";
+		//public static string ConnectionString = @"Data Source=(localdb)\ProjectsV12;Initial Catalog=DbExportData;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False";
 
 		public CDatabaseManager()
 		{
-			modConnection = new SqlConnection(ConnectionString);
+			modConnection = new SqlCeConnection(ConnectionString);
 		}
 
-		public SqlDataReader Execute(string command)
+		public SqlCeDataReader Execute(string command)
 		{
-			SqlCommand cmd = null;
-			SqlDataReader reader = null;
+			SqlCeCommand cmd = null;
+			SqlCeDataReader reader = null;
 
 			try
 			{
 				OpenIfClosed();
 
-				cmd = new SqlCommand(command, modConnection);
+				cmd = new SqlCeCommand(command, modConnection);
 				
 				reader = cmd.ExecuteReader();
 				return reader;
@@ -43,16 +45,16 @@ namespace DbExport.Database
 			return reader;
 		}
 
-		public SqlDataReader ExecuteBG(string command)
+		public SqlCeDataReader ExecuteBG(string command)
 		{
-			SqlCommand cmd = null;
-			SqlDataReader reader = null;
+			SqlCeCommand cmd = null;
+			SqlCeDataReader reader = null;
 
 			try
 			{
 				OpenIfClosed();
 
-				cmd = new SqlCommand(command, modConnection);
+				cmd = new SqlCeCommand(command, modConnection);
 
 				reader = cmd.ExecuteReader();
 				return reader;
@@ -83,14 +85,14 @@ namespace DbExport.Database
 
 		public bool ExecuteNonQuery(string command)
 		{
-			SqlCommand cmd = null;
+			SqlCeCommand cmd = null;
 			int res = 0;
 
 			try
 			{
 				if (modConnection.State == System.Data.ConnectionState.Closed)
 					modConnection.Open();
-				cmd = new SqlCommand(command, modConnection);
+				cmd = new SqlCeCommand(command, modConnection);
 
 				res = cmd.ExecuteNonQuery();
 			}

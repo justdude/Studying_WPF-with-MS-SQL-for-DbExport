@@ -10,6 +10,7 @@ using DbExport.Data;
 using DbExport.Database;
 using System.Data.SqlClient;
 using DbExport.Common.Interfaces;
+using System.Data.SqlServerCe;
 
 namespace DbExport.Data
 {
@@ -74,7 +75,7 @@ namespace DbExport.Data
 		{
 			List<CValue> list = new List<CValue>();
 			CValue item = null;
-			SqlDataReader reader = null;
+			SqlCeDataReader reader = null;
 			try
 			{
 				reader = CDatabase.Instance.Execute(modSQL.SelectValues());
@@ -124,7 +125,7 @@ namespace DbExport.Data
 		{
 			List<CColumn> list = new List<CColumn>();
 			CColumn item = null;
-			SqlDataReader reader = null;
+			SqlCeDataReader reader = null;
 			try
 			{
 				reader = CDatabase.Instance.Execute(modSQL.SelectCollumns());

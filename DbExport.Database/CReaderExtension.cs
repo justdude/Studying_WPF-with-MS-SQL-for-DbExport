@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Data.SqlServerCe;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,7 +10,7 @@ namespace DbExport.Database
 {
 	public static class CReaderExtension
 	{
-		public static string GetClearStr(this SqlDataReader reader, int colIndex)
+		public static string GetClearStr(this SqlCeDataReader reader, int colIndex)
 		{
 			string str = string.Empty;
 			if (!reader.IsDBNull(colIndex))
@@ -25,7 +26,7 @@ namespace DbExport.Database
 			return str;
 		}
 
-		public static string GetStringSafe(this SqlDataReader reader, int colIndex)
+		public static string GetStringSafe(this SqlCeDataReader reader, int colIndex)
 		{
 			if (!reader.IsDBNull(colIndex))
 				return reader.GetString(colIndex);
@@ -33,7 +34,7 @@ namespace DbExport.Database
 				return string.Empty;
 		}
 
-		public static float GetFloatSafe(this SqlDataReader reader, int colIndex)
+		public static float GetFloatSafe(this SqlCeDataReader reader, int colIndex)
 		{
 			if (!reader.IsDBNull(colIndex))
 				return reader.GetFloat(colIndex);
@@ -41,7 +42,7 @@ namespace DbExport.Database
 				return float.NaN;
 		}
 
-		public static int GetIntSafe(this SqlDataReader reader, int colIndex)
+		public static int GetIntSafe(this SqlCeDataReader reader, int colIndex)
 		{
 			if (!reader.IsDBNull(colIndex))
 				return reader.GetInt32(colIndex);
@@ -49,7 +50,7 @@ namespace DbExport.Database
 				return int.MinValue;
 		}
 
-		public static bool GetBoolSafe(this SqlDataReader reader, int colIndex)
+		public static bool GetBoolSafe(this SqlCeDataReader reader, int colIndex)
 		{
 			if (!reader.IsDBNull(colIndex))
 				return reader.GetBoolean(colIndex);
@@ -57,7 +58,7 @@ namespace DbExport.Database
 				return false;
 		}
 
-		public static DateTime GetDateTimeSafe(this SqlDataReader reader, int colIndex)
+		public static DateTime GetDateTimeSafe(this SqlCeDataReader reader, int colIndex)
 		{
 			if (!reader.IsDBNull(colIndex))
 				return reader.GetDateTime(colIndex);

@@ -43,20 +43,20 @@ namespace CRM.Database
 			return @"select * from Conf_Dyn_Tables";
 		}
 
-		public static string InsertTables(CTable table)
+		public static string InsertTable(CTable table)
 		{
 			string query = @"INSERT INTO Conf_Dyn_Tables(Id, Name) VALUES('{0}', '{1}');";
 			return string.Format(query, table.Id, table.Name);
 		}
 
-		public static string UpdateTables(CTable table)
+		public static string UpdateTable(CTable table)
 		{
 			string query = @"UPDATE Conf_Dyn_Tables SET Name='{0}'" 
 				+ " WHERE Id='{1}';";
 			return string.Format(query, table.Name, table.Id);
 		}
 
-		public static string DeleteTables(string id)
+		public static string DeleteTable(string id)
 		{
 			string query = string.Format(@"DELETE from Conf_Dyn_Tables WHERE Id='{0}';", id);
 			return query;
