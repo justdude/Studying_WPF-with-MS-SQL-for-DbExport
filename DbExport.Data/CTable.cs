@@ -13,6 +13,7 @@ namespace DbExport.Data
 {
 	public class CTable : IObjectBase
 	{
+		private string mvName;
 
 		public CTable()
 		{
@@ -24,11 +25,11 @@ namespace DbExport.Data
 		{
 			get
 			{
-				return Data.TableName;
+				return mvName;
 			}
 			set
 			{
-				Data.TableName = value;
+				mvName = value;
 			}
 		}
 		public string Id { get; set; }
@@ -98,6 +99,9 @@ namespace DbExport.Data
 					for (int coll = 0; coll < dataTable.Columns.Count; coll++)
 					{
 						CValue item = collection.FirstOrDefault(p => p.CollumnId == table.Columns[coll].Id);
+
+						if (item == null)
+							continue;
 
 						data[coll] = item.GetValue();
 					}

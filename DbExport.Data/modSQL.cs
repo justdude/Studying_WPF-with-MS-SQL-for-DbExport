@@ -93,5 +93,19 @@ namespace CRM.Database
 			string str = string.Format(@"select * from Conf_Dyn_Values t where t.Id = '{0}'", tableId);
 			return str;
 		}
+
+		public static string SelectCollumns()
+		{
+			string str = @"select * from Conf_Dyn_Properties";
+			return str;
+		}
+
+
+		public static string SelectValues()
+		{
+			string str = @"select * from Conf_Dyn_Values";
+			return str;
+		}
+
 	}
 }

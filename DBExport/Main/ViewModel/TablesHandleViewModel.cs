@@ -115,7 +115,7 @@ namespace DBExport.Main.ViewModel
 			}
 
 			int start = offset;
-			int length = Math.Min(table.Rows.Count - count, start + count);
+			int length = Math.Min(table.Rows.Count, start + count);
 
 			for (int i = start; i < length; i++)
 			{

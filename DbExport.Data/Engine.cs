@@ -38,20 +38,19 @@ namespace DbExport.Data
 		{
 			var list = new List<CTable>();
 
-			var reader = CDatabase.Instance.Execute(modSQL.SelectTables());
+			List<CColumn> columns = LoadCollumns().ToList();
+			List<CValue> rows = LoadValues().ToList();
 
+			var reader = CDatabase.Instance.Execute(modSQL.SelectTables());
 			CTable item = null;
 			try
 			{
 				while (reader.Read())
 				{
 					item = new CTable();
-					item.Id = reader.GetString(0);
-					item.Name = reader.GetStringSafe(1);
+					item.Id = reader.GetClearStr(0);
+					item.Name = reader.GetClearStr(1);
 					item.Status = Status.Normal;
-
-					List<CColumn> columns = LoadCollumns(item.Id).ToList();
-					List<CValue> rows = LoadValues(item.Id).ToList();
 
 					FillBy(item, columns, rows);
 
@@ -71,22 +70,22 @@ namespace DbExport.Data
 			return list;
 		}
 
-		public IEnumerable<CValue> LoadValues(string tableId)
+		public IEnumerable<CValue> LoadValues()
 		{
 			List<CValue> list = new List<CValue>();
 			CValue item = null;
 			SqlDataReader reader = null;
 			try
 			{
-				reader = CDatabase.Instance.Execute(modSQL.SelectValues(tableId));
+				reader = CDatabase.Instance.Execute(modSQL.SelectValues());
 
 				while (reader.Read())
 				{
 					item = new CValue();
-					item.Id = reader.GetString(0);
-					item.TableId = reader.GetString(1);
-					item.CollumnId = reader.GetString(2);
-					item.RowNumb = reader.GetString(3);
+					item.Id = reader.GetClearStr(0);
+					item.TableId = reader.GetClearStr(1);
+					item.CollumnId = reader.GetClearStr(2);
+					item.RowNumb = reader.GetIntSafe(3);
 
 					try
 					{
@@ -112,35 +111,44 @@ namespace DbExport.Data
 				if (reader != null)
 					reader.Close();
 			}
+			finally
+			{
+				if (reader != null && !reader.IsClosed)
+					reader.Close();
+			}
 
 			return list;
 		}
 
-		public IEnumerable<CColumn> LoadCollumns(string tableId)
+		public IEnumerable<CColumn> LoadCollumns()
 		{
 			List<CColumn> list = new List<CColumn>();
 			CColumn item = null;
 			SqlDataReader reader = null;
 			try
 			{
-				reader = CDatabase.Instance.Execute(modSQL.SelectCollumns(tableId));
+				reader = CDatabase.Instance.Execute(modSQL.SelectCollumns());
 
 				while (reader.Read())
 				{
 					item = new CColumn();
-					item.Id = reader.GetString(0);
-					item.CollType = reader.GetString(1);
-					item.TableId = reader.GetString(2);
-					item.Name = reader.GetString(3);
+					item.Id = reader.GetClearStr(0);
+					item.Name = reader.GetClearStr(1);
+					item.CollType = reader.GetClearStr(2);
+					item.TableId = reader.GetClearStr(3);
 					item.Status = Status.Normal;
 
 					list.Add(item);
 				}
 
 			}
-			catch
+			catch (Exception ex)
 			{
-				if (reader != null)
+
+			}
+			finally
+			{
+				if (reader != null && !reader.IsClosed)
 					reader.Close();
 			}
 
@@ -158,6 +166,7 @@ namespace DbExport.Data
 			foreach (var item in table.Rows)
 			{
 				item.Column = table.Columns.FirstOrDefault(p => p.Id == item.CollumnId);
+				item.ValueType = item.Column.GetCollType();
 			}
 		}
 

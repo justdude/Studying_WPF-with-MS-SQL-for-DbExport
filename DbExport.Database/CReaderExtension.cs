@@ -9,6 +9,22 @@ namespace DbExport.Database
 {
 	public static class CReaderExtension
 	{
+		public static string GetClearStr(this SqlDataReader reader, int colIndex)
+		{
+			string str = string.Empty;
+			if (!reader.IsDBNull(colIndex))
+			{
+				str = reader.GetString(colIndex);
+				
+				if (string.IsNullOrWhiteSpace(str))
+					return str;
+
+				str = str.Trim();
+			}
+
+			return str;
+		}
+
 		public static string GetStringSafe(this SqlDataReader reader, int colIndex)
 		{
 			if (!reader.IsDBNull(colIndex))
