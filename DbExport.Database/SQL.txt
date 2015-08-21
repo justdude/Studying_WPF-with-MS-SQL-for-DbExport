@@ -1,0 +1,26 @@
+CREATE TABLE [dbo].[Conf_Dyn_Values] (
+    [Id]       NVARCHAR (50) NOT NULL,
+    [TableId]  NVARCHAR (50) NOT NULL,
+    [CollId]   NVARCHAR (50) NOT NULL,
+    [RowNumb]  INT           NOT NULL,
+    [Float]    FLOAT (53)    NULL,
+    [String]   NTEXT         NULL,
+    [DateTime] DATETIME2 (7) NULL,
+    [Bool]     BIT           DEFAULT ((0)) NULL,
+    [Int]      INT           NULL,
+    PRIMARY KEY CLUSTERED ([Id] ASC)
+);
+
+CREATE TABLE [dbo].[Conf_Dyn_Tables] (
+    [Id]   NVARCHAR (50) NOT NULL,
+    [Name] NVARCHAR (50) NOT NULL,
+    PRIMARY KEY CLUSTERED ([Id] ASC)
+);
+
+CREATE TABLE [dbo].[Conf_Dyn_Properties] (
+    [Id]       NVARCHAR (50) NOT NULL,
+    [Name]     NVARCHAR (50) NOT NULL,
+    [CollType] NCHAR (10)    NOT NULL,
+    [TableId]  NCHAR (10)    NULL,
+    PRIMARY KEY CLUSTERED ([Id] ASC)
+);

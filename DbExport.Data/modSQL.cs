@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DbExport.Data;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -42,7 +43,26 @@ namespace CRM.Database
 			return @"select * from Conf_Dyn_Tables";
 		}
 
-		//public static string InsertEmployes(Employee empl)
+		public static string InsertTables(CTable table)
+		{
+			string query = @"INSERT INTO Conf_Dyn_Tables(Id, Name) VALUES('{0}', '{1}');";
+			return string.Format(query, table.Id, table.Name);
+		}
+
+		public static string UpdateTables(CTable table)
+		{
+			string query = @"UPDATE Conf_Dyn_Tables SET Name='{0}'" 
+				+ " WHERE Id='{1}';";
+			return string.Format(query, table.Name, table.Id);
+		}
+
+		public static string DeleteTables(string id)
+		{
+			string query = string.Format(@"DELETE from Conf_Dyn_Tables WHERE Id='{0}';", id);
+			return query;
+		}
+
+		//public static string InsertEmployee(Employee empl)
 		//{
 		//	string query = @"INSERT INTO Employes(Id,EmployeName,BirthDate,Salary,CountryID) VALUES('{0}', '{1}', '{2}', '{3}', '{4}');";
 		//	return string.Format(query, empl.Id, empl.Name, empl.BirthDate.ToShortDateString(), empl.Salary, empl.CountryID);
@@ -61,25 +81,16 @@ namespace CRM.Database
 		//	return query;
 		//}
 
-
-
-		public static string InsertTable(DbExport.Data.CTable item)
-		{
-			throw new NotImplementedException();
-		}
-
-		internal static string UpdateTable(DbExport.Data.CTable cTable)
-		{
-			throw new NotImplementedException();
-		}
-
-		internal static string DeleteTable(string Id)
-		{
-			throw new NotImplementedException();
-		}
 		#endregion
 
 		#region Collumns
+
+		public static string SelectCollumns()
+		{
+			string str = @"select * from Conf_Dyn_Properties";
+			return str;
+		}
+
 		public static string SelectCollumns(string tableId)
 		{
 			string str = string.Format(@"select * from Conf_Dyn_Properties t where t.Id = '{0}'", tableId);
@@ -93,13 +104,6 @@ namespace CRM.Database
 			string str = string.Format(@"select * from Conf_Dyn_Values t where t.Id = '{0}'", tableId);
 			return str;
 		}
-
-		public static string SelectCollumns()
-		{
-			string str = @"select * from Conf_Dyn_Properties";
-			return str;
-		}
-
 
 		public static string SelectValues()
 		{
