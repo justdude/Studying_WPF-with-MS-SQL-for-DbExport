@@ -12,6 +12,9 @@ using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using DBExport.Helpers;
 using DBExport.Common.MVVM;
+using System.Windows.Threading;
+using System.Threading;
+using System.Windows;
 //using Microsoft.Practices.Prism.Commands;
 //using Microsoft.Practices.Prism.Mvvm;
 
@@ -45,6 +48,11 @@ namespace DBExport.Main.ViewModel
 			mvSettingShowCommand = new RelayCommand(SettingShow, CanShowSettings);
 			//eventAggregator.GetEvent<StateChangedEvent>().Subscribe(OnDataChanged);
 			//eventAggregator.GetEvent<ItemChangedEvent>().Subscribe(OnSelectedChanged, ThreadOption.PublisherThread, true, Filter);
+			OnDispatcherChanged += OnDispatcherChange;
+		}
+
+		private void OnDispatcherChange(System.Windows.Threading.Dispatcher obj)
+		{
 			LoadData();
 		}
 
@@ -81,8 +89,8 @@ namespace DBExport.Main.ViewModel
 			}
 		}
 
-		public bool IsLoading 
-		{ 
+		public bool IsLoading
+		{
 			get
 			{
 				return mvIsLoading;
@@ -303,21 +311,28 @@ namespace DBExport.Main.ViewModel
 
 			Tables.Clear();
 
-			base.BeginInvoke(System.Windows.Threading.DispatcherPriority.Background, BeginInvokeLoading);
-		}
+			IEnumerable<TableViewModel> tables = null;
 
-		private void BeginInvokeLoading()
-		{
-			var tables = Engine.Instance.LoadTables().Select(p => new TableViewModel(p));
-
-			foreach (var item in tables)
+			ThreadPool.QueueUserWorkItem(new WaitCallback((par) =>
 			{
-				Tables.Add(item);
-			}
+				tables = Engine.Instance.LoadTables().Select(p => new TableViewModel(p));
 
-			IsEnabled = true;
-			IsLoading = false;
+				Application.Current.Dispatcher.Invoke(() =>
+				{
+					foreach (var item in tables)
+					{
+						Tables.Add(item);
+					}
+
+					IsEnabled = true;
+					IsLoading = false;
+					
+					RaiseRefresh();
+
+				}, DispatcherPriority.Normal);
+			}));
 		}
+
 
 		private void LoadTable(TableViewModel target)
 		{
@@ -426,10 +441,19 @@ namespace DBExport.Main.ViewModel
 			}
 
 			//SelectedTable.Current.CountryID = SelectedCountry.Current.Id;
-			SelectedTable.Current.Save();
-			SelectedTable = null;
+			ThreadPool.QueueUserWorkItem(new WaitCallback((par) =>
+			{
+				SelectedTable.Current.Save();
 
-			RaiseRefresh();
+				Application.Current.Dispatcher.Invoke(() =>
+				{
+					SelectedTable = null;
+
+					RaiseRefresh();
+
+				}, DispatcherPriority.Normal);
+			}));
+
 		}
 
 		private void OnDeleteSelected()
@@ -468,7 +492,37 @@ namespace DBExport.Main.ViewModel
 
 		private void SettingShow()
 		{
-			CWindowHelper.ShowEmployeWindow(SelectedTable.Current, null);
+			ChangeState(true);
+
+			CWindowHelper.ShowEmployeWindow(SelectedTable.Current, null, OnSettingsTypesClosed);
+		}
+
+		private void OnSettingsTypesClosed()
+		{
+			ThreadPool.QueueUserWorkItem(new WaitCallback((par) =>
+			{
+				try
+				{
+					SelectedTable.Current.Rows.Clear();
+					SelectedTable.Current.Columns.Clear();
+					CTable.FillColumns(SelectedTable.Current.Data, SelectedTable.Current);
+					CTable.FillRows(SelectedTable.Current.Data, SelectedTable.Current);
+				}
+				catch (Exception ex)
+				{ }
+
+				ChangeState(false);
+			}));
+		}
+
+		private void ChangeState(bool isLoading)
+		{
+			BeginInvoke(DispatcherPriority.Normal, () =>
+			{
+				IsEnabled = !isLoading;
+				IsLoading = isLoading;
+				RaiseRefresh();
+			});
 		}
 
 		#endregion

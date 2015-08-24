@@ -83,6 +83,17 @@ namespace DbExport.Database
 			{}
 		}
 
+
+		public SqlCeTransaction BeginTransaction()
+		{
+			OpenIfClosed();
+
+			if (modConnection == null)
+				return null;
+
+			return modConnection.BeginTransaction();
+		}
+
 		public bool ExecuteNonQuery(string command)
 		{
 			SqlCeCommand cmd = null;
@@ -104,6 +115,33 @@ namespace DbExport.Database
 			{
 				if (modConnection!=null)
 					modConnection.Close();
+			}
+			return res == 1;
+		}
+
+		public bool ExecuteNonQuery(string command, SqlCeTransaction tr)
+		{
+			if (tr == null)
+				throw new ArgumentNullException();
+
+			SqlCeCommand cmd = null;
+			int res = 0;
+
+			try
+			{
+				if (modConnection.State == System.Data.ConnectionState.Closed)
+					modConnection.Open();
+				cmd = new SqlCeCommand(command, modConnection, tr);
+
+				res = cmd.ExecuteNonQuery();
+			}
+			catch (Exception ex)
+			{
+
+			}
+			finally
+			{
+
 			}
 			return res == 1;
 		}

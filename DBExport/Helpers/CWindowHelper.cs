@@ -10,7 +10,7 @@ namespace DBExport.Helpers
 {
 	public class CWindowHelper
 	{
-		public static void ShowEmployeWindow(CTable table, Func<object, bool> checkRightColl)
+		public static void ShowEmployeWindow(CTable table, Func<object, bool> checkRightColl, Action onWindowClosed)
 		{
 			var wind = new wndSetTypes();
 			//wind.Owner = App.Current.MainWindow;
@@ -22,8 +22,14 @@ namespace DBExport.Helpers
 			//};
 			wind.DataContext = new Settings.ViewModel.TableSettingViewModel(table, checkRightColl) 
 			{ 
-				Token = wind.Token 
+				Token = wind.Token,
 			};
+			wind.Closed += (p, v) =>
+				{
+					if (onWindowClosed != null)
+						onWindowClosed();
+				};
+			
 			wind.Show();
 		}
 

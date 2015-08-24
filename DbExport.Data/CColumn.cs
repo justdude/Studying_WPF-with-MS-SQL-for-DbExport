@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using DbExport.Database;
 using CRM.Database;
+using System.Data.SqlServerCe;
 
 namespace DbExport.Data
 {
@@ -19,7 +20,7 @@ namespace DbExport.Data
 
 		#region IObjectBase
 
-		public override bool Save()
+		public override bool Save(SqlCeTransaction tr)
 		{
 			bool res = true;
 
@@ -30,7 +31,7 @@ namespace DbExport.Data
 				{
 					case Status.Added:
 						this.Id = Generator.GenerateID();
-						res = AddValue(this);
+						res = AddValue(this, tr);
 						Status = Common.Interfaces.Status.Normal;
 						break;
 					case Status.Normal:
@@ -60,10 +61,10 @@ namespace DbExport.Data
 			return res;
 		}
 
-		private bool AddValue(CColumn item)
+		private bool AddValue(CColumn item, SqlCeTransaction tr)
 		{
 			string str = modSQL.InsertColumn(item);
-			return CDatabase.Instance.ExecuteNonQuery(str);
+			return CDatabase.Instance.ExecuteNonQuery(str, tr);
 		}
 
 		private bool UpdateValue(CColumn item)
@@ -85,8 +86,54 @@ namespace DbExport.Data
 			return type;
 		}
 
+		public void SetType(Type type)
+		{
+			this.CollType = GetType(type);
+		}
+
+		public static string GetType(Type type)
+		{ 
+			if (type == null)
+				return Constants.CollumnTypes.StringType;
+
+			switch (Type.GetTypeCode(type))
+			{
+				case TypeCode.Boolean:
+					return Constants.CollumnTypes.BoolType;
+				case TypeCode.DateTime:
+					return Constants.CollumnTypes.DateTimeType;
+				case TypeCode.Int32:
+					return Constants.CollumnTypes.IntType;
+				case TypeCode.String:
+					return Constants.CollumnTypes.StringType;
+				case TypeCode.Single:
+					return Constants.CollumnTypes.FloatType;
+
+				case TypeCode.Byte:
+				case TypeCode.Char:
+				case TypeCode.DBNull:
+				case TypeCode.Decimal:
+				case TypeCode.Double:
+				case TypeCode.Empty:
+				case TypeCode.Int16:
+				case TypeCode.Int64:
+				case TypeCode.Object:
+				case TypeCode.SByte:
+				case TypeCode.UInt16:
+				case TypeCode.UInt32:
+				case TypeCode.UInt64:
+				default:
+					break;
+			}
+
+			return Constants.CollumnTypes.StringType;;
+		}
+
 		public static Type GetType(string strTypeName)
 		{
+			if (string.IsNullOrWhiteSpace(strTypeName))
+				return typeof(string);
+
 			switch (strTypeName)
 			{
 				case CollumnTypes.BoolType:

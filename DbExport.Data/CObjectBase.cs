@@ -62,5 +62,15 @@ namespace DbExport.Data
 		}
 
 		#endregion
+
+		#region Члены IObjectBase
+
+
+		public virtual bool Save(System.Data.SqlServerCe.SqlCeTransaction tr)
+		{
+			throw new NotImplementedException();
+		}
+
+		#endregion
 	}
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Data.SqlServerCe;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,7 +12,7 @@ namespace DbExport.Data
 	public static class CObjectBaseExtension
 	{
 
-		public static bool SaveList<T>(this IEnumerable<T> items, Status status) where T : IObjectBase
+		public static bool SaveList<T>(this IEnumerable<T> items, Status status, SqlCeTransaction tr) where T : IObjectBase
 		{ 
 			bool res = true;
 			try
@@ -19,7 +20,7 @@ namespace DbExport.Data
 				foreach (var item in items)
 				{
 					item.Status = status;
-					res &= item.Save();
+					res &= item.Save(tr);
 				}
 			}
 			catch (Exception)

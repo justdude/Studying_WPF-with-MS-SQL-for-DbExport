@@ -16,6 +16,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using DBExport.Main.ViewModel;
+using DBExport.Common.MVVM;
 
 namespace DBExport.Main
 {
@@ -30,11 +31,19 @@ namespace DBExport.Main
 			this.Loaded += ctrMainWindow_Loaded;
 		}
 
+		public string Token
+		{
+			get
+			{
+				return ControlBehavior.GetToken(this);
+			}
+		}
+
 		void ctrMainWindow_Loaded(object sender, RoutedEventArgs e)
 		{
 			var viewModel = new TablesHandleViewModel();
 			viewModel.Disp = this.Dispatcher;
-
+			
 			DataContext = viewModel;
 		}
 

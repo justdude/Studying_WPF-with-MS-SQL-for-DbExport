@@ -8,6 +8,7 @@ using CRM.Database;
 using DbExport.Common.Interfaces;
 using DbExport.Database;
 using DbExport.Data.Constants;
+using System.Data.SqlServerCe;
 
 namespace DbExport.Data
 {
@@ -109,7 +110,7 @@ namespace DbExport.Data
 					newRow.ItemArray = data;
 				}
 			}
-			catch(Exception ex)
+			catch (Exception ex)
 			{
 
 			}
@@ -118,7 +119,7 @@ namespace DbExport.Data
 			return dataTable;
 		}
 
-		
+
 		public static CTable ToDbTable(DataTable dataTable)
 		{
 			if (dataTable == null)
@@ -142,7 +143,7 @@ namespace DbExport.Data
 
 		}
 
-		private static void FillRows(DataTable dataTable, CTable table)
+		public static void FillRows(DataTable dataTable, CTable table)
 		{
 			try
 			{
@@ -155,6 +156,7 @@ namespace DbExport.Data
 						value = new CValue();
 						value.Id = Generator.GenerateID();
 						value.TableId = table.Id;
+						value.CollumnId = table.Columns[coll].Id;
 
 						value.SetValue(dataTable.Rows[row].ItemArray[coll]);
 
@@ -171,7 +173,7 @@ namespace DbExport.Data
 			{ }
 		}
 
-		private static void FillColumns(DataTable dataTable, CTable table)
+		public static void FillColumns(DataTable dataTable, CTable table)
 		{
 			try
 			{
@@ -182,7 +184,7 @@ namespace DbExport.Data
 					coll.TableId = table.Id;
 
 					coll.Name = dataTable.Columns[i].ColumnName;
-					coll.CollType = null;
+					coll.SetType(dataTable.Columns[i].DataType);
 
 					coll.Status = Status.Added;
 
@@ -199,42 +201,56 @@ namespace DbExport.Data
 		public override bool Save()
 		{
 			bool res = true;
+			SqlCeTransaction tr = null;
 
-			//save this
-			switch (Status)
+			try
 			{
-				case Status.Added:
-					this.Id = Generator.GenerateID();
-					res = AddTable(this);
-					break;
-				case Status.Normal:
-					break;
-				//case Status.Updated:
-				//	res = UpdateTable(this);
-				//	break;
-				//case Status.Deleted:
-				//	res = DeleteTable(this);
-				//break;
-				default:
-					Status = Common.Interfaces.Status.Normal;
-					break;
+				tr = CDatabase.Instance.BeginTransaction();
+
+				//save this
+				switch (Status)
+				{
+					case Status.Added:
+						this.Id = Generator.GenerateID();
+						res = AddTable(this, tr);
+						break;
+					case Status.Normal:
+						break;
+					//case Status.Updated:
+					//	res = UpdateTable(this);
+					//	break;
+					//case Status.Deleted:
+					//	res = DeleteTable(this);
+					//break;
+					default:
+						Status = Common.Interfaces.Status.Normal;
+						break;
+				}
+				res &= Columns.SaveList(Status, tr);
+				res &= Rows.SaveList(Status, tr);
+			}
+			catch (Exception ex)
+			{
+				
 			}
 
 			if (res)
 			{
 				Status = Common.Interfaces.Status.Normal;
+				tr.Commit(CommitMode.Immediate);
 			}
-
-			res &= Columns.SaveList(Status);
-			res &= Rows.SaveList(Status);
+			else
+			{
+				tr.Rollback();				
+			}
 
 			return true;
 		}
 
-		private bool AddTable(CTable item)
+		private bool AddTable(CTable item, SqlCeTransaction tr)
 		{
 			string str = modSQL.InsertTable(item);
-			return CDatabase.Instance.ExecuteNonQuery(str);
+			return CDatabase.Instance.ExecuteNonQuery(str, tr);
 		}
 
 		private bool UpdateTable(CTable item)
@@ -252,7 +268,7 @@ namespace DbExport.Data
 		#endregion
 
 		#region Table init
-		
+
 		public static CTable Create(DataTable data)
 		{
 			return CTable.ToDbTable(data);
