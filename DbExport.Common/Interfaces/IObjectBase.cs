@@ -16,6 +16,7 @@ namespace DbExport.Common.Interfaces
 
 	public interface IObjectBase
 	{
+		string Id { get; set; }
 		Status Status { get; set; }
 		bool Save();
 	}

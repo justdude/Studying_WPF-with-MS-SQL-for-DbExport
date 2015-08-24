@@ -5,28 +5,80 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DbExport.Database;
+using CRM.Database;
 
 namespace DbExport.Data
 {
-	public class CColumn : IObjectBase
+	public class CColumn : CObjectBase
 	{
-		public string Id { get; set; }
 		public string Name { get; set; }
 		public string TableId { get; set; }
 
 		public string CollType { get; set; }
 
-		public Status Status
+		#region IObjectBase
+
+		public override bool Save()
 		{
-			get;
-			set;
+			bool res = true;
+
+			try
+			{
+				//save this
+				switch (Status)
+				{
+					case Status.Added:
+						this.Id = Generator.GenerateID();
+						res = AddValue(this);
+						Status = Common.Interfaces.Status.Normal;
+						break;
+					case Status.Normal:
+						break;
+					case Status.Updated:
+						res = UpdateValue(this);
+						Status = Common.Interfaces.Status.Normal;
+						break;
+					case Status.Deleted:
+						res = DeleteValue(this.Id);
+						break;
+					default:
+						Status = Common.Interfaces.Status.Normal;
+						break;
+				}
+			}
+			catch (Exception ex)
+			{
+				res = false;
+			}
+
+			if (res)
+			{
+				Status = Common.Interfaces.Status.Normal;
+			}
+
+			return res;
 		}
 
-		public bool Save()
+		private bool AddValue(CColumn item)
 		{
-			throw new NotImplementedException();
+			string str = modSQL.InsertColumn(item);
+			return CDatabase.Instance.ExecuteNonQuery(str);
 		}
 
+		private bool UpdateValue(CColumn item)
+		{
+			string str = modSQL.UpdateColumn(item);
+			return CDatabase.Instance.ExecuteNonQuery(str);
+		}
+
+		private bool DeleteValue(string id)
+		{
+			string str = modSQL.DeleteColumn(id);
+			return CDatabase.Instance.ExecuteNonQuery(str);
+		}
+
+		#endregion
 		public Type GetCollType()
 		{
 			Type type = GetType(this.CollType);

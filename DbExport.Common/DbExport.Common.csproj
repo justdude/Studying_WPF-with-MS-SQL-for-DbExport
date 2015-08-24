@@ -81,6 +81,7 @@
     <Compile Include="Messages\CloseWindowMessage.cs" />
     <Compile Include="Messages\MessageExtended.cs" />
     <Compile Include="MVVM\ControlBehavior.cs" />
+    <Compile Include="MVVM\ViewModel.cs" />
     <Compile Include="MVVM\ViewModelExtended.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>

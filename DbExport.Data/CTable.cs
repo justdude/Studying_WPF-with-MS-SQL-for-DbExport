@@ -11,7 +11,7 @@ using DbExport.Data.Constants;
 
 namespace DbExport.Data
 {
-	public class CTable : IObjectBase
+	public class CTable : CObjectBase
 	{
 		private string mvName;
 
@@ -32,7 +32,6 @@ namespace DbExport.Data
 				mvName = value;
 			}
 		}
-		public string Id { get; set; }
 
 		public DataTable Data { get; set; }
 
@@ -197,9 +196,7 @@ namespace DbExport.Data
 
 		#region Члены IObjectBase
 
-		public Status Status { get; set; }
-
-		public bool Save()
+		public override bool Save()
 		{
 			bool res = true;
 
@@ -221,6 +218,11 @@ namespace DbExport.Data
 				default:
 					Status = Common.Interfaces.Status.Normal;
 					break;
+			}
+
+			if (res)
+			{
+				Status = Common.Interfaces.Status.Normal;
 			}
 
 			res &= Columns.SaveList(Status);
@@ -250,14 +252,12 @@ namespace DbExport.Data
 		#endregion
 
 		#region Table init
+		
 		public static CTable Create(DataTable data)
 		{
-			CTable table = new CTable();
-			table.Id = Database.Generator.GenerateID();
-			table.Data = data;
-
-			return table;
+			return CTable.ToDbTable(data);
 		}
+
 		#endregion
 
 		public void LoadData()

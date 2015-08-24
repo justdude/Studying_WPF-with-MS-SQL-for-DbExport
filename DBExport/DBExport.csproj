@@ -96,6 +96,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Helpers\CWindowHelper.cs" />
+    <Compile Include="Main\ViewModel\ViewModelExtnded.cs" />
     <Compile Include="Settings\TableSettingItemViewModel.cs" />
     <Compile Include="Settings\TableSettingViewModel.cs" />
     <Compile Include="Windows\wndSetTypes.xaml.cs">

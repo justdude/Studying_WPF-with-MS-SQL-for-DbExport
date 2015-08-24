@@ -9,33 +9,6 @@ namespace CRM.Database
 {
 	public static class modSQL
 	{
-		#region Country
-
-		//public static string SelectCountryes()
-		//{
-		//	return @"select * from Countryes";
-		//}
-
-		//public static string InsertCountry(Country c)
-		//{
-		//	string query = @"INSERT INTO Countryes(Id,CountryName) VALUES('{0}', '{1}');";
-		//	return string.Format(query, c.Id, c.Name);
-		//}
-
-		//public static string UpdateCountry(Country c)
-		//{
-		//	string query = @"UPDATE Countryes SET City='{0}' WHERE Id='{1}';";
-		//	return string.Format(query, c.Name, c.Id);
-		//}
-
-		//public static string DeleteCountry(string id)
-		//{
-		//	string query = string.Format(@"DELETE from Countryes WHERE Id='{0}';", id);
-		//	return query;
-		//}
-
-		#endregion
-
 		#region Tables
 
 		public static string SelectTables()
@@ -62,28 +35,51 @@ namespace CRM.Database
 			return query;
 		}
 
-		//public static string InsertEmployee(Employee empl)
-		//{
-		//	string query = @"INSERT INTO Employes(Id,EmployeName,BirthDate,Salary,CountryID) VALUES('{0}', '{1}', '{2}', '{3}', '{4}');";
-		//	return string.Format(query, empl.Id, empl.Name, empl.BirthDate.ToShortDateString(), empl.Salary, empl.CountryID);
-		//}
-
-		//public static string UpdateEmployes(Employee empl)
-		//{
-		//	string query = @"UPDATE Employes SET EmployeName='{0}',BirthDate='{1}',Salary='{2}',CountryID='{3}'" 
-		//		+ " WHERE Id='{4}';";
-		//	return string.Format(query, empl.Name, empl.BirthDate.ToShortDateString(), empl.Salary, empl.CountryID, empl.Id);
-		//}
-
-		//public static string DeleteEmployes(string id)
-		//{
-		//	string query = string.Format(@"DELETE from Employes WHERE Id='{0}';", id);
-		//	return query;
-		//}
-
 		#endregion
 
-		#region Collumns
+		#region Values
+		public static string SelectValues(string tableId)
+		{
+			string str = string.Format(@"select * from Conf_Dyn_Values t where t.Id = '{0}'", tableId);
+			return str;
+		}
+
+		public static string SelectValues()
+		{
+			string str = @"select * from Conf_Dyn_Values";
+			return str;
+		}
+
+		public static string DeleteValue(string id)
+		{
+			string str = @"DELETE FROM Conf_Dyn_Values
+							Where Id='{0}'";
+
+			return string.Format(str, id);
+		}
+
+		public static string UpdateValue(CValue item)
+		{
+			string str = @"UPDATE Conf_Dyn_Values 
+							SET TableId ='{0}', CollId ='{1}', RowNumb ='{2}', 
+							Float ='{3}', String ='{4}', DateTime ='{5}', Bool ='{6}', Int ='{7}'
+							Where Id='{8}'";
+
+			return string.Format(str, item.TableId, item.CollumnId, item.RowNumb,
+								 item.FloatValue, item.StrValue, item.DateValue, item.BoolValue, item.IntValue, item.Id);
+		}
+
+		public static string InsertValue(CValue item)
+		{
+			string str = @"INSERT INTO Conf_Dyn_Values(Id, TableId, CollId, 
+					RowNumb, Float, String, DateTime, Bool, Int) VALUES({0},{1},{2},{3},{4},{5},{6},{7},{8})";
+
+			return string.Format(str, item.Id, item.TableId, item.CollumnId, item.RowNumb, 
+								 item.FloatValue, item.StrValue, item.DateValue, item.BoolValue, item.IntValue);
+		}
+		#endregion
+
+		#region Columns
 
 		public static string SelectCollumns()
 		{
@@ -97,19 +93,31 @@ namespace CRM.Database
 			return str;
 		}
 
+		public static string DeleteColumn(string id)
+		{
+			string str = @"DELETE FROM Conf_Dyn_Properties
+							Where Id='{0}'";
+
+			return string.Format(str, id);
+		}
+
+		public static string UpdateColumn(CColumn item)
+		{
+			string str = @"UPDATE Conf_Dyn_Properties(Name, CollType, TableId) 
+							Set('{0}','{1}','{2}')
+							Where Id='{3}'";
+
+			return string.Format(str, item.Id, item.Name, item.CollType, item.TableId, item.Id);
+		}
+
+		public static string InsertColumn(CColumn item)
+		{
+			string str = @"INSERT INTO Conf_Dyn_Properties(Id, Name, CollType, TableId) 
+							VALUES('{0}','{1}','{2}','{3}')";
+
+			return string.Format(str, item.Id, item.Name, item.CollType, item.TableId, item.Id);
+		}
+
 		#endregion
-
-		public static string SelectValues(string tableId)
-		{
-			string str = string.Format(@"select * from Conf_Dyn_Values t where t.Id = '{0}'", tableId);
-			return str;
-		}
-
-		public static string SelectValues()
-		{
-			string str = @"select * from Conf_Dyn_Values";
-			return str;
-		}
-
 	}
 }

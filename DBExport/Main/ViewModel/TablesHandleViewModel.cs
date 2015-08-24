@@ -11,12 +11,13 @@ using DbExport.Data;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using DBExport.Helpers;
+using DBExport.Common.MVVM;
 //using Microsoft.Practices.Prism.Commands;
 //using Microsoft.Practices.Prism.Mvvm;
 
 namespace DBExport.Main.ViewModel
 {
-	public class TablesHandleViewModel : ViewModelBase
+	public class TablesHandleViewModel : ViewModelExtended
 	{
 		private readonly RelayCommand mvAddCommand;
 		private readonly RelayCommand mvEditCommand;
@@ -302,6 +303,11 @@ namespace DBExport.Main.ViewModel
 
 			Tables.Clear();
 
+			base.BeginInvoke(System.Windows.Threading.DispatcherPriority.Background, BeginInvokeLoading);
+		}
+
+		private void BeginInvokeLoading()
+		{
 			var tables = Engine.Instance.LoadTables().Select(p => new TableViewModel(p));
 
 			foreach (var item in tables)

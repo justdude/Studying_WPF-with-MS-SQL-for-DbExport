@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CRM.Database;
 using DbExport.Common.Interfaces;
+using DbExport.Database;
 
 namespace DbExport.Data
 {
@@ -17,7 +19,7 @@ namespace DbExport.Data
 		DateTime
 	}
 
-	public class CValue: IObjectBase
+	public class CValue : CObjectBase
 	{
 		public string Id { get; set; }
 		public string CollumnId { get; set; }
@@ -36,15 +38,63 @@ namespace DbExport.Data
 
 		#region Члены IObjectBase
 
-		public Status Status
+		public override bool Save()
 		{
-			get;
-			set;
+			bool res = true;
+
+			try
+			{
+				//save this
+				switch (Status)
+				{
+					case Status.Added:
+						this.Id = Generator.GenerateID();
+						res = AddValue(this);
+						Status = Common.Interfaces.Status.Normal;
+						break;
+					case Status.Normal:
+						break;
+					case Status.Updated:
+						res = UpdateValue(this);
+						Status = Common.Interfaces.Status.Normal;
+						break;
+					case Status.Deleted:
+						res = DeleteValue(this.Id);
+						break;
+					default:
+						Status = Common.Interfaces.Status.Normal;
+						break;
+				}
+			}
+			catch (Exception ex)
+			{
+				res = false;
+			}
+
+			if (res)
+			{
+				Status = Common.Interfaces.Status.Normal;
+			}
+
+			return res;
 		}
 
-		public bool Save()
+		private bool AddValue(CValue item)
 		{
-			throw new NotImplementedException();
+			string str = modSQL.InsertValue(item);
+			return CDatabase.Instance.ExecuteNonQuery(str);
+		}
+
+		private bool UpdateValue(CValue item)
+		{
+			string str = modSQL.UpdateValue(item);
+			return CDatabase.Instance.ExecuteNonQuery(str);
+		}
+
+		private bool DeleteValue(string id)
+		{
+			string str = modSQL.DeleteValue(id);
+			return CDatabase.Instance.ExecuteNonQuery(str);
 		}
 
 		#endregion
