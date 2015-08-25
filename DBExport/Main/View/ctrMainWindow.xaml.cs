@@ -41,10 +41,7 @@ namespace DBExport.Main
 
 		void ctrMainWindow_Loaded(object sender, RoutedEventArgs e)
 		{
-			var viewModel = new TablesHandleViewModel();
-			viewModel.Disp = this.Dispatcher;
-			
-			DataContext = viewModel;
+
 		}
 
 		private void Button_Click(object sender, RoutedEventArgs e)

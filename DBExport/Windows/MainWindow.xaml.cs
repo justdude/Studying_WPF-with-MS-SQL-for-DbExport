@@ -1,4 +1,5 @@
 ﻿using DBExport.Common.MVVM;
+using DBExport.Main.ViewModel;
 using GalaSoft.MvvmLight.Messaging;
 using MahApps.Metro.Controls;
 using System;
@@ -38,6 +39,11 @@ namespace DBExport
 		void MainWindow_Loaded(object sender, RoutedEventArgs e)
 		{
 			Messenger.Default.Register<DBExport.Common.Messages.CloseWindowMessage>(Token, OnWindowClose);
+
+			var viewModel = new TablesHandleViewModel();
+			viewModel.Disp = this.Dispatcher;
+
+			DataContext = viewModel;
 		}
 
 		private void OnWindowClose(Common.Messages.CloseWindowMessage obj)

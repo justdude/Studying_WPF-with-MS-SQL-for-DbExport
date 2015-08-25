@@ -23,7 +23,10 @@
 		<main:ctrMainWindow Grid.Row="0"></main:ctrMainWindow>
 		<StatusBar Grid.Row="1">
 			<StatusBarItem>
-				<TextBlock Text="Info"></TextBlock>
+				<StackPanel Orientation="Horizontal">
+					<Controls:ProgressRing IsActive="{Binding IsLoading}" Width="10" Height="10" Foreground="White"/>
+				<TextBlock Margin="8 0 0 0" Text="{Binding StateText}"></TextBlock>
+				</StackPanel>
 			</StatusBarItem>
 		</StatusBar>
 	</Grid>

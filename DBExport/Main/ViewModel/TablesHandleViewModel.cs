@@ -30,6 +30,8 @@ namespace DBExport.Main.ViewModel
 		private readonly RelayCommand mvRefreshCommand;
 		private readonly RelayCommand mvCloseCommand;
 		private readonly RelayCommand mvSettingShowCommand;
+		private readonly RelayCommand mvSetMergeCommand;
+
 		private bool mvIsBlocked;
 		private bool mvIsHasError;
 		private TableViewModel mvSelectedTable;
@@ -47,6 +49,7 @@ namespace DBExport.Main.ViewModel
 			mvRefreshCommand = new RelayCommand(OnRefresh, CanRefresh);
 			mvCloseCommand = new RelayCommand(OnClose);
 			mvSettingShowCommand = new RelayCommand(SettingShow, CanShowSettings);
+			mvSetMergeCommand = new RelayCommand(SetMerge, CanMerge);
 			//eventAggregator.GetEvent<StateChangedEvent>().Subscribe(OnDataChanged);
 			//eventAggregator.GetEvent<ItemChangedEvent>().Subscribe(OnSelectedChanged, ThreadOption.PublisherThread, true, Filter);
 			OnDispatcherChanged += OnDispatcherChange;
@@ -295,6 +298,14 @@ namespace DBExport.Main.ViewModel
 			}
 		}
 
+		public RelayCommand SetMergeCommand
+		{
+			get
+			{
+				return mvSetMergeCommand;
+			}
+		}
+		
 		#endregion
 
 
@@ -376,6 +387,7 @@ namespace DBExport.Main.ViewModel
 			AddCommand.RaiseCanExecuteChanged();
 			CloseCommand.RaiseCanExecuteChanged();
 			SettingShowCommand.RaiseCanExecuteChanged();
+			SetMergeCommand.RaiseCanExecuteChanged();
 		}
 
 		private bool CanRefresh()
@@ -406,6 +418,11 @@ namespace DBExport.Main.ViewModel
 		private bool CanAdd()
 		{
 			return IsEnabled;
+		}
+
+		private bool CanMerge()
+		{
+			return IsEnabled && !IsCreate && IsSelected;
 		}
 
 		private void OnClose()
@@ -510,6 +527,11 @@ namespace DBExport.Main.ViewModel
 			}));
 
 		}
+
+		private void SetMerge()
+		{
+		}
+
 
 		private void OnEdit()
 		{

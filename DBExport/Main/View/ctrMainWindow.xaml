@@ -103,23 +103,30 @@
 
 		<TextBlock>Select table</TextBlock>
 		<TextBlock Grid.Column="2">Table data</TextBlock>
+		<Border
+			BorderBrush="Black"
+			BorderThickness="1"
+			Grid.Column="0" 
+			Grid.Row="1"
+			Grid.RowSpan="1"
+			Margin="5 5 0 5"
+			HorizontalAlignment="Stretch"
+			VerticalAlignment="Stretch">
 
-		<ListBox Name="lstBoxTables"
-				 Grid.Column="0" 
-				 Grid.Row="1"
-				 Grid.RowSpan="1"
-				 HorizontalAlignment="Stretch"
-				 VerticalAlignment="Stretch"
+			<ListBox Name="lstBoxTables"
+				
 				 SelectedItem="{Binding SelectedTable}"
-				 ItemsSource="{Binding Tables}" Margin="10 5 10 10">
-			<ListBox.ItemTemplate>
-				<DataTemplate>
-					<StackPanel Orientation="Horizontal">
-						<TextBlock Text="{Binding Name}"></TextBlock>
-					</StackPanel>
-				</DataTemplate>
-			</ListBox.ItemTemplate>	
-		</ListBox>
+				 ItemsSource="{Binding Tables}" Margin="5">
+				<ListBox.ItemTemplate>
+					<DataTemplate>
+						<StackPanel Orientation="Horizontal">
+							<TextBlock Text="{Binding Name}"></TextBlock>
+						</StackPanel>
+					</DataTemplate>
+				</ListBox.ItemTemplate>
+			</ListBox>
+
+		</Border>
 
 		<GridSplitter Grid.Row="0"
 					  Grid.Column="1"
@@ -176,7 +183,7 @@
 					VerticalAlignment="Center" HorizontalAlignment="Left"
 					Margin="5 0 0 0"
 					Orientation="Horizontal">
-			<CheckBox Name="chkIsMerge" Command="{Binding SetMerge}" 
+			<CheckBox Name="chkIsMerge" Command="{Binding SetMergeCommand}" 
 					  IsChecked="{Binding IsMerge}" 
 					  Content="IsMerge"></CheckBox>
 			<ComboBox IsEnabled="{Binding ElementName=chkIsMerge, Path=IsChecked}" 
