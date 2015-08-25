@@ -187,7 +187,10 @@
 					VerticalAlignment="Center" HorizontalAlignment="Left"
 					Margin="5 0 0 0"
 					Orientation="Horizontal">
-			<CheckBox Name="chkIsMerge" Command="{Binding SetMergeCommand}" 
+			<Button Name="btnMerge" Command="{Binding SetMergeCommand}" 
+					  Content="Append data"></Button>
+			<Ellipse Fill="#FFE1B631" />
+			<!--<CheckBox Name="chkIsMerge" Command="{Binding SetMergeCommand}" 
 					  IsChecked="{Binding IsMerge}" 
 					  Content="IsMerge"></CheckBox>
 			<ComboBox IsEnabled="{Binding ElementName=chkIsMerge, Path=IsChecked}" 
@@ -201,7 +204,7 @@
 						<TextBlock Text="{Binding Name}"></TextBlock>
 					</DataTemplate>
 				</ComboBox.ItemTemplate>
-			</ComboBox>
+			</ComboBox>-->
 		</StackPanel>
 
 		<StackPanel Grid.Column="2" Grid.Row="3" 
