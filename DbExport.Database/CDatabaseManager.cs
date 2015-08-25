@@ -146,6 +146,5 @@ namespace DbExport.Database
 			return res == 1;
 		}
 
-
 	}
 }

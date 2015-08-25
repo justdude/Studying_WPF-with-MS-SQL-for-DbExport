@@ -42,7 +42,7 @@ namespace DbExport.Data
 		public CTable CreateDummy()
 		{
 			CTable table = new CTable();
-			table.Id = Generator.GenerateID();
+			table.Id = Generator.GenerateID(CConstants.TB);
 			table.Name = "Table" + DateTime.Now.Minute;
 
 			table.Columns = new List<CColumn>();
@@ -51,7 +51,7 @@ namespace DbExport.Data
 			for (int i = 0; i < Types.Length; i++)
 			{
 				var coll = new CColumn();
-				coll.Id = Generator.GenerateID();
+				coll.Id = Generator.GenerateID(CConstants.COLL);
 				coll.TableId = table.Id;
 
 				coll.Name = "Coll" + i;
@@ -66,7 +66,7 @@ namespace DbExport.Data
 				{
 					//table.Columns[i]
 					CValue value = new CValue();
-					value.Id = Generator.GenerateID();
+					value.Id = Generator.GenerateID(CConstants.ROW);
 					value.TableId = table.Id;
 
 					//value.SetValue((object)nul);
@@ -127,7 +127,7 @@ namespace DbExport.Data
 
 			CTable table = new CTable();
 
-			table.Id = Generator.GenerateID();
+			table.Id = Generator.GenerateID(CConstants.TB);
 			table.Name = dataTable.TableName;
 
 			table.Data = dataTable;
@@ -154,7 +154,7 @@ namespace DbExport.Data
 					for (int coll = 0; coll < dataTable.Columns.Count; coll++)
 					{
 						value = new CValue();
-						value.Id = Generator.GenerateID();
+						value.Id = Generator.GenerateID(CConstants.TB);
 						value.TableId = table.Id;
 						value.CollumnId = table.Columns[coll].Id;
 
@@ -180,7 +180,7 @@ namespace DbExport.Data
 				for (int i = 0; i < dataTable.Columns.Count; i++)
 				{
 					var coll = new CColumn();
-					coll.Id = Generator.GenerateID();
+					coll.Id = Generator.GenerateID(CConstants.TB);
 					coll.TableId = table.Id;
 
 					coll.Name = dataTable.Columns[i].ColumnName;
@@ -211,7 +211,7 @@ namespace DbExport.Data
 				switch (Status)
 				{
 					case Status.Added:
-						this.Id = Generator.GenerateID();
+						this.Id = Generator.GenerateID(CConstants.TB);
 						res = AddTable(this, tr);
 						break;
 					case Status.Normal:

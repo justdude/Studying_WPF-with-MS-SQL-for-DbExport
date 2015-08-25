@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DbExport.Database;
 
 namespace CRM.Database
 {
@@ -71,11 +72,12 @@ namespace CRM.Database
 
 		public static string InsertValue(CValue item)
 		{
-			string str = @"INSERT INTO Conf_Dyn_Values(Id, TableId, CollId, 
-					RowNumb, Float, String, DateTime, Bool, Int) VALUES({0},{1},{2},{3},{4},{5},{6},{7},{8})";
+			string str = @"INSERT INTO Conf_Dyn_Values(Id, TableId, CollId, RowNumb, Float, String, DateTime, Bool, Int) VALUES('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}')";
 
 			return string.Format(str, item.Id, item.TableId, item.CollumnId, item.RowNumb, 
-								 item.FloatValue, item.StrValue, item.DateValue, item.BoolValue, item.IntValue);
+								 item.FloatValue, item.StrValue,
+								 item.DateValue.ToSqlDate(), 
+								 item.BoolValue, item.IntValue);
 		}
 		#endregion
 

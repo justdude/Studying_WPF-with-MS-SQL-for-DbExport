@@ -167,6 +167,8 @@ namespace DbExport.Data
 			foreach (var item in table.Rows)
 			{
 				item.Column = table.Columns.FirstOrDefault(p => p.Id == item.CollumnId);
+				if (item.Column == null)
+					continue;
 				item.ValueType = item.Column.GetCollType();
 			}
 		}

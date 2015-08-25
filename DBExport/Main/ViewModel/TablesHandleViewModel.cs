@@ -440,6 +440,8 @@ namespace DBExport.Main.ViewModel
 				SelectedTable.Current.Status = Status.Updated;
 			}
 
+			ChangeState(true);
+
 			//SelectedTable.Current.CountryID = SelectedCountry.Current.Id;
 			ThreadPool.QueueUserWorkItem(new WaitCallback((par) =>
 			{
@@ -449,9 +451,11 @@ namespace DBExport.Main.ViewModel
 				{
 					SelectedTable = null;
 
-					RaiseRefresh();
+					//RaiseRefresh();
 
 				}, DispatcherPriority.Normal);
+
+				ChangeState(false);
 			}));
 
 		}
@@ -469,20 +473,38 @@ namespace DBExport.Main.ViewModel
 
 		private void OnAdd()
 		{
+			ChangeState(true);
+
 			CParserGenericAdapter proccesor = new CParserGenericAdapter();
 			string path = CFileHelper.GetPathFromDialog();
+
 			if (string.IsNullOrWhiteSpace(path))
 				return;
 
-			DataTable data = proccesor.GetDataTabletFromCSVFile(path);
-			CTable table = CTable.Create(data);
-			SelectedTable = new TableViewModel(table);
+			ThreadPool.QueueUserWorkItem(new WaitCallback((par) =>
+			{
+				try
+				{
+					DataTable data = proccesor.GetDataTabletFromCSVFile(path);
+					CTable table = CTable.Create(data);
 
-			SelectedTable.Current.Status = Status.Added;
+					BeginInvoke(DispatcherPriority.Normal, () =>
+					{
+						SelectedTable = new TableViewModel(table);
 
-			this.Tables.Add(SelectedTable);
-			RaiseRefresh();
-			this.RaisePropertyChanged(() => this.SelectedTableView);
+						SelectedTable.Current.Status = Status.Added;
+
+						this.Tables.Add(SelectedTable);
+						RaiseRefresh();
+						this.RaisePropertyChanged(() => this.SelectedTableView);
+					});
+				}
+				catch (Exception ex)
+				{ }
+
+				ChangeState(false);
+			}));
+
 		}
 
 		private void OnEdit()

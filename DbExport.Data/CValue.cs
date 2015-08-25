@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlServerCe;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CRM.Database;
 using DbExport.Common.Interfaces;
+using DbExport.Data.Constants;
 using DbExport.Database;
 
 namespace DbExport.Data
@@ -29,7 +31,7 @@ namespace DbExport.Data
 		public DateTime DateValue { get; set; }
 		public String StrValue { get; set; }
 		public bool BoolValue { get; set; }
-		public float FloatValue { get; set; }
+		public double FloatValue { get; set; }
 		public float IntValue { get; set; }
 
 
@@ -48,7 +50,7 @@ namespace DbExport.Data
 				switch (Status)
 				{
 					case Status.Added:
-						this.Id = Generator.GenerateID();
+						this.Id = Generator.GenerateID(CConstants.ROW);
 						res = AddValue(this);
 						Status = Common.Interfaces.Status.Normal;
 						break;
@@ -78,6 +80,54 @@ namespace DbExport.Data
 
 			return res;
 		}
+
+		public override bool Save(SqlCeTransaction tr)
+		{
+			bool res = true;
+
+			try
+			{
+				//save this
+				switch (Status)
+				{
+					case Status.Added:
+						this.Id = Generator.GenerateID(CConstants.ROW);
+						res = AddValue(this, tr);
+						Status = Common.Interfaces.Status.Normal;
+						break;
+					case Status.Normal:
+						break;
+					case Status.Updated:
+						res = UpdateValue(this);
+						Status = Common.Interfaces.Status.Normal;
+						break;
+					case Status.Deleted:
+						res = DeleteValue(this.Id);
+						break;
+					default:
+						Status = Common.Interfaces.Status.Normal;
+						break;
+				}
+			}
+			catch (Exception ex)
+			{
+				res = false;
+			}
+
+			if (res)
+			{
+				Status = Common.Interfaces.Status.Normal;
+			}
+
+			return res;
+		}
+
+		private bool AddValue(CValue item, SqlCeTransaction tr)
+		{
+			string str = modSQL.InsertValue(item);
+			return CDatabase.Instance.ExecuteNonQuery(str, tr);
+		}
+
 
 		private bool AddValue(CValue item)
 		{
@@ -133,7 +183,7 @@ namespace DbExport.Data
 					StrValue = (string)data;
 					break;
 				case TypeCode.Single:
-					FloatValue = (float)data;
+					FloatValue = (double)data;
 					break;
 
 				case TypeCode.Byte:

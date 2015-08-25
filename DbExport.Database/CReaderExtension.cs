@@ -34,10 +34,10 @@ namespace DbExport.Database
 				return string.Empty;
 		}
 
-		public static float GetFloatSafe(this SqlCeDataReader reader, int colIndex)
+		public static double GetFloatSafe(this SqlCeDataReader reader, int colIndex)
 		{
 			if (!reader.IsDBNull(colIndex))
-				return reader.GetFloat(colIndex);
+				return reader.GetDouble(colIndex);
 			else
 				return float.NaN;
 		}

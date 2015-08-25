@@ -30,7 +30,7 @@ namespace DbExport.Data
 				switch (Status)
 				{
 					case Status.Added:
-						this.Id = Generator.GenerateID();
+						this.Id = Generator.GenerateID(CConstants.COLL);
 						res = AddValue(this, tr);
 						Status = Common.Interfaces.Status.Normal;
 						break;
@@ -152,5 +152,11 @@ namespace DbExport.Data
 					return typeof(string);
 			}
 		}
+
+		public override string ToString()
+		{
+			return Id + " " + Name +" "+ CollType;
+		}
+
 	}
 }

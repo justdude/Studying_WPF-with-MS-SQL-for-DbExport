@@ -47,6 +47,7 @@
     <Compile Include="CColumn.cs" />
     <Compile Include="CObjectBase.cs" />
     <Compile Include="CObjectBaseExtension.cs" />
+    <Compile Include="Constants\CConstants.cs" />
     <Compile Include="Constants\CollumnTypes.cs" />
     <Compile Include="CTable.cs" />
     <Compile Include="CValue.cs" />
