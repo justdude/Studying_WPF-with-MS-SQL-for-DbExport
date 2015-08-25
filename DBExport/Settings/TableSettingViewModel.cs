@@ -36,7 +36,7 @@ namespace DBExport.Settings.ViewModel
 			DataTypes = new List<Type>()
 			{
 				typeof(string),
-				typeof(float),
+				typeof(double),
 				typeof(int),
 				typeof(DateTime),
 				typeof(bool)

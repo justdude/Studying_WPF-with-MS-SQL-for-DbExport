@@ -92,6 +92,8 @@ namespace DbExport.Data
 				}
 
 				List<List<CValue>> list = table.Rows.GroupBy(p => p.RowNumb).Select(p => p.ToList()).ToList();
+				
+				//List<object[]> items = new List<object[]>();
 
 				foreach (List<CValue> collection in list)
 				{
@@ -154,9 +156,10 @@ namespace DbExport.Data
 					for (int coll = 0; coll < dataTable.Columns.Count; coll++)
 					{
 						value = new CValue();
-						value.Id = Generator.GenerateID(CConstants.TB);
+						value.Id = Generator.GenerateID(CConstants.ROW);
 						value.TableId = table.Id;
 						value.CollumnId = table.Columns[coll].Id;
+						value.RowNumb = row;
 
 						value.SetValue(dataTable.Rows[row].ItemArray[coll]);
 
@@ -180,7 +183,7 @@ namespace DbExport.Data
 				for (int i = 0; i < dataTable.Columns.Count; i++)
 				{
 					var coll = new CColumn();
-					coll.Id = Generator.GenerateID(CConstants.TB);
+					coll.Id = Generator.GenerateID(CConstants.COLL);
 					coll.TableId = table.Id;
 
 					coll.Name = dataTable.Columns[i].ColumnName;
@@ -211,7 +214,8 @@ namespace DbExport.Data
 				switch (Status)
 				{
 					case Status.Added:
-						this.Id = Generator.GenerateID(CConstants.TB);
+						if (string.IsNullOrWhiteSpace(Id))
+							this.Id = Generator.GenerateID(CConstants.TB);
 						res = AddTable(this, tr);
 						break;
 					case Status.Normal:

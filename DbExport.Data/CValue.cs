@@ -91,7 +91,8 @@ namespace DbExport.Data
 				switch (Status)
 				{
 					case Status.Added:
-						this.Id = Generator.GenerateID(CConstants.ROW);
+						if (string.IsNullOrWhiteSpace(Id))
+							this.Id = Generator.GenerateID(CConstants.ROW);
 						res = AddValue(this, tr);
 						Status = Common.Interfaces.Status.Normal;
 						break;
@@ -182,7 +183,7 @@ namespace DbExport.Data
 				case TypeCode.String:
 					StrValue = (string)data;
 					break;
-				case TypeCode.Single:
+				case TypeCode.Double:
 					FloatValue = (double)data;
 					break;
 
@@ -190,7 +191,7 @@ namespace DbExport.Data
 				case TypeCode.Char:
 				case TypeCode.DBNull:
 				case TypeCode.Decimal:
-				case TypeCode.Double:
+				case TypeCode.Single:
 				case TypeCode.Empty:
 				case TypeCode.Int16:
 				case TypeCode.Int64:
@@ -219,14 +220,14 @@ namespace DbExport.Data
 					return IntValue;
 				case TypeCode.String:
 					return StrValue;
-				case TypeCode.Single:
+				case TypeCode.Double:
 					return FloatValue;
 
 				case TypeCode.Byte:
 				case TypeCode.Char:
 				case TypeCode.DBNull:
 				case TypeCode.Decimal:
-				case TypeCode.Double:
+				case TypeCode.Single:
 				case TypeCode.Empty:
 				case TypeCode.Int16:
 				case TypeCode.Int64:

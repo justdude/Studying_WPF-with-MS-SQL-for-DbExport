@@ -30,7 +30,8 @@ namespace DbExport.Data
 				switch (Status)
 				{
 					case Status.Added:
-						this.Id = Generator.GenerateID(CConstants.COLL);
+						if (string.IsNullOrWhiteSpace(Id))
+							this.Id = Generator.GenerateID(CConstants.COLL);
 						res = AddValue(this, tr);
 						Status = Common.Interfaces.Status.Normal;
 						break;
@@ -106,14 +107,14 @@ namespace DbExport.Data
 					return Constants.CollumnTypes.IntType;
 				case TypeCode.String:
 					return Constants.CollumnTypes.StringType;
-				case TypeCode.Single:
+				case TypeCode.Double:
 					return Constants.CollumnTypes.FloatType;
 
 				case TypeCode.Byte:
 				case TypeCode.Char:
 				case TypeCode.DBNull:
 				case TypeCode.Decimal:
-				case TypeCode.Double:
+				case TypeCode.Single:
 				case TypeCode.Empty:
 				case TypeCode.Int16:
 				case TypeCode.Int64:

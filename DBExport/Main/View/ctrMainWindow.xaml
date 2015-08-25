@@ -114,7 +114,7 @@
 			VerticalAlignment="Stretch">
 
 			<ListBox Name="lstBoxTables"
-				
+				 IsEnabled="{Binding IsEnabled}"
 				 SelectedItem="{Binding SelectedTable}"
 				 ItemsSource="{Binding Tables}" Margin="5">
 				<ListBox.ItemTemplate>
@@ -136,8 +136,8 @@
 					  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
 					  Margin="0"/>
 
-		<StackPanel Grid.Row="3" VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Horizontal" Margin="16,4,15,4">
-			<Button Content="CreateTable" 
+		<StackPanel Grid.Row="3" VerticalAlignment="Center" HorizontalAlignment="Stretch" Orientation="Horizontal" Margin="0,4,0,4">
+			<Button Content="Add" 
 					Command="{Binding AddCommand}" 
 					VerticalAlignment="Center" Style="{StaticResource btnStyle}">
 			</Button>
@@ -146,6 +146,10 @@
 					VerticalAlignment="Center" Style="{StaticResource btnStyle}"></Button>
 			<Button Content="Delete" 
 					Command="{Binding DeleteCommand}"
+					VerticalAlignment="Center" 
+					Style="{StaticResource btnStyle}"></Button>
+			<Button Content="Refresh" 
+					Command="{Binding RefreshCommand}"
 					VerticalAlignment="Center" 
 					Style="{StaticResource btnStyle}"></Button>
 		</StackPanel>
@@ -191,7 +195,13 @@
 					  VerticalAlignment="Center"
 					  HorizontalAlignment="Stretch"
 					  Width="130"
-					  Margin="10 0 0 0"></ComboBox>
+					  Margin="10 0 0 0">
+				<ComboBox.ItemTemplate>
+					<DataTemplate>
+						<TextBlock Text="{Binding Name}"></TextBlock>
+					</DataTemplate>
+				</ComboBox.ItemTemplate>
+			</ComboBox>
 		</StackPanel>
 
 		<StackPanel Grid.Column="2" Grid.Row="3" 

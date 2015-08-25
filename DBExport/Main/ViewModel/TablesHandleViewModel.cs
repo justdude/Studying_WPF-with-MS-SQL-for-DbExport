@@ -110,7 +110,14 @@ namespace DBExport.Main.ViewModel
 			}
 		}
 
-		public bool IsCreate { get; set; }
+		public bool IsCreate
+		{
+			get
+			{
+				return State == enFormState.Create;
+			}
+		}
+		public enFormState State { get; set; }
 
 		public DataTable GetItems(DataTable table, int offset, int count)
 		{
@@ -392,12 +399,12 @@ namespace DBExport.Main.ViewModel
 
 		private bool CanRefresh()
 		{
-			return IsEnabled;
+			return IsEnabled && State == enFormState.None;
 		}
 
 		private bool CanSave()
 		{
-			return IsEnabled && !IsHasError && IsSelected && !IsCreate;
+			return IsEnabled && !IsHasError && IsSelected && State != enFormState.None;
 		}
 
 		private bool CanShowSettings()
@@ -412,17 +419,17 @@ namespace DBExport.Main.ViewModel
 
 		private bool CanDelete()
 		{
-			return false;
+			return IsEnabled && IsSelected && State == enFormState.None;
 		}
 
 		private bool CanAdd()
 		{
-			return IsEnabled;
+			return IsEnabled && State != enFormState.Create;
 		}
 
 		private bool CanMerge()
 		{
-			return IsEnabled && !IsCreate && IsSelected;
+			return IsEnabled && IsSelected && State != enFormState.Create;
 		}
 
 		private void OnClose()
@@ -475,6 +482,7 @@ namespace DBExport.Main.ViewModel
 				}, DispatcherPriority.Normal);
 
 				ChangeState(false);
+				State = enFormState.None;
 			}));
 
 		}
@@ -492,15 +500,19 @@ namespace DBExport.Main.ViewModel
 		
 		private void OnAdd()
 		{
-			ChangeState(true);
+			IsEnabled = false;
 
 			CParserGenericAdapter proccesor = new CParserGenericAdapter();
 			string path = CFileHelper.GetPathFromDialog();
 
 			if (string.IsNullOrWhiteSpace(path))
+			{
+				IsEnabled = true;
 				return;
-			
-			IsCreate = true;
+			}
+
+			IsLoading = true;
+			State = enFormState.Create;
 
 			ThreadPool.QueueUserWorkItem(new WaitCallback((par) =>
 			{
@@ -530,6 +542,7 @@ namespace DBExport.Main.ViewModel
 
 		private void SetMerge()
 		{
+			State = enFormState.EditTable;
 		}
 
 
@@ -555,7 +568,6 @@ namespace DBExport.Main.ViewModel
 					SelectedTable.Current.Columns.Clear();
 					CTable.FillColumns(SelectedTable.Current.Data, SelectedTable.Current);
 					CTable.FillRows(SelectedTable.Current.Data, SelectedTable.Current);
-					IsCreate = true;
 				}
 				catch (Exception ex)
 				{ }
