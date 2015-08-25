@@ -1,7 +1,8 @@
-﻿<Window x:Class="DBExport.Windows.wndSetTypes"
+﻿<Controls:MetroWindow x:Class="DBExport.Windows.wndSetTypes"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 		xmlns:ctr="clr-namespace:DBExport.Common.Controls;assembly=DBExport.Common"
+		xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
         Title="wndSetTypes" Height="180" Width="400">
 	<Grid>
 		<Grid.RowDefinitions>
@@ -50,4 +51,4 @@
 					Style="{StaticResource btnStyle}"></Button>
 		</StackPanel>
 	</Grid>
-</Window>
+</Controls:MetroWindow>

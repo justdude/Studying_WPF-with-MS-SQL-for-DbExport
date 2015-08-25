@@ -1,4 +1,7 @@
-﻿using System;
+﻿using DBExport.Common.MVVM;
+using GalaSoft.MvvmLight.Messaging;
+using MahApps.Metro.Controls;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -18,11 +21,36 @@ namespace DBExport
 	/// <summary>
 	/// Interaction logic for MainWindow.xaml
 	/// </summary>
-	public partial class MainWindow : Window
+	public partial class MainWindow : MetroWindow
 	{
 		public MainWindow()
 		{
 			InitializeComponent();
+			Loaded += MainWindow_Loaded;
+			Unloaded += MainWindow_Unloaded;
+		}
+
+		void MainWindow_Unloaded(object sender, RoutedEventArgs e)
+		{
+			Messenger.Default.Unregister(this);
+		}
+
+		void MainWindow_Loaded(object sender, RoutedEventArgs e)
+		{
+			Messenger.Default.Register<DBExport.Common.Messages.CloseWindowMessage>(Token, OnWindowClose);
+		}
+
+		private void OnWindowClose(Common.Messages.CloseWindowMessage obj)
+		{
+			Application.Current.Shutdown();
+		}
+
+		public string Token
+		{
+			get
+			{
+				return ControlBehavior.GetToken(this);
+			}
 		}
 	}
 }

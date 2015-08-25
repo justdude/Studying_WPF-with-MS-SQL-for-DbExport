@@ -1,6 +1,7 @@
 ﻿using DBExport.Common.Messages;
 using DBExport.Common.MVVM;
 using GalaSoft.MvvmLight.Messaging;
+using MahApps.Metro.Controls;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,7 +21,7 @@ namespace DBExport.Windows
 	/// <summary>
 	/// Interaction logic for wndSetTypes.xaml
 	/// </summary>
-	public partial class wndSetTypes : Window
+	public partial class wndSetTypes : MetroWindow
 	{
 		public wndSetTypes()
 		{

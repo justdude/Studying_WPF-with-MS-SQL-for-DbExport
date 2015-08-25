@@ -15,6 +15,7 @@ using DBExport.Common.MVVM;
 using System.Windows.Threading;
 using System.Threading;
 using System.Windows;
+using DBExport.Common.Messages;
 //using Microsoft.Practices.Prism.Commands;
 //using Microsoft.Practices.Prism.Mvvm;
 
@@ -384,12 +385,12 @@ namespace DBExport.Main.ViewModel
 
 		private bool CanSave()
 		{
-			return IsEnabled && !IsHasError && IsSelected;
+			return IsEnabled && !IsHasError && IsSelected && !IsCreate;
 		}
 
 		private bool CanShowSettings()
 		{
-			return IsSelected;
+			return IsSelected && IsCreate;
 		}
 
 		private bool CanEdit()
@@ -410,6 +411,7 @@ namespace DBExport.Main.ViewModel
 		private void OnClose()
 		{
 			//var mess = CEventSystem.Current.GetEvent<Events.CloseWindowEvent>();
+			MessengerInstance.Send<CloseWindowMessage>(new CloseWindowMessage(), Token);
 		}
 
 		public void OnStateChanged()
@@ -470,7 +472,7 @@ namespace DBExport.Main.ViewModel
 
 			RaiseRefresh();
 		}
-
+		
 		private void OnAdd()
 		{
 			ChangeState(true);
@@ -480,6 +482,8 @@ namespace DBExport.Main.ViewModel
 
 			if (string.IsNullOrWhiteSpace(path))
 				return;
+			
+			IsCreate = true;
 
 			ThreadPool.QueueUserWorkItem(new WaitCallback((par) =>
 			{
@@ -493,7 +497,7 @@ namespace DBExport.Main.ViewModel
 						SelectedTable = new TableViewModel(table);
 
 						SelectedTable.Current.Status = Status.Added;
-
+						
 						this.Tables.Add(SelectedTable);
 						RaiseRefresh();
 						this.RaisePropertyChanged(() => this.SelectedTableView);
@@ -529,6 +533,7 @@ namespace DBExport.Main.ViewModel
 					SelectedTable.Current.Columns.Clear();
 					CTable.FillColumns(SelectedTable.Current.Data, SelectedTable.Current);
 					CTable.FillRows(SelectedTable.Current.Data, SelectedTable.Current);
+					IsCreate = true;
 				}
 				catch (Exception ex)
 				{ }

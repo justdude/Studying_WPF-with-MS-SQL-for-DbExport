@@ -198,6 +198,10 @@
 					Command="{Binding SaveCommand}"
 					VerticalAlignment="Center" 
 					Style="{StaticResource btnStyle}"></Button>
+			<Button Content="Close" 
+					Command="{Binding CloseCommand}"
+					VerticalAlignment="Center" 
+					Style="{StaticResource btnStyle}"></Button>
 		</StackPanel>
 		
 		
