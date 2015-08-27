@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DBExport.Products;
 
 namespace DBExport.Helpers
 {
@@ -33,9 +34,22 @@ namespace DBExport.Helpers
 			wind.Show();
 		}
 
-		public static void ShowEditSelectedTable(CTable cTable)
+		public static void ShowEditSelectedTable(CTable table)
 		{
+			var wind = new wndProducts();
+			wind.Owner = App.Current.MainWindow;
+			wind.Owner.Hide();
+			wind.Closed += (e, a) =>
+			{
+				wind.Owner.Show();
+				wind.Activate();
+			};
+			wind.DataContext = new ProductItemsViewModel(table)
+			{
+				Token = wind.Token,
+			};
 
+			wind.Show();
 		}
 	}
 }

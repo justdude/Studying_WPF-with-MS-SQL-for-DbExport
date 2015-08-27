@@ -37,6 +37,7 @@ namespace DBExport.Main.ViewModel
 		private TableViewModel mvSelectedTable;
 		private bool mvIsMerge;
 		private bool mvIsLoading;
+		private bool mvIsAppenedSuccessfully;
 
 		public TablesHandleViewModel()
 		{
@@ -540,9 +541,60 @@ namespace DBExport.Main.ViewModel
 
 		}
 
+		public bool IsAppenedSuccessfully
+		{
+			get
+			{
+				return mvIsAppenedSuccessfully;
+			}
+			set
+			{
+				if (value == mvIsAppenedSuccessfully)
+					return;
+
+				mvIsAppenedSuccessfully = value;
+
+				RaisePropertyChanged(() => this.IsAppenedSuccessfully);
+			}
+		}
+
 		private void SetMerge()
 		{
+			IsEnabled = false;
+
+			CParserGenericAdapter proccesor = new CParserGenericAdapter();
+			string path = CFileHelper.GetPathFromDialog();
+
+			if (string.IsNullOrWhiteSpace(path))
+			{
+				IsEnabled = true;
+				return;
+			}
+
+			IsLoading = true;
 			State = enFormState.EditTable;
+
+			ThreadPool.QueueUserWorkItem(new WaitCallback((par) =>
+			{
+				try
+				{
+					DataTable data = proccesor.GetDataTabletFromCSVFile(path);
+					bool res = CTable.FillColumns(data, SelectedTable.Current, true);
+					res &= CTable.FillRows(data, SelectedTable.Current);
+
+					BeginInvoke(DispatcherPriority.Normal, () =>
+					{
+						IsAppenedSuccessfully = res;
+						RaiseRefresh();
+						this.RaisePropertyChanged(() => this.SelectedTableView);
+					});
+				}
+				catch (Exception ex)
+				{ }
+
+				ChangeState(false);
+			}));
+
 		}
 
 

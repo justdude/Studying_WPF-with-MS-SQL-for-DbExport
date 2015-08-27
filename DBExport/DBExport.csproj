@@ -118,13 +118,23 @@
     </ApplicationDefinition>
     <Compile Include="Helpers\CWindowHelper.cs" />
     <Compile Include="Main\enFormState.cs" />
-    <Compile Include="Main\ViewModel\ViewModelExtnded.cs" />
+    <Compile Include="Products\ProductItemsViewModel.cs" />
+    <Compile Include="Products\View\ctrProductWindow.xaml.cs">
+      <DependentUpon>ctrProductWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Settings\TableSettingItemViewModel.cs" />
     <Compile Include="Settings\TableSettingViewModel.cs" />
+    <Compile Include="Windows\wndProducts.xaml.cs">
+      <DependentUpon>wndProducts.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Windows\wndSetTypes.xaml.cs">
       <DependentUpon>wndSetTypes.xaml</DependentUpon>
     </Compile>
     <Page Include="Main\View\ctrMainWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Products\View\ctrProductWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -145,6 +155,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Windows\wndProducts.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Windows\wndSetTypes.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -184,7 +198,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Fitments\" />
-    <Folder Include="Products\" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Task\ReadMe.txt" />

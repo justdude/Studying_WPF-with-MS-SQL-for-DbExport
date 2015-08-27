@@ -145,8 +145,9 @@ namespace DbExport.Data
 
 		}
 
-		public static void FillRows(DataTable dataTable, CTable table)
+		public static bool FillRows(DataTable dataTable, CTable table)
 		{
+			bool res = true;
 			try
 			{
 				for (int row = 0; row < dataTable.Rows.Count; row++)
@@ -173,16 +174,35 @@ namespace DbExport.Data
 				}
 			}
 			catch (Exception ex)
-			{ }
+			{
+				res = false;
+			}
+
+			return res;
 		}
 
-		public static void FillColumns(DataTable dataTable, CTable table)
+		public static bool FillColumns(DataTable dataTable, CTable table, bool isIgnoreExists = false)
 		{
+			bool isSuccessful = true;
+
 			try
 			{
 				for (int i = 0; i < dataTable.Columns.Count; i++)
 				{
-					var coll = new CColumn();
+
+					CColumn coll = null;
+					if (isIgnoreExists)
+					{
+						var castedColumns = table.Columns;
+						coll = castedColumns.FirstOrDefault(p=>p.Name == dataTable.Columns[i].ColumnName 
+													&& p.GetCollType() == dataTable.Columns[i].DataType);
+						if (coll != null)
+							continue;
+					}
+
+					isSuccessful = false;
+
+					coll = new CColumn();
 					coll.Id = Generator.GenerateID(CConstants.COLL);
 					coll.TableId = table.Id;
 
@@ -195,7 +215,10 @@ namespace DbExport.Data
 				}
 			}
 			catch (Exception ex)
-			{ }
+			{
+				isSuccessful = false;
+			}
+			return isSuccessful;
 		}
 		#endregion
 

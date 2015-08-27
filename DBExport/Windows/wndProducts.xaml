@@ -1,0 +1,34 @@
+﻿<Controls:MetroWindow x:Class="DBExport.Windows.wndProducts"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+		xmlns:main="clr-namespace:DBExport.Main"
+		xmlns:view="clr-namespace:DBExport.Products.View"
+		xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+		WindowStartupLocation="CenterScreen"
+        Title="MainWindow" Height="455" Width="765">
+	<Window.Resources>
+		<DataTemplate x:Key="crap">
+			<StackPanel Width="100" Height="18"></StackPanel>
+		</DataTemplate>
+
+		<Style x:Key="grdStyle" TargetType="{x:Type Grid}">
+			<Setter Property="Background" Value="SkyBlue"></Setter>
+		</Style>
+	</Window.Resources>
+
+	<Grid x:Name="LayoutRoot">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="*"></RowDefinition>
+			<RowDefinition Height="22"></RowDefinition>
+		</Grid.RowDefinitions>
+		<view:ctrProductWindow Grid.Row="0"></view:ctrProductWindow>
+		<StatusBar Grid.Row="1">
+			<StatusBarItem>
+				<StackPanel Orientation="Horizontal">
+					<Controls:ProgressRing IsActive="{Binding IsLoading}" Width="10" Height="10" Foreground="White"/>
+					<TextBlock Margin="8 0 0 0" Text="{Binding StateText}"></TextBlock>
+				</StackPanel>
+			</StatusBarItem>
+		</StatusBar>
+	</Grid>
+</Controls:MetroWindow>

@@ -1,0 +1,89 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+	
+	<ResourceDictionary.MergedDictionaries>
+		<ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
+		<ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
+		<ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Colors.xaml" />
+		<ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/Blue.xaml" />
+		<ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseLight.xaml" />
+	</ResourceDictionary.MergedDictionaries>
+	
+	<ControlTemplate  x:Key="dtgrTemplateHeader" TargetType="{x:Type DataGridColumnHeader}">
+		<Grid>
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="*" />
+				<ColumnDefinition Width="Auto" />
+			</Grid.ColumnDefinitions>
+			<Border x:Name="BackgroundBorder" BorderThickness="0,1,0,1" 
+                              Grid.ColumnSpan="2" />
+			<StackPanel Margin="6,3,6,3" VerticalAlignment="Center" 
+							Orientation="Horizontal">
+				<ContentPresenter/>
+			</StackPanel>
+			<Path x:Name="SortArrow" Visibility="Collapsed" Data="M0,0 L1,0 0.5,1 z" Stretch="Fill" 
+                            Grid.Column="1" Width="8" Height="6" Fill="White" Margin="0,0,8,0" 
+                            VerticalAlignment="Center" RenderTransformOrigin="0.5,0.4" 
+					  Stroke="Black"/>
+			<!--<Rectangle Width="1" Fill="#AAC377" HorizontalAlignment="Right" Grid.ColumnSpan="2" />
+
+				<Rectangle Width="1" Margin="0,0,1,0" Fill="#425B10" 
+                                 HorizontalAlignment="Right" Grid.ColumnSpan="2" />-->
+			<!--<Thumb x:Name="PART_LeftHeaderGripper" HorizontalAlignment="Left" />
+				<Thumb x:Name="PART_RightHeaderGripper" HorizontalAlignment="Right"/>-->
+		</Grid>
+		<ControlTemplate.Triggers>
+			<Trigger Property="SortDirection" Value="{x:Null}">
+
+				<Setter TargetName="BackgroundBorder" Property="BorderBrush"  
+                                  Value="Transparent" />
+			</Trigger>
+			<MultiTrigger>
+				<MultiTrigger.Conditions>
+					<Condition Property="IsMouseOver" Value="True" />
+					<Condition Property="SortDirection" Value="{x:Null}" />
+				</MultiTrigger.Conditions>
+
+			</MultiTrigger>
+			<MultiTrigger>
+				<MultiTrigger.Conditions>
+					<Condition Property="IsMouseOver" Value="true" />
+					<Condition Property="SortDirection" Value="{x:Null}" />
+				</MultiTrigger.Conditions>
+
+			</MultiTrigger>
+
+			<Trigger Property="SortDirection" Value="Ascending">
+				<Setter TargetName="SortArrow" Property="Visibility" Value="Visible" />
+				<Setter TargetName="SortArrow" Property="RenderTransform">
+					<Setter.Value>
+						<RotateTransform Angle="180" />
+					</Setter.Value>
+				</Setter>
+			</Trigger>
+			<Trigger Property="SortDirection" Value="Descending">
+				<Setter TargetName="SortArrow" Property="Visibility" Value="Visible" />
+			</Trigger>
+			<!--<Trigger Property="DisplayIndex" Value="0">
+					<Setter Property="Visibility" Value="Collapsed" 
+                                  TargetName="PART_LeftHeaderGripper"></Setter>
+				</Trigger>-->
+		</ControlTemplate.Triggers>
+	</ControlTemplate>
+
+	<Style x:Key="DGHeaderStyle" TargetType="{x:Type DataGrid}">
+		<Setter Property="ColumnWidth" Value="*"></Setter>
+		<Setter Property="MinColumnWidth" Value="100"></Setter>
+		<Setter Property="RowDetailsTemplate" Value="{DynamicResource tmplRowDetailsStyled}"/>
+		<Setter Property="ColumnHeaderStyle" Value="{DynamicResource DGCHeaderStyle}"/>
+	</Style>
+	<Style x:Key="DGCHeaderStyle" TargetType="DataGridColumnHeader">
+		<Setter Property="Height" Value="30"/>
+		<Setter Property="Background" Value="LightBlue" />
+		<Setter Property="Foreground" Value="Black"/>
+		<Setter Property="FontSize" Value="14" />
+		<Setter Property="FontFamily" Value="Calibri" />
+		<Setter Property="Template" Value="{DynamicResource dtgrTemplateHeader}"/>
+	</Style>
+
+</ResourceDictionary>
