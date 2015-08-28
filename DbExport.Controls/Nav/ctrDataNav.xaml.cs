@@ -23,6 +23,17 @@ namespace DbExport.Controls.Nav
 		public ctrDataNav()
 		{
 			InitializeComponent();
+			Loaded += ctrDataNav_Loaded;
 		}
+
+		public DataNavigationViewModel ViewModel { get; set; }
+
+		void ctrDataNav_Loaded(object sender, RoutedEventArgs e)
+		{
+			ViewModel = new DataNavigationViewModel();
+			ViewModel.Disp = this.Dispatcher;
+			DataContext = ViewModel;
+		}
+
 	}
 }

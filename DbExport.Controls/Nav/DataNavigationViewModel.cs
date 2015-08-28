@@ -26,12 +26,11 @@ namespace DbExport.Controls.Nav
 		#region Ctr
 		public DataNavigationViewModel()
 		{
-			RaiseRefreshProperties();
-
 			firstCommand = new RelayCommand(GoToFirst, CanGoToFirst);
 			lastCommand = new RelayCommand(GoToLast, CanGoToLast);
 			nextCommand = new RelayCommand(GoToNext, CanGoToNext);
 			previousCommand = new RelayCommand(GoToPrevious, CanGoToPrevious);
+			RaiseRefresh();
 		}
 		#endregion
 
@@ -131,40 +130,54 @@ namespace DbExport.Controls.Nav
 			start = (totalItems / itemCount - 1) * itemCount;
 			start += totalItems % itemCount == 0 ? 0 : itemCount;
 
-			RaiseRefreshProperties();
+			RaiseRefresh();
 		}
 
 		private void GoToFirst()
 		{
 			
 			start = 0;
-			RaiseRefreshProperties();
+			RaiseRefresh();
 		}
 
 		private void GoToPrevious()
 		{
 			start -= itemCount;
 
-			RaiseRefreshProperties();
+			RaiseRefresh();
 		}
 
 		private void GoToNext()
 		{
 			start += itemCount;
 
-			RaiseRefreshProperties();
+			RaiseRefresh();
 		}
 
 		/// <summary>
 		/// Refreshes the list of products. Called by navigation commands.
 		/// </summary>
-		private void RaiseRefreshProperties()
+		private void RaiseRefresh()
+		{
+			RaisePropyrtiesChanged();
+			RefreshButtons();
+		}
+
+		private void RaisePropyrtiesChanged()
 		{
 			//Products = DataAccess.GetProducts(start, itemCount, sortColumn, ascending, out totalItems);
 
 			RaisePropertyChanged(() => this.Start);
 			RaisePropertyChanged(() => this.End);
 			RaisePropertyChanged(() => this.TotalItems);
+		}
+
+		private void RefreshButtons()
+		{
+			this.PreviousCommand.RaiseCanExecuteChanged();
+			this.NextCommand.RaiseCanExecuteChanged();
+			this.LastCommand.RaiseCanExecuteChanged();
+			this.FirstCommand.RaiseCanExecuteChanged();
 		}
 		#endregion
 

@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
 			 xmlns:ctr="clr-namespace:DBExport.Common.Controls;assembly=DBExport.Common"
+             xmlns:nav="clr-namespace:DbExport.Controls.Nav;assembly=DbExport.Controls"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="550">
 	<UserControl.Resources>
@@ -22,7 +23,7 @@
 		<Grid.RowDefinitions>
 			<RowDefinition Height="20"></RowDefinition>
 			<RowDefinition Height="100*"></RowDefinition>
-			<RowDefinition Height="30"/>
+			<RowDefinition Height="33"/>
 			<RowDefinition Height="35"></RowDefinition>
 		</Grid.RowDefinitions>
 
@@ -109,10 +110,11 @@
 		
 		
 		<StackPanel Grid.Column="2" Grid.Row="2" 
-					VerticalAlignment="Center" HorizontalAlignment="Left"
+					VerticalAlignment="Stretch" HorizontalAlignment="Left"
 					Margin="5 0 0 0"
 					Orientation="Horizontal">
 			<Button Name="btnMerge" Command="{Binding SetMergeCommand}" 
+                       Style="{StaticResource btnStyle}"
 					  Content="Append data"></Button>
 			<Ellipse Margin="5 0 0 0" Width="8" Height="8">
 				<Ellipse.Style>
@@ -128,6 +130,7 @@
 					</Style>
 				</Ellipse.Style>
 			</Ellipse>
+            <nav:ctrDataNav Name="ctrDataNav" Margin="10 0 0 0"></nav:ctrDataNav>
 			<!--<CheckBox Name="chkIsMerge" Command="{Binding SetMergeCommand}" 
 					  IsChecked="{Binding IsMerge}" 
 					  Content="IsMerge"></CheckBox>
