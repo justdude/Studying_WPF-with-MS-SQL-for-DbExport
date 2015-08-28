@@ -16,27 +16,13 @@ using System.Windows.Shapes;
 namespace DbExport.Controls.Nav
 {
 	/// <summary>
-	/// Логика взаимодействия для ctrDataNavigation.xaml
+	/// Логика взаимодействия для ctrDataNav.xaml
 	/// </summary>
 	public partial class ctrDataNav : UserControl
 	{
-		public DataNavigationViewModel ViewModel
-		{
-			get;
-			private set;
-		}
-
 		public ctrDataNav()
 		{
-			//InitializeComponent();
-			this.Loaded += ctrDataNavigation_Loaded;
-		}
-
-		void ctrDataNavigation_Loaded(object sender, RoutedEventArgs e)
-		{
-			ViewModel = new DataNavigationViewModel();
-			ViewModel.Disp = this.Dispatcher;
-			DataContext = ViewModel;
+			InitializeComponent();
 		}
 	}
 }

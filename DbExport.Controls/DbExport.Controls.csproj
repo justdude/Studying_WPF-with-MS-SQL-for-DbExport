@@ -80,10 +80,10 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Nav\DataNavigationViewModel.cs" />
-    <Compile Include="Nav\View\ctrDataNav.xaml.cs">
+    <Compile Include="Nav\ctrDataNav.xaml.cs">
       <DependentUpon>ctrDataNav.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Nav\DataNavigationViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -112,16 +112,19 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="Nav\View\ctrDataNav.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\DBExport.Common\DBExport.Common.csproj">
       <Project>{12de7e30-f56c-456b-8c33-4eff1184283e}</Project>
       <Name>DBExport.Common</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Nav\View\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="Nav\ctrDataNav.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />

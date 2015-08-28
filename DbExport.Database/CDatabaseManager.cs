@@ -12,8 +12,8 @@ namespace DbExport.Database
 	{
 		private SqlCeConnection modConnection;
 
-		//public static string ConnectionString = @"Data Source=C:\Users\ialbantov.LIZDEVNTD\Documents\DbExport\DbExport.Database\DbData#1.sdf";
-		public static string ConnectionString = @"Data Source=D:\Projects\DbExport\DbExport.Database\DbEData.sdf";
+		public static string ConnectionString = @"Data Source=C:\Users\ialbantov.LIZDEVNTD\Documents\DbExport\DbExport.Database\DbEData.sdf";
+		//public static string ConnectionString = @"Data Source=D:\Projects\DbExport\DbExport.Database\DbEData.sdf";
 		//public static string ConnectionString = @"Data Source=(localdb)\ProjectsV12;Initial Catalog=DbExportData;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False";
 
 		public CDatabaseManager()

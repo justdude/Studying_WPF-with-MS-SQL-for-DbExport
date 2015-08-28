@@ -73,7 +73,7 @@
 					VerticalAlignment="Center" HorizontalAlignment="Left"
 					Margin="5 0 0 0"
 					Orientation="Horizontal">
-			<!--<nav:ctrDataNav Name="ctrDataNav"></nav:ctrDataNav>-->
+            <nav:ctrDataNav Name="ctrDataNav"></nav:ctrDataNav>
 		</StackPanel>
 
 		<StackPanel Grid.Column="2" Grid.Row="3" 

@@ -2,6 +2,9 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Express 2012 for Windows Desktop
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DBExport", "DBExport\DBExport.csproj", "{C6D68574-9A10-4BCC-915D-36688799C604}"
+	ProjectSection(ProjectDependencies) = postProject
+		{0B509F7D-A6C6-400C-A10C-D44BF19AE624} = {0B509F7D-A6C6-400C-A10C-D44BF19AE624}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbExport.Database", "DbExport.Database\DbExport.Database.csproj", "{07259ACF-FE12-45D2-B65D-39C788D18747}"
 EndProject
