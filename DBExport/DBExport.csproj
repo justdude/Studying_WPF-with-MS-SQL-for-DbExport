@@ -207,6 +207,10 @@
       <Project>{12de7e30-f56c-456b-8c33-4eff1184283e}</Project>
       <Name>DBExport.Common</Name>
     </ProjectReference>
+    <ProjectReference Include="..\DbExport.Controls\DbExport.Controls.csproj">
+      <Project>{0b509f7d-a6c6-400c-a10c-d44bf19ae624}</Project>
+      <Name>DbExport.Controls</Name>
+    </ProjectReference>
     <ProjectReference Include="..\DbExport.CSV\DbExport.CSV.csproj">
       <Project>{ef6872fc-c439-47e2-9a28-90fe971645e7}</Project>
       <Name>DbExport.CSV</Name>

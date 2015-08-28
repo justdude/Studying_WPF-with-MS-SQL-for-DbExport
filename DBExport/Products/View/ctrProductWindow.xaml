@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+			 xmlns:nav="clr-namespace:DbExport.Controls.Nav;assembly=DbExport.Controls"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
 	<Grid>
@@ -72,31 +73,7 @@
 					VerticalAlignment="Center" HorizontalAlignment="Left"
 					Margin="5 0 0 0"
 					Orientation="Horizontal">
-			<StackPanel	Margin="4" Orientation="Horizontal" HorizontalAlignment="Center">
-				<Button  Margin="4,0" Content="" Command="{Binding FirstCommand}"/>
-				<Button Margin="4,0" Content="" Command="{Binding PreviousCommand}"/>
-				<StackPanel VerticalAlignment="Center" Orientation="Horizontal">
-					<TextBlock
-					Text="{Binding Start}"/>
-					<TextBlock
-					Text=" to "/>
-					<TextBlock
-					Text="{Binding End}"/>
-					<TextBlock
-					Text=" of "/>
-					<TextBlock
-					Text="{Binding TotalItems}"/>
-				</StackPanel>
-				<Button
-				Margin="4,0"
-				Content=">"
-				Command="{Binding NextCommand}"/>
-				<Button
-				Margin="4,0"
-				Content=">>"
-				Command="{Binding LastCommand}"/>
-
-			</StackPanel>
+			<!--<nav:ctrDataNav Name="ctrDataNav"></nav:ctrDataNav>-->
 		</StackPanel>
 
 		<StackPanel Grid.Column="2" Grid.Row="3" 

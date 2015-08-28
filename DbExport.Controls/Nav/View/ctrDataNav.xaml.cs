@@ -1,0 +1,42 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
+using System.Windows.Shapes;
+
+namespace DbExport.Controls.Nav
+{
+	/// <summary>
+	/// Логика взаимодействия для ctrDataNavigation.xaml
+	/// </summary>
+	public partial class ctrDataNav : UserControl
+	{
+		public DataNavigationViewModel ViewModel
+		{
+			get;
+			private set;
+		}
+
+		public ctrDataNav()
+		{
+			//InitializeComponent();
+			this.Loaded += ctrDataNavigation_Loaded;
+		}
+
+		void ctrDataNavigation_Loaded(object sender, RoutedEventArgs e)
+		{
+			ViewModel = new DataNavigationViewModel();
+			ViewModel.Disp = this.Dispatcher;
+			DataContext = ViewModel;
+		}
+	}
+}
