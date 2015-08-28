@@ -12,12 +12,41 @@ namespace DBExport.Main.ViewModel
 	public class TableViewModel : ViewModelBase
 	{
 
+		private bool? mvIsAppenedSuccessfully = null;
+
 		public TableViewModel(CTable table)
 		{
 			this.Current = table;
 		}
 
 		public CTable Current { get; private set; }
+
+
+		public bool IsCreate
+		{
+			get
+			{
+				return State == enFormState.Create;
+			}
+		}
+		public enFormState State { get; set; }
+
+		public bool? IsAppenedSuccessfully
+		{
+			get
+			{
+				return mvIsAppenedSuccessfully;
+			}
+			set
+			{
+				if (value == mvIsAppenedSuccessfully)
+					return;
+
+				mvIsAppenedSuccessfully = value;
+
+				RaisePropertyChanged(() => this.IsAppenedSuccessfully);
+			}
+		}
 
 		public bool IsExist
 		{

@@ -114,9 +114,21 @@
 					Margin="5 0 0 0"
 					Orientation="Horizontal">
 			<Button Name="btnMerge" Command="{Binding SetMergeCommand}" 
-                       Style="{StaticResource btnStyle}"
-					  Content="Append data"></Button>
-			<Ellipse Margin="5 0 0 0" Width="8" Height="8">
+					  Content="Append data">
+                <Button.Style>
+                    <Style TargetType="Button" BasedOn="{StaticResource btnStyle}">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsAppenedSuccessfully}" Value="True">
+                                <Setter Property="BorderBrush" Value="Green"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding IsAppenedSuccessfully}" Value="False">
+                                <Setter Property="BorderBrush" Value="Red"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                    </Button.Style>
+            </Button>
+            <!--<Ellipse Margin="5 0 0 0" Width="8" Height="8">
 				<Ellipse.Style>
 					<Style TargetType="Ellipse">
 						<Style.Triggers>
@@ -129,7 +141,7 @@
 						</Style.Triggers>
 					</Style>
 				</Ellipse.Style>
-			</Ellipse>
+			</Ellipse>-->
             <nav:ctrDataNav Name="ctrDataNav" Margin="10 0 0 0"></nav:ctrDataNav>
 			<!--<CheckBox Name="chkIsMerge" Command="{Binding SetMergeCommand}" 
 					  IsChecked="{Binding IsMerge}" 

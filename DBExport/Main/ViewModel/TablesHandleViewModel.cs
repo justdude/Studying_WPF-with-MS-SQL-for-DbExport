@@ -37,7 +37,6 @@ namespace DBExport.Main.ViewModel
 		private TableViewModel mvSelectedTable;
 		private bool mvIsMerge;
 		private bool mvIsLoading;
-		private bool mvIsAppenedSuccessfully;
 
 		public TablesHandleViewModel()
 		{
@@ -110,15 +109,6 @@ namespace DBExport.Main.ViewModel
 				RaisePropertyChanged(() => this.IsLoading);
 			}
 		}
-
-		public bool IsCreate
-		{
-			get
-			{
-				return State == enFormState.Create;
-			}
-		}
-		public enFormState State { get; set; }
 
 		public DataTable GetItems(DataTable table, int offset, int count)
 		{
@@ -400,17 +390,17 @@ namespace DBExport.Main.ViewModel
 
 		private bool CanRefresh()
 		{
-			return IsEnabled && State == enFormState.None;
+			return IsEnabled && !IsSelected || (IsSelected && SelectedTable.State == enFormState.None);
 		}
 
 		private bool CanSave()
 		{
-			return IsEnabled && !IsHasError && IsSelected && State != enFormState.None;
+			return IsEnabled && !IsHasError && IsSelected && SelectedTable.State != enFormState.None;
 		}
 
 		private bool CanShowSettings()
 		{
-			return IsSelected && IsCreate;
+			return IsSelected && SelectedTable.IsCreate;
 		}
 
 		private bool CanEdit()
@@ -420,17 +410,17 @@ namespace DBExport.Main.ViewModel
 
 		private bool CanDelete()
 		{
-			return IsEnabled && IsSelected && State == enFormState.None;
+			return IsEnabled && IsSelected && SelectedTable.State == enFormState.None;
 		}
 
 		private bool CanAdd()
 		{
-			return IsEnabled && State != enFormState.Create;
+			return IsEnabled && !IsSelected || (IsSelected &&  SelectedTable.State != enFormState.Create);
 		}
 
 		private bool CanMerge()
 		{
-			return IsEnabled && IsSelected && State != enFormState.Create;
+			return IsEnabled && IsSelected && SelectedTable.State != enFormState.Create;
 		}
 
 		private void OnClose()
@@ -482,8 +472,9 @@ namespace DBExport.Main.ViewModel
 
 				}, DispatcherPriority.Normal);
 
+				SelectedTable.IsAppenedSuccessfully = null;
 				ChangeState(false);
-				State = enFormState.None;
+				SelectedTable.State = enFormState.None;
 			}));
 
 		}
@@ -513,7 +504,6 @@ namespace DBExport.Main.ViewModel
 			}
 
 			IsLoading = true;
-			State = enFormState.Create;
 
 			ThreadPool.QueueUserWorkItem(new WaitCallback((par) =>
 			{
@@ -525,7 +515,7 @@ namespace DBExport.Main.ViewModel
 					BeginInvoke(DispatcherPriority.Normal, () =>
 					{
 						SelectedTable = new TableViewModel(table);
-
+						SelectedTable.State = enFormState.Create;
 						SelectedTable.Current.Status = Status.Added;
 						
 						this.Tables.Add(SelectedTable);
@@ -539,23 +529,6 @@ namespace DBExport.Main.ViewModel
 				ChangeState(false);
 			}));
 
-		}
-
-		public bool IsAppenedSuccessfully
-		{
-			get
-			{
-				return mvIsAppenedSuccessfully;
-			}
-			set
-			{
-				if (value == mvIsAppenedSuccessfully)
-					return;
-
-				mvIsAppenedSuccessfully = value;
-
-				RaisePropertyChanged(() => this.IsAppenedSuccessfully);
-			}
 		}
 
 		private void SetMerge()
@@ -572,7 +545,7 @@ namespace DBExport.Main.ViewModel
 			}
 
 			IsLoading = true;
-			State = enFormState.EditTable;
+			SelectedTable.State = enFormState.EditTable;
 
 			ThreadPool.QueueUserWorkItem(new WaitCallback((par) =>
 			{
@@ -584,7 +557,7 @@ namespace DBExport.Main.ViewModel
 
 					BeginInvoke(DispatcherPriority.Normal, () =>
 					{
-						IsAppenedSuccessfully = res;
+						SelectedTable.IsAppenedSuccessfully = res;
 						RaiseRefresh();
 						this.RaisePropertyChanged(() => this.SelectedTableView);
 					});
