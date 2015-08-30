@@ -98,5 +98,31 @@ namespace DbExport.Database
 
 			}//rows cycle
 		}//FillData
+
+		public static DataTable GetItems(DataTable table, int offset, int count)
+		{
+			DataTable tableRes = new DataTable();
+
+			tableRes.TableName = table.TableName;
+			//tableRes.Columns.AddRange(table.Columns.Cast<DataColumn>().ToArray());
+
+			foreach (DataColumn coll in table.Columns)
+			{
+				string name = coll.ColumnName;
+				Type type = coll.DataType;
+				DataColumn newColl = new DataColumn(name, type);
+				tableRes.Columns.Add(newColl);
+			}
+
+			int start = offset;
+			int length = Math.Min(table.Rows.Count, start + count);
+
+			for (int i = start; i < length; i++)
+			{
+				object[] data = table.Rows[i].ItemArray;
+				tableRes.Rows.Add(data);
+			}
+			return tableRes;
+		}//Get items
 	}
 }

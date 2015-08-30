@@ -127,10 +127,10 @@ namespace DbExport.Controls.Nav
 		private void GoToLast()
 		{
 
-			start = (totalItems / itemCount - 1) * itemCount;
-			start += totalItems % itemCount == 0 ? 0 : itemCount;
+			//start = (totalItems / itemCount - 1) * itemCount;
+			//start += totalItems % itemCount == 0 ? 0 : itemCount;
 
-			RaiseRefresh();
+			//RaiseRefresh();
 		}
 
 		private void GoToFirst()

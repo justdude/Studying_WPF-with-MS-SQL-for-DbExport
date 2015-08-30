@@ -78,11 +78,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CFileHelper.cs" />
-    <Compile Include="Controls\DataGridTemplated.cs" />
+    <Compile Include="Enumeration\Status.cs" />
     <Compile Include="Interfaces\IDataButtons.cs" />
     <Compile Include="Interfaces\IObjectBase.cs" />
     <Compile Include="Interfaces\IWindowsHelper.cs" />
+    <Compile Include="Messages\ChangeSelected.cs" />
     <Compile Include="Messages\CloseWindowMessage.cs" />
+    <Compile Include="Messages\DeleteSelected.cs" />
     <Compile Include="Messages\MessageExtended.cs" />
     <Compile Include="MVVM\ControlBehavior.cs" />
     <Compile Include="MVVM\ViewModelExtended.cs" />

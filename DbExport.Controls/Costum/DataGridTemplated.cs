@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using GalaSoft.MvvmLight.Messaging;
 
 namespace DBExport.Common.Controls
 {
@@ -20,6 +21,26 @@ namespace DBExport.Common.Controls
 			DependencyProperty.Register("Selector", typeof(DataTemplateSelector), typeof(DataGridTemplated),
 			new FrameworkPropertyMetadata(null));
 
+		public string Token { get; set; }
+
+		public DataGridTemplated():base()
+		{
+			Loaded += DataGridTemplated_Loaded;
+		}
+
+		void DataGridTemplated_Loaded(object sender, RoutedEventArgs e)
+		{
+			Messenger.Default.Register<Messages.DeleteSelected>(this, Token, OnDeleteSelected);
+			Messenger.Default.Register<Messages.ChangeSelected>(this,  Token, OnChangeSelected);
+		}
+
+		private void OnDeleteSelected(Messages.DeleteSelected obj)
+		{
+		}
+
+		private void OnChangeSelected(Messages.ChangeSelected obj)
+		{
+		}
 
 		protected override void OnAutoGeneratingColumn(DataGridAutoGeneratingColumnEventArgs e)
 		{

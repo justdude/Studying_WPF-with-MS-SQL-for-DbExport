@@ -16,6 +16,7 @@ using System.Windows.Threading;
 using System.Threading;
 using System.Windows;
 using DBExport.Common.Messages;
+using DbExport.Database;
 //using Microsoft.Practices.Prism.Commands;
 //using Microsoft.Practices.Prism.Mvvm;
 
@@ -89,7 +90,7 @@ namespace DBExport.Main.ViewModel
 				if (!IsSelected || !SelectedTable.IsExist)
 					return null;
 
-				return GetItems(SelectedTable.Current.Data, 0, 20).DefaultView;
+				return CDataTableHelper.GetItems(SelectedTable.Current.Data, 0, 20).DefaultView;
 			}
 		}
 
@@ -108,32 +109,6 @@ namespace DBExport.Main.ViewModel
 
 				RaisePropertyChanged(() => this.IsLoading);
 			}
-		}
-
-		public DataTable GetItems(DataTable table, int offset, int count)
-		{
-			DataTable tableRes = new DataTable();
-
-			tableRes.TableName = table.TableName;
-			//tableRes.Columns.AddRange(table.Columns.Cast<DataColumn>().ToArray());
-
-			foreach (DataColumn coll in table.Columns)
-			{
-				string name = coll.ColumnName;
-				Type type = coll.DataType;
-				DataColumn newColl = new DataColumn(name, type);
-				tableRes.Columns.Add(newColl);
-			}
-
-			int start = offset;
-			int length = Math.Min(table.Rows.Count, start + count);
-
-			for (int i = start; i < length; i++)
-			{
-				object[] data = table.Rows[i].ItemArray;
-				tableRes.Rows.Add(data);
-			}
-			return tableRes;
 		}
 
 		public string SelectedItemName

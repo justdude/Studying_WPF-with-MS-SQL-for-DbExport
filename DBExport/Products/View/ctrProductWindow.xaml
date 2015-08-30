@@ -32,6 +32,7 @@
 					VerticalAlignment="Center" Style="{StaticResource btnStyle}"></Button>
 			<Button Content="Delete" 
 					Command="{Binding DeleteCommand}"
+					Click="Button_Click"
 					VerticalAlignment="Center" 
 					Style="{StaticResource btnStyle}"></Button>
 			<Button Content="Refresh" 
@@ -42,7 +43,8 @@
 
 
 		<!---->
-			<DataGrid ItemsSource="{Binding SelectedTableView}"
+			<DataGrid Name="grdTable"
+					ItemsSource="{Binding SelectedTableView}"
 					Style="{StaticResource DGHeaderStyle}"
 					ColumnWidth="60"
 					Grid.Row="1"

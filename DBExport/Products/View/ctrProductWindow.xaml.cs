@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,6 +24,17 @@ namespace DBExport.Products.View
 		public ctrProductWindow()
 		{
 			InitializeComponent();
+		}
+
+		private void Button_Click(object sender, RoutedEventArgs e)
+		{
+			DataRowView rowView = (DataRowView)grdTable.SelectedItem;
+			OnItemChanged(rowView, DbExport.Common.Interfaces.Status.Deleted);
+		}
+
+		private void OnItemChanged(DataRowView rowView, DbExport.Common.Interfaces.Status status)
+		{
+			rowView.Delete();
 		}
 	}
 }
