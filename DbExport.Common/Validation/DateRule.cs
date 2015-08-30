@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 
-namespace CRM.Common.Validation
+namespace Common.Validation
 {
 	public class DateRule : ValidationRule
 	{

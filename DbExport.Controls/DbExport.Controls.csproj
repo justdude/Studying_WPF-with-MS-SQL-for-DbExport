@@ -57,6 +57,8 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\MahApps.Metro.1.1.2.0\lib\net45\System.Windows.Interactivity.dll</HintPath>
     </Reference>
@@ -78,6 +80,11 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Costum\DataGridTemplated.cs" />
+    <Compile Include="GeneratableForm\Items\CCollumnItem.cs" />
+    <Compile Include="GeneratableForm\Items\CRowItem.cs" />
+    <Compile Include="GeneratableForm\ctrGeneratableForm.xaml.cs">
+      <DependentUpon>ctrGeneratableForm.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Nav\ctrDataNav.xaml.cs">
       <DependentUpon>ctrDataNav.xaml</DependentUpon>
     </Compile>
@@ -119,6 +126,14 @@
     <Folder Include="Nav\View\" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="GeneratableForm\Resources.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="GeneratableForm\ctrGeneratableForm.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Nav\ctrDataNav.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
