@@ -4,11 +4,14 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
 			 xmlns:nav="clr-namespace:DbExport.Controls.Nav;assembly=DbExport.Controls"
+			 xmlns:form="clr-namespace:DbExport.Controls.GeneratableForm;assembly=DbExport.Controls"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DesignHeight="350" d:DesignWidth="800">
 	<Grid>
 		<Grid.ColumnDefinitions>
 
+			<ColumnDefinition MinWidth="220" Width="265"/>
+			<ColumnDefinition Width="auto" MaxWidth="3"></ColumnDefinition>
 			<ColumnDefinition Width="60*"/>
 
 		</Grid.ColumnDefinitions>
@@ -21,7 +24,33 @@
 
 		<TextBlock>Select table</TextBlock>
 
+		<TextBlock Grid.Column="2">Table data</TextBlock>
+		<Border
+			BorderBrush="Black"
+			BorderThickness="1"
+			Grid.Column="0" 
+			Grid.Row="1"
+			Grid.RowSpan="1"
+			Margin="5 5 0 5"
+			HorizontalAlignment="Stretch"
+			VerticalAlignment="Stretch">
 
+			<ListBox Name="lstBoxTables"
+				 IsEnabled="{Binding IsEnabled}"
+				 SelectedItem="{Binding SelectedTable}"
+				 ItemsSource="{Binding Tables}" Margin="5">
+				<ListBox.ItemTemplate>
+					<DataTemplate>
+						<StackPanel Orientation="Horizontal">
+							<TextBlock Text="{Binding Name}"></TextBlock>
+						</StackPanel>
+					</DataTemplate>
+				</ListBox.ItemTemplate>
+			</ListBox>
+
+		</Border>
+
+		
 		<StackPanel Grid.Row="3" VerticalAlignment="Center" HorizontalAlignment="Stretch" Orientation="Horizontal" Margin="0,4,0,4">
 			<Button Content="Add" 
 					Command="{Binding AddCommand}" 
@@ -32,7 +61,6 @@
 					VerticalAlignment="Center" Style="{StaticResource btnStyle}"></Button>
 			<Button Content="Delete" 
 					Command="{Binding DeleteCommand}"
-					Click="Button_Click"
 					VerticalAlignment="Center" 
 					Style="{StaticResource btnStyle}"></Button>
 			<Button Content="Refresh" 
@@ -41,37 +69,28 @@
 					Style="{StaticResource btnStyle}"></Button>
 		</StackPanel>
 
+		<GridSplitter Grid.Row="0"
+					  Grid.Column="1"
+					  Grid.RowSpan="4"
+					  Height="Auto" 
+					  Width="4" 
+					  ResizeDirection="Columns"
+					  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
+					  Margin="0"/>
 
 		<!---->
-			<DataGrid Name="grdTable"
-					ItemsSource="{Binding SelectedTableView}"
-					Style="{StaticResource DGHeaderStyle}"
-					ColumnWidth="60"
+		<form:ctrGeneratableForm 
+					DataContext="{Binding SelectedTableView}"
 					Grid.Row="1"
-					Grid.Column="0"
+					Grid.Column="1"
 					Grid.RowSpan="1"
 					MinWidth="200"
 					MinHeight="220"
 					Margin="5"
 					HorizontalAlignment="Stretch"
-					VerticalAlignment="Stretch"
-					AutoGenerateColumns="True" 
-					VirtualizingStackPanel.VirtualizationMode="Standard"
-					EnableColumnVirtualization="True"
-					EnableRowVirtualization="True"
-					ScrollViewer.VerticalScrollBarVisibility="Auto"
-					ScrollViewer.HorizontalScrollBarVisibility="Auto"
-					ScrollViewer.CanContentScroll="True"
-					IsReadOnly="True">
-				 <!--<DataGrid.Resources>
-						<Style TargetType="Button" x:Key="{ComponentResourceKey ResourceId=DataGridSelectAllButtonStyle, TypeInTargetAssembly={x:Type DataGrid}}">
-							<Setter Property="Background" Value="Black" />
-						</Style>
-					</DataGrid.Resources>-->
-		</DataGrid>
-
-
-		<StackPanel Grid.Column="2" Grid.Row="2" 
+					VerticalAlignment="Stretch"/>
+		
+		<StackPanel Grid.Column="1" Grid.Row="2" 
 					VerticalAlignment="Center" HorizontalAlignment="Left"
 					Margin="5 0 0 0"
 					Orientation="Horizontal">
@@ -81,10 +100,6 @@
 		<StackPanel Grid.Column="2" Grid.Row="3" 
 					VerticalAlignment="Center" HorizontalAlignment="Right"
 					Orientation="Horizontal" Margin="5 0">
-			<Button Content="Setting up table" 
-					Command="{Binding SettingShowCommand}"
-					VerticalAlignment="Center" 
-					Style="{StaticResource btnStyle}"></Button>
 			<Button Content="Save" 
 					Command="{Binding SaveCommand}"
 					VerticalAlignment="Center" 

@@ -26,15 +26,15 @@ namespace DBExport.Products.View
 			InitializeComponent();
 		}
 
-		private void Button_Click(object sender, RoutedEventArgs e)
-		{
-			DataRowView rowView = (DataRowView)grdTable.SelectedItem;
-			OnItemChanged(rowView, DbExport.Common.Interfaces.Status.Deleted);
-		}
+		//private void Button_Click(object sender, RoutedEventArgs e)
+		//{
+		//	DataRowView rowView = (DataRowView)grdTable.SelectedItem;
+		//	OnItemChanged(rowView, DbExport.Common.Interfaces.Status.Deleted);
+		//}
 
-		private void OnItemChanged(DataRowView rowView, DbExport.Common.Interfaces.Status status)
-		{
-			rowView.Delete();
-		}
+		//private void OnItemChanged(DataRowView rowView, DbExport.Common.Interfaces.Status status)
+		//{
+		//	rowView.Delete();
+		//}
 	}
 }

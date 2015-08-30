@@ -17,13 +17,14 @@ using System.Windows.Shapes;
 namespace DbExport.Controls.GeneratableForm
 {
 	/// <summary>
-	/// Логика взаимодействия для UserControl1.xaml
+	/// Логика взаимодействия для ctrGeneratableForm.xaml
 	/// </summary>
-	public partial class UserControl1 : UserControl
+	public partial class ctrGeneratableForm : UserControl
 	{
 		private string tbStyleName;
 		private string tboxStyleName;
-		public UserControl1()
+
+		public ctrGeneratableForm()
 		{
 			InitializeComponent();
 			Items = new Dictionary<string, TextBox>();
