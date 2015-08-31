@@ -80,7 +80,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Costum\DataGridTemplated.cs" />
-    <Compile Include="GeneratableForm\Items\CCollumnItem.cs" />
     <Compile Include="GeneratableForm\Items\CRowItem.cs" />
     <Compile Include="GeneratableForm\ctrGeneratableForm.xaml.cs">
       <DependentUpon>ctrGeneratableForm.xaml</DependentUpon>

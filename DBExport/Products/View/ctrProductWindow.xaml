@@ -37,8 +37,8 @@
 
 			<ListBox Name="lstBoxTables"
 				 IsEnabled="{Binding IsEnabled}"
-				 SelectedItem="{Binding SelectedTable}"
-				 ItemsSource="{Binding Tables}" Margin="5">
+				 SelectedItem="{Binding SelectedRowsItem}"
+				 ItemsSource="{Binding RowItems}" Margin="5">
 				<ListBox.ItemTemplate>
 					<DataTemplate>
 						<StackPanel Orientation="Horizontal">
@@ -79,7 +79,7 @@
 					  Margin="0"/>
 
 		<!---->
-		<form:ctrGeneratableForm 
+		<form:ctrGeneratableForm Name="ctrGeneratableFormData"
 					DataContext="{Binding SelectedTableView}"
 					Grid.Row="1"
 					Grid.Column="1"

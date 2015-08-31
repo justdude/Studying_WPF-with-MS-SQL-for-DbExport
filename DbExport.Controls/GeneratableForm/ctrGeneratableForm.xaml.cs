@@ -13,6 +13,9 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using DBExport.Common.Containers;
+using DBExport.Common.MVVM;
+using GalaSoft.MvvmLight.Messaging;
 
 namespace DbExport.Controls.GeneratableForm
 {
@@ -28,33 +31,79 @@ namespace DbExport.Controls.GeneratableForm
 		{
 			InitializeComponent();
 			Items = new Dictionary<string, TextBox>();
+			Init();
+			Loaded += ctrGeneratableForm_Loaded;
+			Unloaded += ctrGeneratableForm_Unloaded;
 		}
+
+		private void Init()
+		{
+			Messenger.Default.Register<DBExport.Common.Messages.LoadCollumnsMessage>(Token, this, OnBuildColumns);
+		}
+
+		public string Token
+		{
+			get;
+			set;
+		}
+
 
 		public ObservableCollection<CCollumnItem> Collumns { get; set; }
 		public Dictionary<string, TextBox> Items { get; private set; }
+
+		void ctrGeneratableForm_Loaded(object sender, RoutedEventArgs e)
+		{
+		}
+
+		void ctrGeneratableForm_Unloaded(object sender, RoutedEventArgs e)
+		{
+			Messenger.Default.Unregister(this);
+		}
+
+		private void OnBuildColumns(DBExport.Common.Messages.LoadCollumnsMessage obj)
+		{
+			if (obj.Collumns == null)
+				return;
+
+			Collumns.Clear();
+
+			foreach (var item in obj.Collumns)
+			{
+				Collumns.Add(item);
+			} 
+
+			BuildCollumns();
+		}
 
 		public void BuildCollumns()
 		{
 			Items.Clear();
 
-			for (int i = 0; i < Collumns.Count; i++)
+			try
 			{
-				var row = CreateRowDefinition();
-				grdData_Container.RowDefinitions.Add(row);
+				for (int i = 0; i < Collumns.Count; i++)
+				{
+					var row = CreateRowDefinition();
+					grdData_Container.RowDefinitions.Add(row);
 
-				var textBlock = CreateTextBlock(i, 0, Collumns[i].Name);
-				var textBox = CreateTextBox(i, 1);
-				SetTextBoxBinding(textBox, "Value", Collumns[i].ItemType);
+					var textBlock = CreateTextBlock(i, 0, Collumns[i].Name);
+					var textBox = CreateTextBox(i, 1);
+					SetTextBoxBinding(textBox, "Value", Collumns[i].ItemType);
 
-				Items.Add(Collumns[i].Name, textBox);
+					Items.Add(Collumns[i].Name, textBox);
 
-				grdData_Container.Children.Add(textBlock);
-				grdData_Container.Children.Add(textBox);
+					grdData_Container.Children.Add(textBlock);
+					grdData_Container.Children.Add(textBox);
+				}
+			}
+			catch (Exception ex)
+			{ 
+				
 			}
 		}
 
 
-
+		#region Instatiates
 		private RowDefinition CreateRowDefinition()
 		{
 			RowDefinition RowDefinition = new RowDefinition();
@@ -139,9 +188,16 @@ namespace DbExport.Controls.GeneratableForm
 
 		private Style GetStyle(string name)
 		{
-			Style style = this.FindResource(name) as Style;
+			Style style = null;
+			try
+			{
+				style = this.FindResource(name) as Style;
+			}
+			catch (Exception ex)
+			{ }
+
 			return style;
 		}
-
+		#endregion
 	}
 }

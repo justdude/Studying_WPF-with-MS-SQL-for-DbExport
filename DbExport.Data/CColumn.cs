@@ -18,6 +18,13 @@ namespace DbExport.Data
 
 		public string CollType { get; set; }
 
+		public Type TargetType
+		{
+			get
+			{
+				return GetType(CollType);
+			}
+		}
 		#region IObjectBase
 
 		public override bool Save(SqlCeTransaction tr)

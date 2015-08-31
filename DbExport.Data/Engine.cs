@@ -173,5 +173,22 @@ namespace DbExport.Data
 			}
 		}
 
+
+		public string GetName(List<CValue> rowItems)
+		{
+			StringBuilder builder = new StringBuilder();
+
+			foreach (var item in rowItems)
+			{
+				builder.Append(item.ToString() + " ");
+			}
+
+			string str = builder.ToString();
+
+			if (string.IsNullOrWhiteSpace(str))
+				return str;
+
+			return str.Substring(0, Math.Min(str.Length, 10));
+		}
 	}
 }

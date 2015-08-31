@@ -25,8 +25,22 @@ namespace DBExport.Windows
 		public wndProducts()
 		{
 			InitializeComponent();
+			InitMessenger();
 			Loaded += wndProducts_Loaded;
 			Unloaded += wndProducts_Unloaded;
+		}
+
+		private void InitMessenger()
+		{
+			Messenger.Default.Register<DBExport.Common.Messages.CloseWindowMessage>(Token, OnWindowClose);
+		}
+
+		public string Token
+		{
+			get
+			{
+				return ControlBehavior.GetToken(this);
+			}
 		}
 
 		void wndProducts_Unloaded(object sender, RoutedEventArgs e)
@@ -36,7 +50,6 @@ namespace DBExport.Windows
 
 		void wndProducts_Loaded(object sender, RoutedEventArgs e)
 		{
-			Messenger.Default.Register<DBExport.Common.Messages.CloseWindowMessage>(Token, OnWindowClose);
 
 			//var viewModel = new TablesHandleViewModel();
 			//viewModel.Disp = this.Dispatcher;
@@ -49,12 +62,5 @@ namespace DBExport.Windows
 			Application.Current.Shutdown();
 		}
 
-		public string Token
-		{
-			get
-			{
-				return ControlBehavior.GetToken(this);
-			}
-		}
 	}
 }

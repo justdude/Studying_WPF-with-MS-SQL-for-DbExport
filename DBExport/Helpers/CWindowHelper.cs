@@ -21,8 +21,8 @@ namespace DBExport.Helpers
 			//	wind.Owner.Show();
 			//	wind.Activate();
 			//};
-			wind.DataContext = new Settings.ViewModel.TableSettingViewModel(table, checkRightColl) 
-			{ 
+			wind.DataContext = new Settings.ViewModel.TableSettingViewModel(table, checkRightColl)
+			{
 				Token = wind.Token,
 			};
 			wind.Closed += (p, v) =>
@@ -30,7 +30,7 @@ namespace DBExport.Helpers
 					if (onWindowClosed != null)
 						onWindowClosed();
 				};
-			
+
 			wind.Show();
 		}
 
@@ -44,9 +44,14 @@ namespace DBExport.Helpers
 				wind.Owner.Show();
 				wind.Activate();
 			};
-			wind.DataContext = new ProductItemsViewModel(table)
+
+			wind.Loaded += (p, e) =>
 			{
-				Token = wind.Token,
+				wind.DataContext = new ProductItemsViewModel(table)
+				{
+					Token = wind.Token,
+					Disp = wind.Dispatcher
+				};
 			};
 
 			wind.Show();

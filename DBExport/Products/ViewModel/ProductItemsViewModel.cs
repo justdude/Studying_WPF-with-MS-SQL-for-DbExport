@@ -12,10 +12,12 @@ using DbExport.Common.Interfaces;
 using DbExport.CSV;
 using DbExport.Data;
 using DbExport.Database;
+using DBExport.Common.Containers;
 using DBExport.Common.Messages;
 using DBExport.Common.MVVM;
 using DBExport.Main;
 using DBExport.Main.ViewModel;
+using DBExport.Products.ViewModel;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 
@@ -23,7 +25,7 @@ namespace DBExport.Products
 {
 	public class ProductItemsViewModel : ViewModelExtended
 	{
-		//private TableViewModel mvSelectedTable;
+		//private ProductItemViewModel mvSelectedTable;
 
 		private readonly RelayCommand mvAddCommand;
 		private readonly RelayCommand mvEditCommand;
@@ -31,26 +33,25 @@ namespace DBExport.Products
 		private readonly RelayCommand mvSaveCommand;
 		private readonly RelayCommand mvRefreshCommand;
 		private readonly RelayCommand mvCloseCommand;
-		private readonly RelayCommand mvSettingShowCommand;
-		private readonly RelayCommand mvSetMergeCommand;
 
 		private bool mvIsBlocked;
 		private bool mvIsHasError;
 		private bool mvIsMerge;
 		private bool mvIsLoading;
+		private ProductItemViewModel mvSelectedRowsItem;
 
 		public ProductItemsViewModel(DbExport.Data.CTable table)
 		{
 			this.SelectedTable = table;
 
-			//mvAddCommand = new RelayCommand(OnAdd, CanAdd);
-			//mvEditCommand = new RelayCommand(OnEdit, CanEdit);
-			//mvDeleteCommand = new RelayCommand(OnDeleteSelected, CanDelete);
-			//mvSaveCommand = new RelayCommand(OnSaveSelected, CanSave);
-			//mvRefreshCommand = new RelayCommand(OnRefresh, CanRefresh);
-			//mvCloseCommand = new RelayCommand(OnClose);
-			//mvSettingShowCommand = new RelayCommand(SettingShow, CanShowSettings);
-			//mvSetMergeCommand = new RelayCommand(SetMerge, CanMerge);
+			mvAddCommand = new RelayCommand(OnAdd, CanAdd);
+			mvEditCommand = new RelayCommand(OnEdit, CanEdit);
+			mvDeleteCommand = new RelayCommand(OnDeleteSelected, CanDelete);
+			mvSaveCommand = new RelayCommand(OnSaveSelected, CanSave);
+			mvRefreshCommand = new RelayCommand(OnRefresh, CanRefresh);
+			mvCloseCommand = new RelayCommand(OnClose);
+
+			RowItems = new ObservableCollection<ProductItemViewModel>();
 
 			OnDispatcherChanged += OnDispatcherChange;
 		}
@@ -62,24 +63,27 @@ namespace DBExport.Products
 
 		#region Properties
 
-		//public DBExport.Main.ViewModel.TableViewModel SelectedTable
-		//{
-		//	get
-		//	{
-		//		return mvSelectedTable;
-		//	}
-		//	set
-		//	{
-		//		if (mvSelectedTable == value)
-		//			return;
+		public ProductItemViewModel SelectedRowsItem
+		{
+			get
+			{
+				return mvSelectedRowsItem;
+			}
+			set
+			{
+				if (mvSelectedRowsItem == value)
+					return;
 
-		//		mvSelectedTable = value;
-		//		OnSelectedChanged(value);
+				mvSelectedRowsItem = value;
+				OnSelectedChanged(value);
 
-		//		this.RaisePropertyChanged(() => this.SelectedTable);
-		//		this.RaisePropertyChanged(() => this.SelectedTableView);
-		//	}
-		//}
+				this.RaisePropertyChanged(() => this.SelectedTable);
+				this.RaisePropertyChanged(() => this.SelectedTableView);
+			}
+		}
+
+		public ObservableCollection<ProductItemViewModel> RowItems { get; set; }
+
 		public CTable SelectedTable
 		{
 			get;
@@ -208,6 +212,60 @@ namespace DBExport.Products
 		
 		#endregion
 
+		#region Члены IDataButtons
+
+		public RelayCommand AddCommand
+		{
+			get
+			{
+				return mvAddCommand;
+			}
+		}
+
+		public RelayCommand EditCommand
+		{
+			get
+			{
+				return mvEditCommand;
+			}
+		}
+
+		public RelayCommand DeleteCommand
+		{
+			get
+			{
+				return mvDeleteCommand;
+			}
+		}
+
+		public RelayCommand SaveCommand
+		{
+			get
+			{
+				return mvSaveCommand;
+			}
+		}
+
+
+		public RelayCommand RefreshCommand
+		{
+			get
+			{
+				return mvRefreshCommand;
+			}
+		}
+
+		public RelayCommand CloseCommand
+		{
+			get
+			{
+				return mvCloseCommand;
+			}
+		}
+
+		#endregion
+
+
 		#region Methods
 
 		private void RaisePropertyesChanged()
@@ -226,8 +284,31 @@ namespace DBExport.Products
 			IsLoading = true;
 			IsEnabled = false;
 
-			ThreadPool.QueueUserWorkItem(new WaitCallback((par) =>
-			{
+			//ThreadPool.QueueUserWorkItem(new WaitCallback((par) =>
+			//{
+				IEnumerable<List<CValue>> dataRowsList = SelectedTable.Rows.GroupBy(p=>p.RowNumb).Select(p=>p.ToList());
+
+				RowItems.Clear();
+
+				foreach (var items in dataRowsList)
+				{
+					ProductItemViewModel pr = new ProductItemViewModel();
+					pr.RowItems = items;
+
+					RowItems.Add(pr);
+
+					pr.RaisePropertyesChanged();
+					//Application.Current.Dispatcher.Invoke(() => pr.RaisePropertyesChanged(), DispatcherPriority.Normal);
+				}
+
+				if (!IsCollumnsLoaded)
+				{
+					var items = SelectedTable.Columns.Select(p=> new CCollumnItem() { ItemType = p.TargetType, Name = p.Name }).ToList();
+
+					MessengerInstance.Send<Common.Messages.LoadCollumnsMessage>(new LoadCollumnsMessage() { Collumns = items }, Token);
+					IsCollumnsLoaded = true;
+				}
+
 				Application.Current.Dispatcher.Invoke(() =>
 				{
 					IsEnabled = true;
@@ -236,17 +317,17 @@ namespace DBExport.Products
 					RaiseRefresh();
 
 				}, DispatcherPriority.Normal);
-			}));
+			//}));
 		}
 
 		private void OnDataChanged(object obj)
 		{
-			//EmployesItemsViewModel vm = obj as EmployesItemsViewModel;
-			//if (vm != null && vm == this)
-			//{
-			//	this.RaisePropertyChanged(() => IsHasError);
-			//	RefreshCommands();
-			//}
+			ProductItemViewModel vm = obj as ProductItemViewModel;
+			if (vm != null)
+			{
+				this.RaisePropertyChanged(() => IsHasError);
+				RefreshCommands();
+			}
 		}
 
 		private void OnItemChanged(DataRowView rowView, IObjectBase data, Status status)
@@ -258,7 +339,7 @@ namespace DBExport.Products
 			data.Status = Status.Deleted;
 		}
 
-		private void OnSelectedChanged(TableViewModel obj)
+		private void OnSelectedChanged(ProductItemViewModel obj)
 		{
 			RefreshCommands();
 		}
@@ -271,14 +352,12 @@ namespace DBExport.Products
 
 		private void RefreshCommands()
 		{
-			//RefreshCommand.RaiseCanExecuteChanged();
-			//SaveCommand.RaiseCanExecuteChanged();
-			//EditCommand.RaiseCanExecuteChanged();
-			//DeleteCommand.RaiseCanExecuteChanged();
-			//AddCommand.RaiseCanExecuteChanged();
-			//CloseCommand.RaiseCanExecuteChanged();
-			//SettingShowCommand.RaiseCanExecuteChanged();
-			//SetMergeCommand.RaiseCanExecuteChanged();
+			RefreshCommand.RaiseCanExecuteChanged();
+			SaveCommand.RaiseCanExecuteChanged();
+			EditCommand.RaiseCanExecuteChanged();
+			DeleteCommand.RaiseCanExecuteChanged();
+			AddCommand.RaiseCanExecuteChanged();
+			CloseCommand.RaiseCanExecuteChanged();
 		}
 
 		private bool CanRefresh()
@@ -422,5 +501,7 @@ namespace DBExport.Products
 		#endregion
 
 		public enFormState State { get; set; }
+
+		public bool IsCollumnsLoaded { get; set; }
 	}
 }

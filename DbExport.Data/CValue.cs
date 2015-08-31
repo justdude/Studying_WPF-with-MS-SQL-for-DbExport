@@ -241,5 +241,16 @@ namespace DbExport.Data
 			}
 			return null;
 		}
+
+		public override string ToString()
+		{
+			object data = GetValue();
+
+			if (data == null)
+				return string.Empty;
+
+			return data.ToString();
+		}
+
 	}
 }

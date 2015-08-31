@@ -13,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using DBExport.Common.MVVM;
 
 namespace DBExport.Products.View
 {
@@ -24,6 +25,15 @@ namespace DBExport.Products.View
 		public ctrProductWindow()
 		{
 			InitializeComponent();
+			//this.ctrGeneratableFormData.Token = Token
+		}
+
+		public string Token
+		{
+			get
+			{
+				return ControlBehavior.GetToken(this);
+			}
 		}
 
 		//private void Button_Click(object sender, RoutedEventArgs e)

@@ -118,7 +118,8 @@
     </ApplicationDefinition>
     <Compile Include="Helpers\CWindowHelper.cs" />
     <Compile Include="Main\enFormState.cs" />
-    <Compile Include="Products\ProductItemsViewModel.cs" />
+    <Compile Include="Products\ViewModel\ProductItemsViewModel.cs" />
+    <Compile Include="Products\ViewModel\ProductItemViewModel.cs" />
     <Compile Include="Products\View\ctrProductWindow.xaml.cs">
       <DependentUpon>ctrProductWindow.xaml</DependentUpon>
     </Compile>
