@@ -80,6 +80,7 @@
 
 		<!---->
 		<form:ctrGeneratableForm Name="ctrGeneratableFormData"
+					
 					DataContext="{Binding SelectedTableView}"
 					Grid.Row="1"
 					Grid.Column="1"

@@ -31,23 +31,41 @@ namespace DbExport.Controls.GeneratableForm
 		{
 			InitializeComponent();
 			Items = new Dictionary<string, TextBox>();
-			Init();
 			Loaded += ctrGeneratableForm_Loaded;
 			Unloaded += ctrGeneratableForm_Unloaded;
 		}
 
-		private void Init()
+		public void Init(string token)
 		{
-			Messenger.Default.Register<DBExport.Common.Messages.LoadCollumnsMessage>(Token, this, OnBuildColumns);
+			Token = token;
+
+			Messenger.Default.Unregister(this);
+
+			Messenger.Default.Register<DBExport.Common.Messages.LoadCollumnsMessage>(this, Token, OnBuildColumns);
+
 		}
 
+		//public string Token
+		//{
+		//	get { return (string)GetValue(TokenProperty); }
+		//	set
+		//	{
+		//		SetValue(TokenProperty, value);
+		//		Init();
+		//	}
+		//}
+
+		//public static readonly DependencyProperty TokenProperty =
+		//	DependencyProperty.Register("Token", typeof(string), typeof(ctrGeneratableForm), new PropertyMetadata(string.Empty));
 		public string Token
 		{
 			get;
 			set;
+			//get
+			//{
+			//	return ControlBehavior.GetToken(this);
+			//}
 		}
-
-
 		public ObservableCollection<CCollumnItem> Collumns { get; set; }
 		public Dictionary<string, TextBox> Items { get; private set; }
 
@@ -65,12 +83,15 @@ namespace DbExport.Controls.GeneratableForm
 			if (obj.Collumns == null)
 				return;
 
+			if (Collumns == null)
+				Collumns = new ObservableCollection<CCollumnItem>();
+
 			Collumns.Clear();
 
 			foreach (var item in obj.Collumns)
 			{
 				Collumns.Add(item);
-			} 
+			}
 
 			BuildCollumns();
 		}
@@ -97,8 +118,8 @@ namespace DbExport.Controls.GeneratableForm
 				}
 			}
 			catch (Exception ex)
-			{ 
-				
+			{
+
 			}
 		}
 
@@ -124,7 +145,7 @@ namespace DbExport.Controls.GeneratableForm
 
 			Grid.SetColumn(tb, column);
 			Grid.SetRow(tb, row);
-			
+
 			return tb;
 		}
 

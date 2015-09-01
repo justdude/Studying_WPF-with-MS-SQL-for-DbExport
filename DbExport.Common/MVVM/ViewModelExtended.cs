@@ -12,7 +12,19 @@ namespace DBExport.Common.MVVM
 	public class ViewModelExtended : ViewModelBase
 	{
 		private Dispatcher mvDispatcher;
-		public string Token { get; set; }
+		private string mvToken;
+		public string Token
+		{
+			get
+			{
+				return mvToken;
+			}
+			set
+			{
+				mvToken = value;
+				OnTokenChanged();
+			}
+		}
 
 		public Dispatcher Disp 
 		{
@@ -25,6 +37,10 @@ namespace DBExport.Common.MVVM
 				mvDispatcher = value;
 				RaiseOnDispatcherChaned(mvDispatcher);
 			}
+		}
+
+		protected virtual void OnTokenChanged()
+		{
 		}
 
 		public Action<Dispatcher> OnDispatcherChanged { get; set; }

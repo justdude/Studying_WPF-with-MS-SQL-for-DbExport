@@ -21,7 +21,7 @@
 			<RowDefinition Height="*"></RowDefinition>
 			<RowDefinition Height="22"></RowDefinition>
 		</Grid.RowDefinitions>
-		<view:ctrProductWindow Grid.Row="0"></view:ctrProductWindow>
+		<view:ctrProductWindow x:Name="ctrProd" Grid.Row="0"></view:ctrProductWindow>
 		<StatusBar Grid.Row="1">
 			<StatusBarItem>
 				<StackPanel Orientation="Horizontal">

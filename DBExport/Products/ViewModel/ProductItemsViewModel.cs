@@ -58,7 +58,12 @@ namespace DBExport.Products
 
 		private void OnDispatcherChange(System.Windows.Threading.Dispatcher obj)
 		{
+		}
+
+		protected override void OnTokenChanged()
+		{
 			LoadData();
+			base.OnTokenChanged();
 		}
 
 		#region Properties

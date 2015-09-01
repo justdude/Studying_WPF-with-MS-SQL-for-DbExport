@@ -25,7 +25,12 @@ namespace DBExport.Products.View
 		public ctrProductWindow()
 		{
 			InitializeComponent();
-			//this.ctrGeneratableFormData.Token = Token
+			Loaded += ctrProductWindow_Loaded;
+		}
+
+		void ctrProductWindow_Loaded(object sender, RoutedEventArgs e)
+		{
+			
 		}
 
 		public string Token
@@ -34,6 +39,11 @@ namespace DBExport.Products.View
 			{
 				return ControlBehavior.GetToken(this);
 			}
+		}
+
+		public void Init(string token)
+		{
+			ctrGeneratableFormData.Init(token);
 		}
 
 		//private void Button_Click(object sender, RoutedEventArgs e)

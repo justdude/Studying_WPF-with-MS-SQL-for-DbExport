@@ -47,6 +47,7 @@ namespace DBExport.Helpers
 
 			wind.Loaded += (p, e) =>
 			{
+				wind.ctrProd.Init(wind.Token);
 				wind.DataContext = new ProductItemsViewModel(table)
 				{
 					Token = wind.Token,
