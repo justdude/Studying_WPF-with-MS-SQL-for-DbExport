@@ -138,7 +138,7 @@ namespace DbExport.Controls.GeneratableForm
 			tb.MinWidth = 90;
 			tb.FontWeight = FontWeights.Bold;
 			tb.Margin = new Thickness(5);
-			tb.Style = GetStyle(tbStyleName);
+			//tb.Style = GetStyle(tbStyleName);
 
 			var bc = new BrushConverter();
 			tb.Foreground = (Brush)bc.ConvertFrom("#FF2D72BC");
@@ -157,7 +157,7 @@ namespace DbExport.Controls.GeneratableForm
 			tb.Width = 150;
 			tb.FontWeight = FontWeights.Bold;
 			tb.Margin = new Thickness(5);
-			tb.Style = GetStyle(tboxStyleName);
+			//tb.Style = GetStyle(tboxStyleName);
 
 			var bc = new BrushConverter();
 			tb.Foreground = (Brush)bc.ConvertFrom("#FF2D72BC");

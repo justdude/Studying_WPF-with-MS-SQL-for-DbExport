@@ -50,7 +50,7 @@
 
 		</Border>
 
-		
+
 		<StackPanel Grid.Row="3" VerticalAlignment="Center" HorizontalAlignment="Stretch" Orientation="Horizontal" Margin="0,4,0,4">
 			<Button Content="Add" 
 					Command="{Binding AddCommand}" 
@@ -85,6 +85,7 @@
 					Grid.Row="1"
 					Grid.Column="1"
 					Grid.RowSpan="1"
+                    Grid.ColumnSpan="2"
 					MinWidth="200"
 					MinHeight="220"
 					Margin="5"
