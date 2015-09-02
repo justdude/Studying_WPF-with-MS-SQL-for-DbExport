@@ -24,8 +24,9 @@ namespace DbExport.Controls.GeneratableForm
 	/// </summary>
 	public partial class ctrGeneratableForm : UserControl
 	{
-		private string tbStyleName;
-		private string tboxStyleName;
+		const string tbStyleName = "";
+		const string tboxStyleName = "";
+		const string tboxTmlErrorName = "tbError";
 
 		public ctrGeneratableForm()
 		{
@@ -175,6 +176,7 @@ namespace DbExport.Controls.GeneratableForm
 			tb.FontWeight = FontWeights.Bold;
 			tb.Margin = new Thickness(5);
 			//tb.Style = GetStyle(tboxStyleName);
+			SetErrorTemplate(tb);
 
 			var bc = new BrushConverter();
 			tb.Foreground = (Brush)bc.ConvertFrom("#FF2D72BC");
@@ -183,6 +185,16 @@ namespace DbExport.Controls.GeneratableForm
 			Grid.SetRow(tb, row);
 
 			return tb;
+		}
+
+		private void SetErrorTemplate(TextBox tb)
+		{
+			try
+			{
+				Validation.SetErrorTemplate(tb, this.FindResource(tboxTmlErrorName) as ControlTemplate);
+			}
+			catch (Exception ex)
+			{ }
 		}
 
 		private static void SetTextBoxBinding(TextBox tb, Type type, object source)
