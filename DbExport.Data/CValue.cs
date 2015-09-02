@@ -8,6 +8,7 @@ using CRM.Database;
 using DbExport.Common.Interfaces;
 using DbExport.Data.Constants;
 using DbExport.Database;
+using DBExport.Common.Interfaces;
 
 namespace DbExport.Data
 {
@@ -21,7 +22,7 @@ namespace DbExport.Data
 		DateTime
 	}
 
-	public class CValue : CObjectBase
+	public class CValue : CObjectBase, IDataValue
 	{
 		public string Id { get; set; }
 		public string CollumnId { get; set; }
@@ -38,6 +39,20 @@ namespace DbExport.Data
 		public CColumn Column { get; set; }
 		public Type ValueType { get; set; }
 
+		public string CollumnName
+		{
+			get
+			{ 
+				string str = string.Empty;
+
+				if (Column != null)
+				{
+					str = Column.Name;
+				}
+
+				return str;
+			}
+		}
 		#region Члены IObjectBase
 
 		public override bool Save()

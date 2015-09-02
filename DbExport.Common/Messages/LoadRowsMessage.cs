@@ -9,6 +9,6 @@ namespace DBExport.Common.Messages
 {
 	public class LoadRowsMessage : MessageExtended
 	{
-		public List<CRowItem> Rows { get; set; }
+		public List<CRowItemViewModel> Rows { get; set; }
 	}
 }

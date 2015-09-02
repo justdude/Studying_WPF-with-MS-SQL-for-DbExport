@@ -292,15 +292,7 @@ namespace DBExport.Products
 				if (item == null)
 					return;
 
-				List<CRowItem> items = item.RowItems.Select(p =>
-					new CRowItem()
-					{
-						Name = p.Column.Name,
-						Value = p.GetValue(),
-						ValueType = p.ValueType
-					}).ToList();
-
-				MessengerInstance.Send<Common.Messages.LoadRowsMessage>(new LoadRowsMessage() { Rows = items }, Token);
+				MessengerInstance.Send<Common.Messages.LoadRowsMessage>(new LoadRowsMessage() { Rows = item.RowitemsViewModels }, Token);
 			}
 			catch(Exception ex)
 			{}
@@ -323,16 +315,21 @@ namespace DBExport.Products
 				pr.RowItems = items;
 
 				RowItems.Add(pr);
-
+		
 				pr.RaisePropertyesChanged();
 				//Application.Current.Dispatcher.Invoke(() => pr.RaisePropertyesChanged(), DispatcherPriority.Normal);
 			}
 
 			if (!IsCollumnsLoaded)
 			{
-				var items = SelectedTable.Columns.Select(p => new CCollumnItem() { ItemType = p.TargetType, Name = p.Name }).ToList();
+				var collumns = SelectedTable.Columns.Select(p => new CCollumnItem() 
+				{ 
+					ItemType = p.TargetType, 
+					Name = p.Name,
+					Coll = p
+				}).ToList();
 
-				MessengerInstance.Send<Common.Messages.LoadCollumnsMessage>(new LoadCollumnsMessage() { Collumns = items }, Token);
+				MessengerInstance.Send<Common.Messages.LoadCollumnsMessage>(new LoadCollumnsMessage() { Collumns = collumns }, Token);
 				IsCollumnsLoaded = true;
 			}
 

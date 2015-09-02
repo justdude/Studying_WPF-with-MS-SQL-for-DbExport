@@ -79,9 +79,10 @@
   <ItemGroup>
     <Compile Include="CFileHelper.cs" />
     <Compile Include="Containers\CCollumnItem.cs" />
-    <Compile Include="Containers\CRowItem.cs" />
+    <Compile Include="Containers\CRowItemViewModel.cs" />
     <Compile Include="Enumeration\Status.cs" />
     <Compile Include="Interfaces\IDataButtons.cs" />
+    <Compile Include="Interfaces\IDataValue.cs" />
     <Compile Include="Interfaces\IObjectBase.cs" />
     <Compile Include="Interfaces\IWindowsHelper.cs" />
     <Compile Include="Messages\CCollumnItem.cs" />

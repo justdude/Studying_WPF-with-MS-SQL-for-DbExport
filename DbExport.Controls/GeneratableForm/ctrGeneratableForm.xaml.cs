@@ -30,7 +30,7 @@ namespace DbExport.Controls.GeneratableForm
 		public ctrGeneratableForm()
 		{
 			InitializeComponent();
-			Items = new Dictionary<string, TextBox>();
+			DataBoxes = new Dictionary<string, TextBox>();
 			Loaded += ctrGeneratableForm_Loaded;
 			Unloaded += ctrGeneratableForm_Unloaded;
 		}
@@ -68,8 +68,7 @@ namespace DbExport.Controls.GeneratableForm
 			//}
 		}
 		public ObservableCollection<CCollumnItem> Collumns { get; set; }
-		public ObservableCollection<CRowItem> Row { get; set; }
-		public Dictionary<string, TextBox> Items { get; private set; }
+		public Dictionary<string, TextBox> DataBoxes { get; private set; }
 
 		void ctrGeneratableForm_Loaded(object sender, RoutedEventArgs e)
 		{
@@ -100,15 +99,23 @@ namespace DbExport.Controls.GeneratableForm
 
 		private void OnRowsChanged(DBExport.Common.Messages.LoadRowsMessage obj)
 		{
-			//foreach (var item in obj.Rows)
-			//{
-			//	this.Row.Add(item);
-			//}
+			foreach (var item in DataBoxes)
+			{
+				CRowItemViewModel viewModel = obj.Rows.FirstOrDefault(p => p.CollumnName == item.Key);
+				
+				if (viewModel == null)
+					continue;
+
+				TextBox tb = item.Value;
+
+				SetTextBoxBinding(tb, viewModel.ValueType, viewModel);
+			}
+
 		}
 
 		public void BuildCollumns()
 		{
-			Items.Clear();
+			DataBoxes.Clear();
 
 			try
 			{
@@ -119,9 +126,9 @@ namespace DbExport.Controls.GeneratableForm
 
 					var textBlock = CreateTextBlock(i, 0, Collumns[i].Name);
 					var textBox = CreateTextBox(i, 1);
-					SetTextBoxBinding(textBox, "Value", Collumns[i].ItemType);
+					//SetTextBoxBinding(textBox, Collumns[i].ItemType);
 
-					Items.Add(Collumns[i].Name, textBox);
+					DataBoxes.Add(Collumns[i].Name, textBox);
 
 					grdData_Container.Children.Add(textBlock);
 					grdData_Container.Children.Add(textBox);
@@ -178,9 +185,9 @@ namespace DbExport.Controls.GeneratableForm
 			return tb;
 		}
 
-		private static void SetTextBoxBinding(TextBox tb, string propName, Type type)
+		private static void SetTextBoxBinding(TextBox tb, Type type, object source)
 		{
-			var binding = new Binding(propName);
+			var binding = new Binding();
 			binding.Source = tb;
 			binding.Mode = BindingMode.TwoWay;
 
@@ -188,29 +195,41 @@ namespace DbExport.Controls.GeneratableForm
 			{
 				ValidationRule rule = null;
 
+				string prName = string.Empty;
+
 				switch (Type.GetTypeCode(type))
 				{
 					case TypeCode.Boolean:
+						prName = "BoolValue";
 						break;
 					case TypeCode.DateTime:
+						prName = "DateValue";
 						break;
 					case TypeCode.Double:
+						prName = "FloatValue";
 						break;
 					case TypeCode.Int32:
 						break;
 					case TypeCode.String:
+						prName = "StrValue";
 						break;
 					case TypeCode.Single:
+						prName = "IntValue";
 						break;
 					default:
 						break;
 				}
 
-				if (rule != null)
+				if (!string.IsNullOrWhiteSpace(prName))
 				{
-					binding.NotifyOnValidationError = true;
-					binding.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
-					binding.ValidationRules.Add(rule);
+					binding.Path = new PropertyPath(prName);
+					binding.Source = source;
+						if (rule != null)
+						{
+							binding.NotifyOnValidationError = true;
+							binding.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
+							binding.ValidationRules.Add(rule);
+						}
 				}
 			}
 
