@@ -42,6 +42,7 @@ namespace DbExport.Controls.GeneratableForm
 			Messenger.Default.Unregister(this);
 
 			Messenger.Default.Register<DBExport.Common.Messages.LoadCollumnsMessage>(this, Token, OnBuildColumns);
+			Messenger.Default.Register<DBExport.Common.Messages.LoadRowsMessage>(this, Token, OnRowsChanged);
 
 		}
 
@@ -67,6 +68,7 @@ namespace DbExport.Controls.GeneratableForm
 			//}
 		}
 		public ObservableCollection<CCollumnItem> Collumns { get; set; }
+		public ObservableCollection<CRowItem> Row { get; set; }
 		public Dictionary<string, TextBox> Items { get; private set; }
 
 		void ctrGeneratableForm_Loaded(object sender, RoutedEventArgs e)
@@ -94,6 +96,14 @@ namespace DbExport.Controls.GeneratableForm
 			}
 
 			BuildCollumns();
+		}
+
+		private void OnRowsChanged(DBExport.Common.Messages.LoadRowsMessage obj)
+		{
+			//foreach (var item in obj.Rows)
+			//{
+			//	this.Row.Add(item);
+			//}
 		}
 
 		public void BuildCollumns()

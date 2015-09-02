@@ -214,7 +214,7 @@ namespace DBExport.Products
 				return SelectedTable != null && SelectedTable.Data != null;
 			}
 		}
-		
+
 		#endregion
 
 		#region Члены IDataButtons
@@ -284,6 +284,28 @@ namespace DBExport.Products
 		}
 
 
+
+		private void LoadSelectedRow(ProductItemViewModel item)
+		{
+			try
+			{
+				if (item == null)
+					return;
+
+				List<CRowItem> items = item.RowItems.Select(p =>
+					new CRowItem()
+					{
+						Name = p.Column.Name,
+						Value = p.GetValue(),
+						ValueType = p.ValueType
+					}).ToList();
+
+				MessengerInstance.Send<Common.Messages.LoadRowsMessage>(new LoadRowsMessage() { Rows = items }, Token);
+			}
+			catch(Exception ex)
+			{}
+		}
+
 		private void LoadData()
 		{
 			IsLoading = true;
@@ -291,37 +313,37 @@ namespace DBExport.Products
 
 			//ThreadPool.QueueUserWorkItem(new WaitCallback((par) =>
 			//{
-				IEnumerable<List<CValue>> dataRowsList = SelectedTable.Rows.GroupBy(p=>p.RowNumb).Select(p=>p.ToList());
+			IEnumerable<List<CValue>> dataRowsList = SelectedTable.Rows.GroupBy(p => p.RowNumb).Select(p => p.ToList());
 
-				RowItems.Clear();
+			RowItems.Clear();
 
-				foreach (var items in dataRowsList)
-				{
-					ProductItemViewModel pr = new ProductItemViewModel();
-					pr.RowItems = items;
+			foreach (var items in dataRowsList)
+			{
+				ProductItemViewModel pr = new ProductItemViewModel();
+				pr.RowItems = items;
 
-					RowItems.Add(pr);
+				RowItems.Add(pr);
 
-					pr.RaisePropertyesChanged();
-					//Application.Current.Dispatcher.Invoke(() => pr.RaisePropertyesChanged(), DispatcherPriority.Normal);
-				}
+				pr.RaisePropertyesChanged();
+				//Application.Current.Dispatcher.Invoke(() => pr.RaisePropertyesChanged(), DispatcherPriority.Normal);
+			}
 
-				if (!IsCollumnsLoaded)
-				{
-					var items = SelectedTable.Columns.Select(p=> new CCollumnItem() { ItemType = p.TargetType, Name = p.Name }).ToList();
+			if (!IsCollumnsLoaded)
+			{
+				var items = SelectedTable.Columns.Select(p => new CCollumnItem() { ItemType = p.TargetType, Name = p.Name }).ToList();
 
-					MessengerInstance.Send<Common.Messages.LoadCollumnsMessage>(new LoadCollumnsMessage() { Collumns = items }, Token);
-					IsCollumnsLoaded = true;
-				}
+				MessengerInstance.Send<Common.Messages.LoadCollumnsMessage>(new LoadCollumnsMessage() { Collumns = items }, Token);
+				IsCollumnsLoaded = true;
+			}
 
-				Application.Current.Dispatcher.Invoke(() =>
-				{
-					IsEnabled = true;
-					IsLoading = false;
+			Application.Current.Dispatcher.Invoke(() =>
+			{
+				IsEnabled = true;
+				IsLoading = false;
 
-					RaiseRefresh();
+				RaiseRefresh();
 
-				}, DispatcherPriority.Normal);
+			}, DispatcherPriority.Normal);
 			//}));
 		}
 
@@ -346,6 +368,7 @@ namespace DBExport.Products
 
 		private void OnSelectedChanged(ProductItemViewModel obj)
 		{
+			LoadSelectedRow(obj);
 			RefreshCommands();
 		}
 
