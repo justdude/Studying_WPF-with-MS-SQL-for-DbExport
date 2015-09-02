@@ -78,6 +78,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CFileHelper.cs" />
+    <Compile Include="Constants\TypeNames.cs" />
     <Compile Include="Containers\CCollumnItem.cs" />
     <Compile Include="Containers\CRowItemViewModel.cs" />
     <Compile Include="Enumeration\Status.cs" />
@@ -87,6 +88,7 @@
     <Compile Include="Interfaces\IWindowsHelper.cs" />
     <Compile Include="Messages\CCollumnItem.cs" />
     <Compile Include="Messages\ChangeSelected.cs" />
+    <Compile Include="Messages\ErrorStateMessage.cs" />
     <Compile Include="Messages\LoadRowsMessage.cs" />
     <Compile Include="Messages\CloseWindowMessage.cs" />
     <Compile Include="Messages\DeleteSelected.cs" />

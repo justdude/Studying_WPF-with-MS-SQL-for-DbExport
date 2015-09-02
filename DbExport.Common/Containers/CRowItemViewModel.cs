@@ -9,10 +9,11 @@ using System.Threading.Tasks;
 
 namespace DBExport.Common.Containers
 {
-	public class CRowItemViewModel : IDataValue, INotifyPropertyChanged
+	public class CRowItemViewModel : IDataValue, IDataErrorInfo, INotifyPropertyChanged
 	{
 		public IObjectBase Coll { get; set; }
 		public IDataValue Value { get; set; }
+		public Func<string, IDataValue, IObjectBase, string> OnValidateErrors { get; set; }
 
 		public CRowItemViewModel(IDataValue val)
 		{
@@ -21,7 +22,7 @@ namespace DBExport.Common.Containers
 
 		#region INotifyPropertyChanged
 
-		public void RaiseProprtyChanged(string propertyName)
+		public void RaisePropertyChanged(string propertyName)
 		{
 			if (PropertyChanged == null)
 				return;
@@ -50,6 +51,9 @@ namespace DBExport.Common.Containers
 			}
 			set
 			{
+				if (value == Value.ValueType)
+					return;
+
 				Value.ValueType = value;
 			}
 		}
@@ -62,7 +66,12 @@ namespace DBExport.Common.Containers
 			}
 			set
 			{
+				if (value == Value.DateValue)
+					return;
+
 				Value.DateValue = value;
+
+				RaisePropertyChanged("DateValue");
 			}
 		}
 
@@ -74,7 +83,12 @@ namespace DBExport.Common.Containers
 			}
 			set
 			{
+				if (value == Value.StrValue)
+					return;
+
 				Value.StrValue = value;
+
+				RaisePropertyChanged("StrValue");
 			}
 		}
 
@@ -86,7 +100,12 @@ namespace DBExport.Common.Containers
 			}
 			set
 			{
+				if (value == Value.BoolValue)
+					return;
+
 				Value.BoolValue = value;
+
+				RaisePropertyChanged("BoolValue");
 			}
 		}
 
@@ -98,7 +117,12 @@ namespace DBExport.Common.Containers
 			}
 			set
 			{
+				if (value == Value.FloatValue)
+					return;
+
 				Value.FloatValue = value;
+
+				RaisePropertyChanged("FloatValue");
 			}
 		}
 
@@ -110,7 +134,12 @@ namespace DBExport.Common.Containers
 			}
 			set
 			{
+				if (value == Value.IntValue)
+					return;
+
 				Value.IntValue = value;
+
+				RaisePropertyChanged("IntValue");
 			}
 		}
 
@@ -125,5 +154,31 @@ namespace DBExport.Common.Containers
 		}
 
 		#endregion
+
+		#region IDataErrorInfo
+
+		public string Error
+		{
+			get { throw new NotImplementedException(); }
+		}
+
+		public string this[string columnName]
+		{
+			get 
+			{
+				return ValidateError(columnName, Value, Coll);
+			}
+		}
+
+		private string ValidateError(string columnName, IDataValue value_, IObjectBase coll)
+		{
+			if (OnValidateErrors == null)
+				return string.Empty;
+
+			return OnValidateErrors(columnName, value_, coll);
+		}
+
+		#endregion
+
 	}
 }

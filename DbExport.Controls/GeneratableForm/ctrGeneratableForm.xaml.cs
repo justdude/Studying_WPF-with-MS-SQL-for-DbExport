@@ -16,6 +16,7 @@ using System.Windows.Shapes;
 using DBExport.Common.Containers;
 using DBExport.Common.MVVM;
 using GalaSoft.MvvmLight.Messaging;
+using DBExport.Common.Constants;
 
 namespace DbExport.Controls.GeneratableForm
 {
@@ -212,21 +213,21 @@ namespace DbExport.Controls.GeneratableForm
 				switch (Type.GetTypeCode(type))
 				{
 					case TypeCode.Boolean:
-						prName = "BoolValue";
+						prName = TypeNames.BoolValue;
 						break;
 					case TypeCode.DateTime:
-						prName = "DateValue";
+						prName = TypeNames.DateValue;
 						break;
 					case TypeCode.Double:
-						prName = "FloatValue";
+						prName = TypeNames.FloatValue;
 						break;
 					case TypeCode.Int32:
 						break;
 					case TypeCode.String:
-						prName = "StrValue";
+						prName = TypeNames.StrValue;
 						break;
 					case TypeCode.Single:
-						prName = "IntValue";
+						prName = TypeNames.IntValue;
 						break;
 					default:
 						break;

@@ -7,6 +7,10 @@ using DbExport.Data;
 using DBExport.Common.MVVM;
 using DbExport.Controls.GeneratableForm;
 using DBExport.Common.Containers;
+using DbExport.Common.Interfaces;
+using DBExport.Common.Interfaces;
+using DBExport.Common.Messages;
+using DBExport.Common.Constants;
 
 namespace DBExport.Products.ViewModel
 {
@@ -45,8 +49,37 @@ namespace DBExport.Products.ViewModel
 			{
 				vm = new CRowItemViewModel(item as DBExport.Common.Interfaces.IDataValue);
 				vm.Coll = item.Column;
+				vm.OnValidateErrors = OnItemValidationErrors;
 				mvRowitemsViewModels.Add(vm);
 			}
+		}
+
+		private string OnItemValidationErrors(string columnName, IDataValue value, IObjectBase coll)
+		{
+			string errors = string.Empty;
+
+			switch (columnName)
+			{
+				case TypeNames.BoolValue:
+					break;
+				case TypeNames.DateValue:
+					break;
+				case TypeNames.FloatValue:
+					break;
+				//case TypeCode.Int32:
+				//	break;
+				case TypeNames.StrValue:
+					break;
+				case TypeNames.IntValue:
+					break;
+				default:
+					break;
+			}
+
+
+			MessengerInstance.Send<ErrorStateMessage>(new Common.Messages.ErrorStateMessage(), Token);
+
+			return errors;
 		}
 
 		//public string Id
