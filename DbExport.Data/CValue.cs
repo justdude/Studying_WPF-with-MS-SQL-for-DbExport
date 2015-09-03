@@ -24,7 +24,6 @@ namespace DbExport.Data
 
 	public class CValue : CObjectBase, IDataValue
 	{
-		public string Id { get; set; }
 		public string CollumnId { get; set; }
 		public string TableId { get; set; }
 		public int RowNumb { get; set; }

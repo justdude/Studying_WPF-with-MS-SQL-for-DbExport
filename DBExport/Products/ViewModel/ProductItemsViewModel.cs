@@ -458,29 +458,33 @@ private  List<CCollumnItem> modColumns;
 
 		private void OnSaveSelected()
 		{
-			if (SelectedTable.Status == Status.Normal)
-			{
-				SelectedTable.Status = Status.Updated;
-			}
-
 			ChangeState(true);
 
-			//SelectedTable.Current.CountryID = SelectedCountry.Current.Id;
 			ThreadPool.QueueUserWorkItem(new WaitCallback((par) =>
 			{
-				SelectedTable.Save();
+				if (State == enFormState.Create)
+				{
+					SelectedTable.Rows.AddRange(SelectedRowsItem.RowItems);
+					SelectedTable.Save();
+				}
+
+				if (State == enFormState.None || State == enFormState.EditTable)
+				{
+					SelectedTable.Save();
+				}
 
 				Application.Current.Dispatcher.Invoke(() =>
 				{
 					SelectedRowsItem.IsChanged = false;
-					SelectedTable = null;
-
-					//RaiseRefresh();
+					SelectedRowsItem = null;
+					SelectedItems.Clear();
+					State = enFormState.None;
+					RaiseRefresh();
 
 				}, DispatcherPriority.Normal);
 
 				ChangeState(false);
-				State = enFormState.None;
+				
 			}));
 
 		}
@@ -507,8 +511,9 @@ private  List<CCollumnItem> modColumns;
 				var selectionCopy = SelectedItems.ToList();
 				foreach (ProductItemViewModel item in selectionCopy)
 				{
+					item.RowItems.ForEach(p => p.Status = Status.Deleted);
 					res = item.RowItems.SaveList(Status.Deleted, tr);
-
+					SelectedTable.Rows.RemoveAll(p => ClearTable(item));
 					if (res)
 					{
 						BeginInvoke(DispatcherPriority.Normal, () =>
@@ -529,6 +534,12 @@ private  List<CCollumnItem> modColumns;
 			{ }
 
 			ChangeState(false);
+		}
+
+		private static bool ClearTable(ProductItemViewModel item)
+		{
+			var target = item.RowItems.FirstOrDefault();
+			return target != null && target.Status == Status.Deleted;
 		}
 
 		private void OnAdd()

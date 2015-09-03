@@ -66,6 +66,12 @@ namespace DBExport.Products.ViewModel
 
 		private void OnItemChanged(string propName)
 		{
+			CValue changedItem = RowItems.FirstOrDefault(p => p.CollumnName == propName);
+			if (changedItem != null && changedItem.Status == Status.Normal)
+			{
+				changedItem.Status = Status.Updated;
+			}
+
 			IsChanged = true;
 			MessengerInstance.Send<PropertyChangedMessage>(new PropertyChangedMessage() { PropName = propName }, Token);
 		}

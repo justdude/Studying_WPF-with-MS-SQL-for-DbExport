@@ -20,7 +20,7 @@ namespace DbExport.Data
 			{
 				foreach (var item in items)
 				{
-					item.Status = status;
+					//item.Status = status;
 					res &= item.Save(tr);
 					count++;
 				}
