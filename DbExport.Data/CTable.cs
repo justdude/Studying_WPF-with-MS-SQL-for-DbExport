@@ -181,6 +181,39 @@ namespace DbExport.Data
 			return res;
 		}
 
+		public static IEnumerable<CValue> CreateEmptyRows(CTable table)
+		{
+			List<CValue> rows = new List<CValue>();
+			try
+			{
+					CValue value = null;
+
+					for (int coll = 0; coll < table.Columns.Count; coll++)
+					{
+						value = new CValue();
+						value.Id = Generator.GenerateID(CConstants.ROW);
+						value.TableId = table.Id;
+						value.CollumnId = table.Columns[coll].Id;
+						value.RowNumb = 0;
+
+						value.ValueType = table.Columns[coll].GetCollType();
+						value.Column = table.Columns[coll];
+
+						value.Status = Status.Added;
+
+						//value.SetValue(dataTable.Rows[row].ItemArray[coll]);
+
+						rows.Add(value);
+					}
+			}
+			catch (Exception ex)
+			{
+				rows.Clear();
+			}
+
+			return rows;
+		}
+
 		public static bool FillColumns(DataTable dataTable, CTable table, bool isIgnoreExists = false)
 		{
 			bool isSuccessful = true;

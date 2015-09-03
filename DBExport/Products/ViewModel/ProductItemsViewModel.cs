@@ -40,6 +40,7 @@ namespace DBExport.Products
 		private bool mvIsLoading;
 		private ProductItemViewModel mvSelectedRowsItem;
 		private bool mvIsChanged;
+private  List<CCollumnItem> modColumns;
 
 		public ProductItemsViewModel(DbExport.Data.CTable table)
 		{
@@ -334,14 +335,14 @@ namespace DBExport.Products
 
 			if (!IsCollumnsLoaded)
 			{
-				var collumns = SelectedTable.Columns.Select(p => new CCollumnItem()
+				modColumns = SelectedTable.Columns.Select(p => new CCollumnItem()
 				{
 					ItemType = p.TargetType,
 					Name = p.Name,
 					Coll = p
 				}).ToList();
 
-				MessengerInstance.Send<Common.Messages.LoadCollumnsMessage>(new LoadCollumnsMessage() { Collumns = collumns }, Token);
+				MessengerInstance.Send<Common.Messages.LoadCollumnsMessage>(new LoadCollumnsMessage() { Collumns = modColumns }, Token);
 				IsCollumnsLoaded = true;
 			}
 
@@ -532,21 +533,27 @@ namespace DBExport.Products
 
 		private void OnAdd()
 		{
+			SelectedItems.Clear();
+			SelectedRowsItem = null;
+			RaiseRefresh();
+
 			IsEnabled = false;
-			IsLoading = true;
+			IsLoading = false;
+
+			var newListItem = new ProductItemViewModel();
 
 			ThreadPool.QueueUserWorkItem(new WaitCallback((par) =>
 			{
 				try
 				{
-					//data.Rows.Add(new object[] { });
+					var addedRows = CTable.CreateEmptyRows(SelectedTable).ToList();
+					newListItem.RowItems = addedRows;
 
 					BeginInvoke(DispatcherPriority.Normal, () =>
 					{
-						SelectedTable.Status = Status.Added;
-
+						SelectedRowsItem = newListItem;
+						State = enFormState.Create;
 						RaiseRefresh();
-						this.RaisePropertyChanged(() => this.SelectedTableView);
 					});
 				}
 				catch (Exception ex)
