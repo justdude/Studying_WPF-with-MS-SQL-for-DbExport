@@ -91,8 +91,7 @@ namespace DBExport.Products
 
 				mvSelectedRowsItem = value;
 
-				if (value != null)
-					OnSelectedChanged(value);
+				OnSelectedChanged(value);
 
 				//this.RaisePropertyChanged(() => this.SelectedTable);
 				//this.RaisePropertyChanged(() => this.SelectedTableView);
@@ -225,6 +224,14 @@ namespace DBExport.Products
 			}
 		}
 
+		public bool IsSelectedRightPart
+		{
+			get
+			{
+				return IsEnabled && SelectedRowsItem != null && SelectedTable != null && SelectedTable.Data != null;
+			}
+		}
+
 		#endregion
 
 		#region Члены IDataButtons
@@ -288,6 +295,7 @@ namespace DBExport.Products
 			//if (IsSelected)
 			//	SelectedTable.RaisePropertyesChanged();
 
+			this.RaisePropertyChanged(() => this.IsSelectedRightPart);
 			this.RaisePropertyChanged(() => this.IsHasError);
 			this.RaisePropertyChanged(() => this.IsSelected);
 			this.RaisePropertyChanged(() => this.IsEnabled);
@@ -309,10 +317,19 @@ namespace DBExport.Products
 		{
 			try
 			{
-				if (item == null)
-					return;
+				List<CRowItemViewModel> rowList= null;
 
-				MessengerInstance.Send<Common.Messages.LoadRowsMessage>(new LoadRowsMessage() { Rows = item.RowitemsViewModels }, Token);
+				if (item == null)
+				{
+					rowList = new List<CRowItemViewModel>();
+				}
+				else
+				{
+					rowList = item.RowitemsViewModels;
+				}
+
+
+				MessengerInstance.Send<Common.Messages.LoadRowsMessage>(new LoadRowsMessage() { Rows = rowList }, Token);
 			}
 			catch (Exception ex)
 			{ }
@@ -500,6 +517,7 @@ namespace DBExport.Products
 		{
 			IsEnabled = false;
 			IsLoading = true;
+			RaiseRefresh();
 
 			ThreadPool.QueueUserWorkItem(new WaitCallback((par) =>
 			{

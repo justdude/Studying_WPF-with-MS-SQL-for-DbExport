@@ -197,19 +197,19 @@ namespace DBExport.Common.Containers
 			}
 		}
 
-		private bool mvIsHasErrors;
+		//private bool mvIsHasErrors;
 
-		public bool IsHasErrors
-		{
-			get { return mvIsHasErrors; }
-			set {
-				if (value == mvIsHasErrors)
-					return;
+		//public bool IsHasErrors
+		//{
+		//	get { return mvIsHasErrors; }
+		//	set {
+		//		if (value == mvIsHasErrors)
+		//			return;
 
-				mvIsHasErrors = value;
-				RaisePropertyChanged("IsHasErrors");
-			}
-		}
+		//		mvIsHasErrors = value;
+		//		RaisePropertyChanged("IsHasErrors");
+		//	}
+		//}
 
 
 	}

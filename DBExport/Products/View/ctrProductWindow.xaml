@@ -42,7 +42,7 @@
 				 ItemsSource="{Binding RowItems}" 
 				 Margin="5"
 				 beh:ListBoxBehaviour.SelectedItems="{Binding SelectedItems}"
-				 SelectionMode="Multiple">
+				 SelectionMode="Extended">
 				
 				<ListBox.ItemTemplate>
 					<DataTemplate>
@@ -92,7 +92,7 @@
 
 		<!---->
 		<form:ctrGeneratableForm Name="ctrGeneratableFormData"
-					
+					IsEnabled="{Binding DataContext.IsSelectedRightPart, RelativeSource={RelativeSource AncestorType=Window,Mode=FindAncestor}}"
 					DataContext="{Binding SelectedTableView}"
 					Grid.Row="1"
 					Grid.Column="1"
