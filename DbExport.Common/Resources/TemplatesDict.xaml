@@ -39,10 +39,14 @@
 	</Style>
 	
 	<ControlTemplate x:Key="tbError">
-		<StackPanel>
+		<StackPanel Orientation="Horizontal">
 			<!-- Placeholder for the TextBox itself -->
+			<TextBlock Text="*" 
+					   FontWeight="ExtraBold" 
+					   Margin="0 0 3 0" 
+					   ToolTip="{Binding [0].ErrorContent}" 
+					   Foreground="Red"/>
 			<AdornedElementPlaceholder x:Name="textBox"/>
-			<TextBlock Text="{Binding [0].ErrorContent}" Foreground="Red"/>
 		</StackPanel>
 	</ControlTemplate>
 

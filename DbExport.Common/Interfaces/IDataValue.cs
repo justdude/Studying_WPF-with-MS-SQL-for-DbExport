@@ -12,7 +12,7 @@ namespace DBExport.Common.Interfaces
 		String StrValue { get; set; }
 		bool BoolValue { get; set; }
 		double FloatValue { get; set; }
-		float IntValue { get; set; }
+		int IntValue { get; set; }
 
 		Type ValueType { get; set; }
 

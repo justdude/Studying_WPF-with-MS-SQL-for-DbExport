@@ -126,7 +126,7 @@ namespace DBExport.Common.Containers
 			}
 		}
 
-		public float IntValue
+		public int IntValue
 		{
 			get
 			{

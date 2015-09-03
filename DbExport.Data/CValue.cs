@@ -33,7 +33,7 @@ namespace DbExport.Data
 		public String StrValue { get; set; }
 		public bool BoolValue { get; set; }
 		public double FloatValue { get; set; }
-		public float IntValue { get; set; }
+		public int IntValue { get; set; }
 
 
 		public CColumn Column { get; set; }

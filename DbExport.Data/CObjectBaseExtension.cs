@@ -15,12 +15,14 @@ namespace DbExport.Data
 		public static bool SaveList<T>(this IEnumerable<T> items, Status status, SqlCeTransaction tr) where T : IObjectBase
 		{ 
 			bool res = true;
+			int count = 0;
 			try
 			{
 				foreach (var item in items)
 				{
 					item.Status = status;
 					res &= item.Save(tr);
+					count++;
 				}
 			}
 			catch (Exception)

@@ -437,17 +437,22 @@ namespace DBExport.Main.ViewModel
 			//SelectedTable.Current.CountryID = SelectedCountry.Current.Id;
 			ThreadPool.QueueUserWorkItem(new WaitCallback((par) =>
 			{
-				SelectedTable.Current.Save();
+				bool res = SelectedTable.Current.Save();
 
 				Application.Current.Dispatcher.Invoke(() =>
 				{
-					SelectedTable = null;
-
+					if (res)
+					{
+						SelectedTable.IsAppenedSuccessfully = null;
+						//SelectedTable = null;
+					}
+					else
+					{ 
+						
+					}
 					//RaiseRefresh();
 
 				}, DispatcherPriority.Normal);
-
-				SelectedTable.IsAppenedSuccessfully = null;
 				ChangeState(false);
 				SelectedTable.State = enFormState.None;
 			}));

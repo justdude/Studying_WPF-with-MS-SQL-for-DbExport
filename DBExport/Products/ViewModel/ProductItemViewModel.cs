@@ -66,8 +66,6 @@ namespace DBExport.Products.ViewModel
 					break;
 				case TypeNames.FloatValue:
 					break;
-				//case TypeCode.Int32:
-				//	break;
 				case TypeNames.StrValue:
 					break;
 				case TypeNames.IntValue:

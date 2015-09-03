@@ -104,11 +104,12 @@ namespace DbExport.Controls.GeneratableForm
 			foreach (var item in DataBoxes)
 			{
 				CRowItemViewModel viewModel = obj.Rows.FirstOrDefault(p => p.CollumnName == item.Key);
-				
+
 				if (viewModel == null)
 					continue;
 
 				TextBox tb = item.Value;
+				tb.DataContext = viewModel;
 
 				SetTextBoxBinding(tb, viewModel.ValueType, viewModel);
 			}
@@ -201,7 +202,7 @@ namespace DbExport.Controls.GeneratableForm
 		private static void SetTextBoxBinding(TextBox tb, Type type, object source)
 		{
 			var binding = new Binding();
-			binding.Source = tb;
+			binding.Source = source;
 			binding.Mode = BindingMode.TwoWay;
 
 			if (type != null)
@@ -218,16 +219,15 @@ namespace DbExport.Controls.GeneratableForm
 					case TypeCode.DateTime:
 						prName = TypeNames.DateValue;
 						break;
+					case TypeCode.Single:
 					case TypeCode.Double:
 						prName = TypeNames.FloatValue;
 						break;
 					case TypeCode.Int32:
+						prName = TypeNames.IntValue;
 						break;
 					case TypeCode.String:
 						prName = TypeNames.StrValue;
-						break;
-					case TypeCode.Single:
-						prName = TypeNames.IntValue;
 						break;
 					default:
 						break;
@@ -237,12 +237,15 @@ namespace DbExport.Controls.GeneratableForm
 				{
 					binding.Path = new PropertyPath(prName);
 					binding.Source = source;
-						if (rule != null)
-						{
-							binding.NotifyOnValidationError = true;
-							binding.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
-							binding.ValidationRules.Add(rule);
-						}
+					binding.ValidatesOnDataErrors = true;
+					binding.NotifyOnValidationError = true;
+					binding.Mode = BindingMode.TwoWay;
+					binding.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
+
+					if (rule != null)
+					{
+						binding.ValidationRules.Add(rule);
+					}
 				}
 			}
 

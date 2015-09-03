@@ -246,9 +246,9 @@ namespace DbExport.Data
 					//case Status.Updated:
 					//	res = UpdateTable(this);
 					//	break;
-					//case Status.Deleted:
-					//	res = DeleteTable(this);
-					//break;
+					case Status.Deleted:
+						res = DeleteTable(this.Id);
+						break;
 					default:
 						Status = Common.Interfaces.Status.Normal;
 						break;
