@@ -40,7 +40,7 @@ namespace DBExport.Products
 		private bool mvIsLoading;
 		private ProductItemViewModel mvSelectedRowsItem;
 		private bool mvIsChanged;
-		private  List<CCollumnItem> modColumns;
+		private List<CCollumnItem> modColumns;
 
 		public ProductItemsViewModel(DbExport.Data.CTable table)
 		{
@@ -303,6 +303,8 @@ namespace DBExport.Products
 
 		private void OnPropertiesChanged(PropertyChangedMessage obj)
 		{
+			State = enFormState.EditTable;
+
 			RaisePropertyesChanged();
 			RefreshCommands();
 		}
@@ -317,7 +319,7 @@ namespace DBExport.Products
 		{
 			try
 			{
-				List<CRowItemViewModel> rowList= null;
+				List<CRowItemViewModel> rowList = null;
 
 				if (item == null)
 				{
@@ -434,7 +436,7 @@ namespace DBExport.Products
 
 		private bool CanFilter()
 		{
-			return IsEnabled && IsSelected;
+			return IsEnabled && IsSelected && State == enFormState.None;
 		}
 
 		private bool CanDelete()
@@ -444,7 +446,7 @@ namespace DBExport.Products
 
 		private bool CanAdd()
 		{
-			return IsEnabled && !IsSelected || (IsSelected && State != enFormState.Create);
+			return IsEnabled && !IsSelected || (IsSelected && State == enFormState.None);
 		}
 
 		private bool CanMerge()
@@ -494,6 +496,14 @@ namespace DBExport.Products
 
 				if (State == enFormState.None || State == enFormState.EditTable)
 				{
+					foreach (ProductItemViewModel item in SelectedItems)
+					{
+						if (item == SelectedRowsItem)
+							continue;
+
+						item.RowItems.ForEach(p => CopyDataTo(p, SelectedRowsItem.RowItems));
+					}
+
 					SelectedTable.Save();
 				}
 
@@ -508,9 +518,17 @@ namespace DBExport.Products
 				}, DispatcherPriority.Normal);
 
 				ChangeState(false);
-				
+
 			}));
 
+		}
+
+		private object CopyDataTo(CValue target, List<CValue> list)
+		{
+			CValue source = list.FirstOrDefault(p => p.CollumnId == target.CollumnId);
+			target.SetValue(source.GetValue());
+			target.Status = source.Status;
+			return target;
 		}
 
 		private void OnDeleteSelected()
