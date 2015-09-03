@@ -40,7 +40,7 @@ namespace DBExport.Products
 		private bool mvIsLoading;
 		private ProductItemViewModel mvSelectedRowsItem;
 		private bool mvIsChanged;
-private  List<CCollumnItem> modColumns;
+		private  List<CCollumnItem> modColumns;
 
 		public ProductItemsViewModel(DbExport.Data.CTable table)
 		{
@@ -72,7 +72,8 @@ private  List<CCollumnItem> modColumns;
 
 		private void RegisterMessenger()
 		{
-			MessengerInstance.Register<PropertyChangedMessage>(this, OnPropertiesChanged);
+			MessengerInstance.Register<PropertyChangedMessage>(this, Token, OnPropertiesChanged);
+			MessengerInstance.Register<ErrorStateMessage>(this, Token, OnErrorStateChanged);
 		}
 
 		#region Properties
@@ -298,6 +299,12 @@ private  List<CCollumnItem> modColumns;
 			RefreshCommands();
 		}
 
+		private void OnErrorStateChanged(ErrorStateMessage obj)
+		{
+			RaisePropertyesChanged();
+			RefreshCommands();
+		}
+
 		private void LoadSelectedRow(ProductItemViewModel item)
 		{
 			try
@@ -326,7 +333,7 @@ private  List<CCollumnItem> modColumns;
 			{
 				ProductItemViewModel pr = new ProductItemViewModel();
 				pr.RowItems = items;
-
+				pr.Token = Token;
 				RowItems.Add(pr);
 
 				pr.RaisePropertyesChanged();
@@ -552,6 +559,7 @@ private  List<CCollumnItem> modColumns;
 			IsLoading = false;
 
 			var newListItem = new ProductItemViewModel();
+			newListItem.Token = Token;
 
 			ThreadPool.QueueUserWorkItem(new WaitCallback((par) =>
 			{

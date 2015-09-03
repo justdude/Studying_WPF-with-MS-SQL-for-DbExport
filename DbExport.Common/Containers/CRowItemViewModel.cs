@@ -31,6 +31,7 @@ namespace DBExport.Common.Containers
 		}
 
 		public event PropertyChangedEventHandler PropertyChanged;
+		private string modErrorText;
 
 		#endregion
 
@@ -172,7 +173,8 @@ namespace DBExport.Common.Containers
 		{
 			get 
 			{
-				return ValidateError(columnName, Value, Coll);
+				modErrorText = ValidateError(columnName, Value, Coll);
+				return modErrorText;
 			}
 		}
 
@@ -191,8 +193,24 @@ namespace DBExport.Common.Containers
 		{
 			get
 			{
-				return false;
+				return !string.IsNullOrWhiteSpace(modErrorText);
 			}
 		}
+
+		private bool mvIsHasErrors;
+
+		public bool IsHasErrors
+		{
+			get { return mvIsHasErrors; }
+			set {
+				if (value == mvIsHasErrors)
+					return;
+
+				mvIsHasErrors = value;
+				RaisePropertyChanged("IsHasErrors");
+			}
+		}
+
+
 	}
 }
