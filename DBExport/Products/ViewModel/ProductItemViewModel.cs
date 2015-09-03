@@ -17,6 +17,7 @@ namespace DBExport.Products.ViewModel
 	public class ProductItemViewModel : ViewModelExtended
 	{
 		private List<CRowItemViewModel> mvRowitemsViewModels;
+		private bool mvIsChanged;
 
 		public List<CValue> RowItems { get; set; }
 
@@ -40,6 +41,14 @@ namespace DBExport.Products.ViewModel
 			}
 		}
 
+		public bool IsHasErrors
+		{
+			get
+			{
+				return RowitemsViewModels.Any(p => p.IsHasErrors == true);
+			}
+		}
+
 		private void InitRows()
 		{
 			CRowItemViewModel vm = null;
@@ -50,8 +59,15 @@ namespace DBExport.Products.ViewModel
 				vm = new CRowItemViewModel(item as DBExport.Common.Interfaces.IDataValue);
 				vm.Coll = item.Column;
 				vm.OnValidateErrors = OnItemValidationErrors;
+				vm.OnPropertyChanged = OnItemChanged;
 				mvRowitemsViewModels.Add(vm);
 			}
+		}
+
+		private void OnItemChanged(string propName)
+		{
+			IsChanged = true;
+			MessengerInstance.Send<PropertyChangedMessage>(new PropertyChangedMessage() { PropName = propName }, Token);
 		}
 
 		private string OnItemValidationErrors(string columnName, IDataValue value, IObjectBase coll)
@@ -96,6 +112,23 @@ namespace DBExport.Products.ViewModel
 			get
 			{
 				return DbExport.Data.Engine.Instance.GetName(RowItems);
+			}
+		}
+
+		public bool IsChanged
+		{
+			get
+			{
+				return mvIsChanged;
+			}
+			set
+			{
+				if (mvIsChanged == value)
+					return;
+
+				mvIsChanged = value;
+
+				RaisePropertyChanged(() => this.IsChanged);
 			}
 		}
 

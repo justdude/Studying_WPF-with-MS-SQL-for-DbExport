@@ -14,6 +14,7 @@ namespace DBExport.Common.Containers
 		public IObjectBase Coll { get; set; }
 		public IDataValue Value { get; set; }
 		public Func<string, IDataValue, IObjectBase, string> OnValidateErrors { get; set; }
+		public Action<string> OnPropertyChanged { get; set; }
 
 		public CRowItemViewModel(IDataValue val)
 		{
@@ -72,6 +73,7 @@ namespace DBExport.Common.Containers
 				Value.DateValue = value;
 
 				RaisePropertyChanged("DateValue");
+				OnPropertyChanged("DateValue"); 
 			}
 		}
 
@@ -89,6 +91,7 @@ namespace DBExport.Common.Containers
 				Value.StrValue = value;
 
 				RaisePropertyChanged("StrValue");
+				OnPropertyChanged("StrValue"); 
 			}
 		}
 
@@ -106,6 +109,7 @@ namespace DBExport.Common.Containers
 				Value.BoolValue = value;
 
 				RaisePropertyChanged("BoolValue");
+				OnPropertyChanged("BoolValue"); 
 			}
 		}
 
@@ -123,6 +127,7 @@ namespace DBExport.Common.Containers
 				Value.FloatValue = value;
 
 				RaisePropertyChanged("FloatValue");
+				OnPropertyChanged("FloatValue"); 
 			}
 		}
 
@@ -140,6 +145,7 @@ namespace DBExport.Common.Containers
 				Value.IntValue = value;
 
 				RaisePropertyChanged("IntValue");
+				OnPropertyChanged("IntValue"); 
 			}
 		}
 
@@ -180,5 +186,13 @@ namespace DBExport.Common.Containers
 
 		#endregion
 
+
+		public bool IsHasErrors
+		{
+			get
+			{
+				return false;
+			}
+		}
 	}
 }

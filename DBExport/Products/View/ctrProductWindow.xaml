@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
 			 xmlns:nav="clr-namespace:DbExport.Controls.Nav;assembly=DbExport.Controls"
 			 xmlns:form="clr-namespace:DbExport.Controls.GeneratableForm;assembly=DbExport.Controls"
+			 xmlns:beh ="clr-namespace:DBExport.Common.MVVM;assembly=DBExport.Common"
              mc:Ignorable="d" 
              d:DesignHeight="350" d:DesignWidth="800">
 	<Grid>
@@ -38,7 +39,11 @@
 			<ListBox Name="lstBoxTables"
 				 IsEnabled="{Binding IsEnabled}"
 				 SelectedItem="{Binding SelectedRowsItem}"
-				 ItemsSource="{Binding RowItems}" Margin="5">
+				 ItemsSource="{Binding RowItems}" 
+				 Margin="5"
+				 beh:ListBoxBehaviour.SelectedItems="{Binding SelectedItems}"
+				 SelectionMode="Multiple">
+				
 				<ListBox.ItemTemplate>
 					<DataTemplate>
 						<StackPanel Orientation="Horizontal">
@@ -46,6 +51,13 @@
 						</StackPanel>
 					</DataTemplate>
 				</ListBox.ItemTemplate>
+
+				<ListBox.ItemContainerStyle>
+					<Style TargetType="{x:Type ListBoxItem}">
+						<Setter Property="IsSelected" Value="{Binding Mode=TwoWay, Path=IsSelected}"/>
+					</Style>
+				</ListBox.ItemContainerStyle>
+
 			</ListBox>
 
 		</Border>
@@ -56,13 +68,13 @@
 					Command="{Binding AddCommand}" 
 					VerticalAlignment="Center" Style="{StaticResource btnStyle}">
 			</Button>
-			<Button Content="Edit" 
-					Command="{Binding EditCommand}" 
-					VerticalAlignment="Center" Style="{StaticResource btnStyle}"></Button>
 			<Button Content="Delete" 
 					Command="{Binding DeleteCommand}"
 					VerticalAlignment="Center" 
 					Style="{StaticResource btnStyle}"></Button>
+			<Button Content="Filter" 
+					Command="{Binding FilterCommand}" 
+					VerticalAlignment="Center" Style="{StaticResource btnStyle}"></Button>
 			<Button Content="Refresh" 
 					Command="{Binding RefreshCommand}"
 					VerticalAlignment="Center" 

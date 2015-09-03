@@ -94,7 +94,10 @@
     <Compile Include="Messages\DeleteSelected.cs" />
     <Compile Include="Messages\LoadCollumnsMessage.cs" />
     <Compile Include="Messages\MessageExtended.cs" />
+    <Compile Include="Messages\PropertyChangedMessage.cs" />
     <Compile Include="MVVM\ControlBehavior.cs" />
+    <Compile Include="MVVM\ListBoxBehaviour.cs" />
+    <Compile Include="MVVM\ListViewModelExtended.cs" />
     <Compile Include="MVVM\ViewModelExtended.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>

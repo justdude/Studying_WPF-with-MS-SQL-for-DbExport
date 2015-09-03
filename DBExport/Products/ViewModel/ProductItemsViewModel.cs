@@ -23,12 +23,12 @@ using GalaSoft.MvvmLight.Command;
 
 namespace DBExport.Products
 {
-	public class ProductItemsViewModel : ViewModelExtended
+	public class ProductItemsViewModel : ListViewModelExtended<ProductItemViewModel>
 	{
 		//private ProductItemViewModel mvSelectedTable;
 
 		private readonly RelayCommand mvAddCommand;
-		private readonly RelayCommand mvEditCommand;
+		private readonly RelayCommand mvFilterCommand;
 		private readonly RelayCommand mvDeleteCommand;
 		private readonly RelayCommand mvSaveCommand;
 		private readonly RelayCommand mvRefreshCommand;
@@ -39,19 +39,21 @@ namespace DBExport.Products
 		private bool mvIsMerge;
 		private bool mvIsLoading;
 		private ProductItemViewModel mvSelectedRowsItem;
+		private bool mvIsChanged;
 
 		public ProductItemsViewModel(DbExport.Data.CTable table)
 		{
 			this.SelectedTable = table;
 
 			mvAddCommand = new RelayCommand(OnAdd, CanAdd);
-			mvEditCommand = new RelayCommand(OnEdit, CanEdit);
+			mvFilterCommand = new RelayCommand(OnFilterCommand, CanFilter);
 			mvDeleteCommand = new RelayCommand(OnDeleteSelected, CanDelete);
 			mvSaveCommand = new RelayCommand(OnSaveSelected, CanSave);
 			mvRefreshCommand = new RelayCommand(OnRefresh, CanRefresh);
 			mvCloseCommand = new RelayCommand(OnClose);
 
 			RowItems = new ObservableCollection<ProductItemViewModel>();
+			base.SelectedItems = new ObservableCollection<ProductItemViewModel>();
 
 			OnDispatcherChanged += OnDispatcherChange;
 		}
@@ -62,8 +64,14 @@ namespace DBExport.Products
 
 		protected override void OnTokenChanged()
 		{
+			RegisterMessenger();
 			LoadData();
 			base.OnTokenChanged();
+		}
+
+		private void RegisterMessenger()
+		{
+			MessengerInstance.Register<PropertyChangedMessage>(this, OnPropertiesChanged);
 		}
 
 		#region Properties
@@ -80,10 +88,13 @@ namespace DBExport.Products
 					return;
 
 				mvSelectedRowsItem = value;
-				OnSelectedChanged(value);
 
-				this.RaisePropertyChanged(() => this.SelectedTable);
-				this.RaisePropertyChanged(() => this.SelectedTableView);
+				if (value != null)
+					OnSelectedChanged(value);
+
+				//this.RaisePropertyChanged(() => this.SelectedTable);
+				//this.RaisePropertyChanged(() => this.SelectedTableView);
+				this.RaisePropertyChanged(() => this.SelectedRowsItem);
 			}
 		}
 
@@ -188,22 +199,19 @@ namespace DBExport.Products
 		//	}
 		//}
 
+		public bool IsChanged
+		{
+			get
+			{
+				return IsSelected && SelectedRowsItem.IsChanged;
+			}
+		}
+
 		public bool IsHasError
 		{
 			get
 			{
-				return mvIsHasError;
-			}
-			set
-			{
-				if (mvIsHasError == value)
-					return;
-
-				mvIsHasError = value;
-
-				RefreshCommands();
-
-				this.RaisePropertyChanged(() => this.IsHasError);
+				return IsSelected && SelectedRowsItem.IsHasErrors;
 			}
 		}
 
@@ -211,7 +219,7 @@ namespace DBExport.Products
 		{
 			get
 			{
-				return SelectedTable != null && SelectedTable.Data != null;
+				return SelectedRowsItem != null && SelectedTable != null && SelectedTable.Data != null;
 			}
 		}
 
@@ -227,11 +235,11 @@ namespace DBExport.Products
 			}
 		}
 
-		public RelayCommand EditCommand
+		public RelayCommand FilterCommand
 		{
 			get
 			{
-				return mvEditCommand;
+				return mvFilterCommand;
 			}
 		}
 
@@ -283,7 +291,11 @@ namespace DBExport.Products
 			this.RaisePropertyChanged(() => this.IsEnabled);
 		}
 
-
+		private void OnPropertiesChanged(PropertyChangedMessage obj)
+		{
+			RaisePropertyesChanged();
+			RefreshCommands();
+		}
 
 		private void LoadSelectedRow(ProductItemViewModel item)
 		{
@@ -294,8 +306,8 @@ namespace DBExport.Products
 
 				MessengerInstance.Send<Common.Messages.LoadRowsMessage>(new LoadRowsMessage() { Rows = item.RowitemsViewModels }, Token);
 			}
-			catch(Exception ex)
-			{}
+			catch (Exception ex)
+			{ }
 		}
 
 		private void LoadData()
@@ -315,16 +327,16 @@ namespace DBExport.Products
 				pr.RowItems = items;
 
 				RowItems.Add(pr);
-		
+
 				pr.RaisePropertyesChanged();
 				//Application.Current.Dispatcher.Invoke(() => pr.RaisePropertyesChanged(), DispatcherPriority.Normal);
 			}
 
 			if (!IsCollumnsLoaded)
 			{
-				var collumns = SelectedTable.Columns.Select(p => new CCollumnItem() 
-				{ 
-					ItemType = p.TargetType, 
+				var collumns = SelectedTable.Columns.Select(p => new CCollumnItem()
+				{
+					ItemType = p.TargetType,
 					Name = p.Name,
 					Coll = p
 				}).ToList();
@@ -379,7 +391,7 @@ namespace DBExport.Products
 		{
 			RefreshCommand.RaiseCanExecuteChanged();
 			SaveCommand.RaiseCanExecuteChanged();
-			EditCommand.RaiseCanExecuteChanged();
+			FilterCommand.RaiseCanExecuteChanged();
 			DeleteCommand.RaiseCanExecuteChanged();
 			AddCommand.RaiseCanExecuteChanged();
 			CloseCommand.RaiseCanExecuteChanged();
@@ -392,10 +404,10 @@ namespace DBExport.Products
 
 		private bool CanSave()
 		{
-			return IsEnabled && !IsHasError && IsSelected && State != enFormState.None;
+			return IsEnabled && IsSelected && !IsHasError && IsChanged;//&& State != enFormState.None;
 		}
 
-		private bool CanEdit()
+		private bool CanFilter()
 		{
 			return IsEnabled && IsSelected;
 		}
@@ -428,7 +440,8 @@ namespace DBExport.Products
 
 		private void OnRefresh()
 		{
-			SelectedTable = null;
+			SelectedRowsItem = null;
+
 			RaiseRefresh();
 
 			LoadData();
@@ -458,6 +471,7 @@ namespace DBExport.Products
 
 				Application.Current.Dispatcher.Invoke(() =>
 				{
+					SelectedRowsItem.IsChanged = false;
 					SelectedTable = null;
 
 					//RaiseRefresh();
@@ -472,13 +486,48 @@ namespace DBExport.Products
 
 		private void OnDeleteSelected()
 		{
-			SelectedTable.Status = Status.Deleted;
-			SelectedTable.Save();
+			IsEnabled = false;
+			IsLoading = true;
 
-			//this.Tables.Remove(SelectedTable);
-			SelectedTable = null;
+			ThreadPool.QueueUserWorkItem(new WaitCallback((par) =>
+			{
+				DeleteSelected();
+			}));
 
-			RaiseRefresh();
+		}
+
+		private void DeleteSelected()
+		{
+			try
+			{
+				var tr = CDatabase.Instance.BeginTransaction();
+
+				bool res = true;
+				var selectionCopy = SelectedItems.ToList();
+				foreach (ProductItemViewModel item in selectionCopy)
+				{
+					res = item.RowItems.SaveList(Status.Deleted, tr);
+
+					if (res)
+					{
+						BeginInvoke(DispatcherPriority.Normal, () =>
+						{
+							RowItems.Remove(item);
+						});
+					}
+				}
+
+				BeginInvoke(DispatcherPriority.Normal, () =>
+				{
+					SelectedItems.Clear();
+					SelectedRowsItem = null;
+					RaiseRefresh();
+				});
+			}
+			catch (Exception ex)
+			{ }
+
+			ChangeState(false);
 		}
 
 		private void OnAdd()
@@ -508,7 +557,7 @@ namespace DBExport.Products
 
 		}
 
-		private void OnEdit()
+		private void OnFilterCommand()
 		{
 
 		}

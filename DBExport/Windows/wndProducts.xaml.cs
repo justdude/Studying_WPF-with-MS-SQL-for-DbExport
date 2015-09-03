@@ -25,14 +25,14 @@ namespace DBExport.Windows
 		public wndProducts()
 		{
 			InitializeComponent();
-			InitMessenger();
+			
 			Loaded += wndProducts_Loaded;
 			Unloaded += wndProducts_Unloaded;
 		}
 
-		private void InitMessenger()
+		public void Init()
 		{
-			Messenger.Default.Register<DBExport.Common.Messages.CloseWindowMessage>(Token, OnWindowClose);
+			Messenger.Default.Register<DBExport.Common.Messages.CloseWindowMessage>(this,Token, OnWindowClose);
 		}
 
 		public string Token
@@ -59,7 +59,7 @@ namespace DBExport.Windows
 
 		private void OnWindowClose(Common.Messages.CloseWindowMessage obj)
 		{
-			Application.Current.Shutdown();
+			this.Close();
 		}
 
 	}
