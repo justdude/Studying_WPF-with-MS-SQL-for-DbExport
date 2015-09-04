@@ -56,6 +56,7 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CCommonExtension.cs" />
     <Compile Include="CDatabase.cs" />
     <Compile Include="CDatabaseManager.cs" />
     <Compile Include="CDataTableHelper.cs" />

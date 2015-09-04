@@ -64,7 +64,7 @@ namespace DBExport.Products.ViewModel
 			}
 		}
 
-		private void OnItemChanged(string propName)
+		private void OnItemChanged(string collName, string propName, string collID)
 		{
 			CValue changedItem = RowItems.FirstOrDefault(p => p.CollumnName == propName);
 			if (changedItem != null && changedItem.Status == Status.Normal)

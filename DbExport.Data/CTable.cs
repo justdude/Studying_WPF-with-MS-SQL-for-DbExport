@@ -288,20 +288,27 @@ namespace DbExport.Data
 				}
 				res &= Columns.SaveList(Status, tr);
 				res &= Rows.SaveList(Status, tr);
+
+					if (res)
+				{
+					Status = Common.Interfaces.Status.Normal;
+					tr.Commit(CommitMode.Immediate);
+				}
+				else
+				{
+					
+				}
+
 			}
 			catch (Exception ex)
 			{
-				
-			}
-
-			if (res)
-			{
-				Status = Common.Interfaces.Status.Normal;
-				tr.Commit(CommitMode.Immediate);
-			}
-			else
-			{
-				tr.Rollback();				
+				try
+				{
+					if (tr!=null)
+						tr.Rollback();
+				}
+				catch (Exception ex1)
+				{ }
 			}
 
 			return true;

@@ -20,6 +20,11 @@ using DBExport.Common.Constants;
 
 namespace DbExport.Controls.GeneratableForm
 {
+	internal class DataBox
+	{
+		public string Name { get; set; }
+	}
+
 	/// <summary>
 	/// Логика взаимодействия для ctrGeneratableForm.xaml
 	/// </summary>
@@ -32,7 +37,7 @@ namespace DbExport.Controls.GeneratableForm
 		public ctrGeneratableForm()
 		{
 			InitializeComponent();
-			DataBoxes = new Dictionary<string, TextBox>();
+			DataBoxes = new Dictionary<DataBox, FrameworkElement>();
 			Loaded += ctrGeneratableForm_Loaded;
 			Unloaded += ctrGeneratableForm_Unloaded;
 		}
@@ -70,7 +75,7 @@ namespace DbExport.Controls.GeneratableForm
 			//}
 		}
 		public ObservableCollection<CCollumnItem> Collumns { get; set; }
-		public Dictionary<string, TextBox> DataBoxes { get; private set; }
+		private Dictionary<DataBox, FrameworkElement> DataBoxes { get; set; }
 
 		void ctrGeneratableForm_Loaded(object sender, RoutedEventArgs e)
 		{
@@ -103,17 +108,121 @@ namespace DbExport.Controls.GeneratableForm
 		{
 			foreach (var item in DataBoxes)
 			{
-				CRowItemViewModel viewModel = obj.Rows.FirstOrDefault(p => p.CollumnName == item.Key);
+				CRowItemViewModel viewModel = obj.Rows.FirstOrDefault(p => p.CollumnName == item.Key.Name);
 
 				if (viewModel == null)
 					continue;
 
-				TextBox tb = item.Value;
+				FrameworkElement tb = item.Value;
 				tb.DataContext = viewModel;
 
-				SetTextBoxBinding(tb, viewModel.ValueType, viewModel);
+				if (tb is TextBox)
+				{
+					SetTextBoxBinding(tb as TextBox, viewModel.ValueType, viewModel);
+				}
+				if (tb is DatePicker)
+				{
+					SetDatePickerBinding(tb as DatePicker, viewModel.ValueType, viewModel);
+				}
+				if (tb is ComboBox)
+				{
+					SetComboBoxBinding(tb as ComboBox, viewModel.ValueType, viewModel);
+				}
+
 			}
 
+		}
+
+		private void SetComboBoxBinding(ComboBox datePicker, Type type, object source)
+		{
+			var binding = new Binding();
+			binding.Source = source;
+			binding.Mode = BindingMode.TwoWay;
+
+			if (type != null)
+			{
+				ValidationRule rule = null;
+
+				string prName = string.Empty;
+
+				prName = GetTypeName(type, prName);
+
+				if (!string.IsNullOrWhiteSpace(prName))
+				{
+					binding.Path = new PropertyPath(prName);
+					binding.Source = source;
+					binding.ValidatesOnDataErrors = true;
+					binding.NotifyOnValidationError = true;
+					binding.Mode = BindingMode.TwoWay;
+					binding.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
+
+					if (rule != null)
+					{
+						binding.ValidationRules.Add(rule);
+					}
+				}
+			}
+
+			BindingOperations.SetBinding(datePicker, ComboBox.SelectedItemProperty, binding);
+		}
+
+		private void SetDatePickerBinding(DatePicker datePicker, Type type, object source)
+		{
+			var binding = new Binding();
+			binding.Source = source;
+			binding.Mode = BindingMode.TwoWay;
+
+			if (type != null)
+			{
+				ValidationRule rule = null;
+
+				string prName = string.Empty;
+
+				prName = GetTypeName(type, prName);
+
+				if (!string.IsNullOrWhiteSpace(prName))
+				{
+					binding.Path = new PropertyPath(prName);
+					binding.Source = source;
+					binding.ValidatesOnDataErrors = true;
+					binding.NotifyOnValidationError = true;
+					binding.Mode = BindingMode.TwoWay;
+					binding.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
+
+					if (rule != null)
+					{
+						binding.ValidationRules.Add(rule);
+					}
+				}
+			}
+
+			BindingOperations.SetBinding(datePicker, DatePicker.SelectedDateProperty, binding);
+		}
+
+		private static string GetTypeName(Type type, string prName)
+		{
+			switch (Type.GetTypeCode(type))
+			{
+				case TypeCode.Boolean:
+					prName = TypeNames.BoolValue;
+					break;
+				case TypeCode.DateTime:
+					prName = TypeNames.DateValue;
+					break;
+				case TypeCode.Single:
+				case TypeCode.Double:
+					prName = TypeNames.FloatValue;
+					break;
+				case TypeCode.Int32:
+					prName = TypeNames.IntValue;
+					break;
+				case TypeCode.String:
+					prName = TypeNames.StrValue;
+					break;
+				default:
+					break;
+			}
+			return prName;
 		}
 
 		public void BuildCollumns()
@@ -128,10 +237,31 @@ namespace DbExport.Controls.GeneratableForm
 					grdData_Container.RowDefinitions.Add(row);
 
 					var textBlock = CreateTextBlock(i, 0, Collumns[i].Name);
-					var textBox = CreateTextBox(i, 1);
-					//SetTextBoxBinding(textBox, Collumns[i].ItemType);
+					FrameworkElement textBox = null;
 
-					DataBoxes.Add(Collumns[i].Name, textBox);
+					switch (Type.GetTypeCode(Collumns[i].ItemType))
+					{
+						case TypeCode.Boolean:
+							textBox = CreateTrueFalseCombo(i, 1);
+							break;
+						case TypeCode.DateTime:
+							textBox = CreateDatePicker(i, 1);
+							break;
+	
+						case TypeCode.Single:
+						case TypeCode.Double:
+						case TypeCode.Int32:
+						case TypeCode.String:
+							textBox = CreateTextBox(i, 1);
+							break;
+						default:
+							break;
+					}
+
+					
+					//SetTextBoxBinding(textBox, Collumns[i].ItemType);
+					var dbox = new DataBox() { Name = Collumns[i].Name };
+					DataBoxes.Add(dbox, textBox);
 
 					grdData_Container.Children.Add(textBlock);
 					grdData_Container.Children.Add(textBox);
@@ -141,6 +271,49 @@ namespace DbExport.Controls.GeneratableForm
 			{
 
 			}
+		}
+
+		private ComboBox CreateTrueFalseCombo(int row, int column)
+		{
+			ComboBox tb = new ComboBox();
+
+			tb.Height = 22;
+			tb.Width = 150;
+			tb.FontWeight = FontWeights.Bold;
+			tb.Margin = new Thickness(5);
+			//tb.Style = GetStyle(tboxStyleName);
+			//SetErrorTemplate(tb);
+
+			var bc = new BrushConverter();
+			tb.Foreground = (Brush)bc.ConvertFrom("#FF2D72BC");
+
+			Grid.SetColumn(tb, column);
+			Grid.SetRow(tb, row);
+
+			tb.Items.Add(true);
+			tb.Items.Add(false);
+
+			return tb;
+		}
+
+		private DatePicker CreateDatePicker(int row, int column)
+		{
+			DatePicker tb = new DatePicker();
+
+			tb.Height = 22;
+			tb.Width = 150;
+			tb.FontWeight = FontWeights.Bold;
+			tb.Margin = new Thickness(5);
+			//tb.Style = GetStyle(tboxStyleName);
+			//SetErrorTemplate(tb);
+
+			var bc = new BrushConverter();
+			tb.Foreground = (Brush)bc.ConvertFrom("#FF2D72BC");
+
+			Grid.SetColumn(tb, column);
+			Grid.SetRow(tb, row);
+
+			return tb;
 		}
 
 

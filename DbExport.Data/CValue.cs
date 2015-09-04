@@ -9,6 +9,7 @@ using DbExport.Common.Interfaces;
 using DbExport.Data.Constants;
 using DbExport.Database;
 using DBExport.Common.Interfaces;
+using System.Data.SqlClient;
 
 namespace DbExport.Data
 {
@@ -139,21 +140,28 @@ namespace DbExport.Data
 
 		private bool AddValue(CValue item, SqlCeTransaction tr)
 		{
-			string str = modSQL.InsertValue(item);
-			return CDatabase.Instance.ExecuteNonQuery(str, tr);
+			SqlCeCommand cmd = new SqlCeCommand();
+			modSQL.InsertValue(item, cmd);
+
+			return CDatabase.Instance.ExecuteNonQuery(cmd, tr);
 		}
 
 
 		private bool AddValue(CValue item)
 		{
-			string str = modSQL.InsertValue(item);
-			return CDatabase.Instance.ExecuteNonQuery(str);
+			SqlCeCommand cmd = new SqlCeCommand();
+			modSQL.InsertValue(item, cmd);
+
+			return CDatabase.Instance.ExecuteNonQuery(cmd);
 		}
 
 		private bool UpdateValue(CValue item)
 		{
-			string str = modSQL.UpdateValue(item);
-			return CDatabase.Instance.ExecuteNonQuery(str);
+			SqlCeCommand cmd = new SqlCeCommand();
+
+			modSQL.UpdateValue(item, cmd);
+
+			return CDatabase.Instance.ExecuteNonQuery(cmd);
 		}
 
 		private bool DeleteValue(string id)

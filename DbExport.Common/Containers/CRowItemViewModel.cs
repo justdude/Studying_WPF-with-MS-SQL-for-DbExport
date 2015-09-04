@@ -14,7 +14,7 @@ namespace DBExport.Common.Containers
 		public IObjectBase Coll { get; set; }
 		public IDataValue Value { get; set; }
 		public Func<string, IDataValue, IObjectBase, string> OnValidateErrors { get; set; }
-		public Action<string> OnPropertyChanged { get; set; }
+		public Action<string, string, string> OnPropertyChanged { get; set; }
 
 		public CRowItemViewModel(IDataValue val)
 		{
@@ -74,7 +74,7 @@ namespace DBExport.Common.Containers
 				Value.DateValue = value;
 
 				RaisePropertyChanged("DateValue");
-				OnPropertyChanged("DateValue"); 
+				RaiseOnPropertyChanged("DateValue"); 
 			}
 		}
 
@@ -92,7 +92,7 @@ namespace DBExport.Common.Containers
 				Value.StrValue = value;
 
 				RaisePropertyChanged("StrValue");
-				OnPropertyChanged("StrValue"); 
+				RaiseOnPropertyChanged("StrValue"); 
 			}
 		}
 
@@ -110,7 +110,7 @@ namespace DBExport.Common.Containers
 				Value.BoolValue = value;
 
 				RaisePropertyChanged("BoolValue");
-				OnPropertyChanged("BoolValue"); 
+				RaiseOnPropertyChanged("BoolValue"); 
 			}
 		}
 
@@ -128,7 +128,7 @@ namespace DBExport.Common.Containers
 				Value.FloatValue = value;
 
 				RaisePropertyChanged("FloatValue");
-				OnPropertyChanged("FloatValue"); 
+				RaiseOnPropertyChanged("FloatValue"); 
 			}
 		}
 
@@ -146,7 +146,7 @@ namespace DBExport.Common.Containers
 				Value.IntValue = value;
 
 				RaisePropertyChanged("IntValue");
-				OnPropertyChanged("IntValue"); 
+				RaiseOnPropertyChanged("IntValue"); 
 			}
 		}
 
@@ -195,6 +195,14 @@ namespace DBExport.Common.Containers
 			{
 				return !string.IsNullOrWhiteSpace(modErrorText);
 			}
+		}
+
+		private void RaiseOnPropertyChanged(string name)
+		{
+			if (OnPropertyChanged == null)
+				return;
+			
+			OnPropertyChanged(name, Value.CollumnName, Coll.Id);
 		}
 
 		//private bool mvIsHasErrors;

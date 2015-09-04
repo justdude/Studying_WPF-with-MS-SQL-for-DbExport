@@ -498,7 +498,7 @@ namespace DBExport.Products
 				{
 					foreach (ProductItemViewModel item in SelectedItems)
 					{
-						if (item == SelectedRowsItem)
+						if (item == SelectedRowsItem && SelectedItems.Count > 1)
 							continue;
 
 						item.RowItems.ForEach(p => CopyDataTo(p, SelectedRowsItem.RowItems));
