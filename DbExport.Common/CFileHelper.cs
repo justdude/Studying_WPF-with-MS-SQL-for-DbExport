@@ -15,7 +15,8 @@ namespace DbExport.Common
 			OpenFileDialog openFileDialog = new OpenFileDialog();
 			openFileDialog.Filter = "Text files (*.csv)|*.csv";
 			openFileDialog.InitialDirectory = Directory.GetCurrentDirectory();
-			if (openFileDialog.ShowDialog() == DialogResult.OK || openFileDialog.ShowDialog() == DialogResult.Yes)
+			DialogResult res = openFileDialog.ShowDialog();
+			if (res == DialogResult.OK || res == DialogResult.Yes)
 			{
 				return openFileDialog.FileName;
 			}

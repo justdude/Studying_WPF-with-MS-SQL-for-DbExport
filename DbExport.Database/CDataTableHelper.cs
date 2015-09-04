@@ -68,7 +68,8 @@ namespace DbExport.Database
 						if (newDt.Columns[coll].DataType == typeof(DateTime))
 						{
 							DateTime dateRes = DateTime.MinValue;
-							if (DateTime.TryParse(item.ToString(), out dateRes))
+
+							if (CDateTimeExtension.TryParse(item.ToString(), out dateRes))
 							{
 								newRowValues[coll] = dateRes;
 							}
