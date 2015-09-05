@@ -24,3 +24,8 @@ CREATE TABLE [dbo].[Conf_Dyn_Properties] (
     [TableId]  NCHAR (10)    NULL,
     PRIMARY KEY CLUSTERED ([Id] ASC)
 );
+
+
+DELETE FROM Conf_Dyn_Values;
+DELETE FROM Conf_Dyn_Tables;
+DELETE FROM Conf_Dyn_Properties;

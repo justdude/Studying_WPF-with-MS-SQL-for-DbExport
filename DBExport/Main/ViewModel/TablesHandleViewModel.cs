@@ -17,6 +17,7 @@ using System.Threading;
 using System.Windows;
 using DBExport.Common.Messages;
 using DbExport.Database;
+using System.IO;
 //using Microsoft.Practices.Prism.Commands;
 //using Microsoft.Practices.Prism.Mvvm;
 
@@ -300,6 +301,12 @@ namespace DBExport.Main.ViewModel
 
 			ThreadPool.QueueUserWorkItem(new WaitCallback((par) =>
 			{
+
+				//string dir = Directory.GetCurrentDirectory();
+				//string fileName = @"DbEData.sdf";
+				//CDatabase.Instance.TryOpenConnection(Path.Combine(dir, fileName));	
+				CDatabase.Instance.TryOpenConnection(CDatabaseManager.DbPathNoteBook);	
+
 				tables = Engine.Instance.LoadTables().Select(p => new TableViewModel(p));
 
 				Application.Current.Dispatcher.Invoke(() =>

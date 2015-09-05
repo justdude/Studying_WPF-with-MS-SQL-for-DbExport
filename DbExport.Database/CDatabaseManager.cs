@@ -12,13 +12,13 @@ namespace DbExport.Database
 	{
 		private SqlCeConnection modConnection;
 
-		public static string ConnectionString = @"Data Source=C:\Users\ialbantov.LIZDEVNTD\Documents\DbExport\DbExport.Database\DbEData.sdf";
-		//public static string ConnectionString = @"Data Source=D:\Projects\DbExport\DbExport.Database\DbEData.sdf";
+		//public static string ConnectionString = @"Data Source=C:\Users\ialbantov.LIZDEVNTD\Documents\DbExport\DbExport.Database\DbEData.sdf";
+		public static string ConnectionString = @"Data Source={0}";
+		public const string DbPathNoteBook = @"D:\Projects\DbExport\DbExport.Database\DbEData.sdf";
 		//public static string ConnectionString = @"Data Source=(localdb)\ProjectsV12;Initial Catalog=DbExportData;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False";
 
 		public CDatabaseManager()
 		{
-			modConnection = new SqlCeConnection(ConnectionString);
 		}
 
 		public SqlCeDataReader Execute(string command)
@@ -201,6 +201,26 @@ namespace DbExport.Database
 
 			}
 			return res == 1;
+		}
+
+		public bool TryOpenConnection(string path)
+		{
+			if (modConnection != null)
+				return true;
+
+			bool res = false;
+
+			try
+			{
+				string connString = string.Format(ConnectionString, path);
+				modConnection = new SqlCeConnection(connString);
+			}
+			catch (Exception ex)
+			{
+				res = false;
+			}
+
+			return res;
 		}
 	}
 }
