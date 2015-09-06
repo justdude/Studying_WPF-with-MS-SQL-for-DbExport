@@ -4,6 +4,26 @@
 		xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
 		WindowStartupLocation="CenterScreen"
         Title="wndSelectFilter" Height="300" Width="300">
+	<Controls:MetroWindow.RightWindowCommands>
+		<Controls:WindowCommands>
+			<Button Content="settings" />
+			<Button>
+				<StackPanel Orientation="Horizontal">
+					<!--<Rectangle Width="20" Height="20"
+                   Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
+						<Rectangle.OpacityMask>
+							<VisualBrush Stretch="Fill"
+                         Visual="{StaticResource appbar_cupcake}" />
+						</Rectangle.OpacityMask>
+					</Rectangle>-->
+					<TextBlock Margin="4 0 0 0"
+                   VerticalAlignment="Center"
+                   Text="deploy cupcakes" />
+				</StackPanel>
+			</Button>
+		</Controls:WindowCommands>
+	</Controls:MetroWindow.RightWindowCommands>
+
 	<Grid>
 		<Grid.RowDefinitions>
 				<RowDefinition Height="80*"></RowDefinition>
