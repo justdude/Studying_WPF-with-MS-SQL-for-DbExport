@@ -190,5 +190,41 @@ namespace DbExport.Data
 
 			return str.Substring(0, Math.Min(str.Length, 10));
 		}
+
+		public IEnumerable<CFilter> GetFilters(string id)
+		{
+			List<CFilter> list = new List<CFilter>();
+			CFilter item = null;
+			SqlCeDataReader reader = null;
+			try
+			{
+				reader = CDatabase.Instance.Execute(modSQL.SelectFilters(id));
+
+				while (reader.Read())
+				{
+					item = new CFilter();
+					item.Id = reader.GetClearStr(0);
+					item.Name = reader.GetClearStr(1);
+					item.QuerySQL = reader.GetClearStr(2);
+					item.TableId = reader.GetClearStr(3);
+					item.Status = Status.Normal;
+
+					list.Add(item);
+				}
+
+			}
+			catch (Exception ex)
+			{
+
+			}
+			finally
+			{
+				if (reader != null && !reader.IsClosed)
+					reader.Close();
+			}
+
+			return list;
+		}
+
 	}
 }

@@ -171,7 +171,7 @@ namespace CRM.Database
 
 		#region Filtration
 
-		public static string GetFilters(string tableID)
+		public static string SelectFilters(string tableID)
 		{
 			string str = @"SELECT Conf_Dyn_Filter.* FROM Conf_Dyn_Filter t WHERE t.TableId ='{0}'";
 			return string.Format(str, tableID);
