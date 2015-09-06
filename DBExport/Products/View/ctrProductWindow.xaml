@@ -39,7 +39,7 @@
 			<ListBox Name="lstBoxTables"
 				 IsEnabled="{Binding IsEnabled}"
 				 SelectedItem="{Binding SelectedRowsItem}"
-				 ItemsSource="{Binding RowItems}" 
+				 ItemsSource="{Binding RowItems}"
 				 Margin="5"
 				 beh:ListBoxBehaviour.SelectedItems="{Binding SelectedItems}"
 				 SelectionMode="Extended">
@@ -55,6 +55,11 @@
 				<ListBox.ItemContainerStyle>
 					<Style TargetType="{x:Type ListBoxItem}">
 						<Setter Property="IsSelected" Value="{Binding Mode=TwoWay, Path=IsSelected}"/>
+						<Style.Triggers>
+							<DataTrigger Binding="{Binding IsVisible}" Value="False">
+								<Setter Property="Visibility" Value="Collapsed"/>
+							</DataTrigger>
+						</Style.Triggers>
 					</Style>
 				</ListBox.ItemContainerStyle>
 
@@ -62,8 +67,18 @@
 
 		</Border>
 
+		<TextBox
+			BorderBrush="Black"
+			BorderThickness="1"
+			Grid.Column="0" 
+			Grid.Row="2"
+			Grid.RowSpan="1"
+			Margin="5 0 0 5"
+			Text="{Binding SearchString,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+			HorizontalAlignment="Stretch"
+			VerticalAlignment="Stretch"/>
 
-		<StackPanel Grid.Row="3" VerticalAlignment="Center" HorizontalAlignment="Stretch" Orientation="Horizontal" Margin="0,4,0,4">
+			<StackPanel Grid.Row="3" VerticalAlignment="Center" HorizontalAlignment="Stretch" Orientation="Horizontal" Margin="0,4,0,4">
 			<Button Content="Add" 
 					Command="{Binding AddCommand}" 
 					VerticalAlignment="Center" Style="{StaticResource btnStyle}">

@@ -168,5 +168,15 @@ namespace CRM.Database
 		}
 
 		#endregion
+
+		#region Filtration
+
+		public static string GetFilters(string tableID)
+		{
+			string str = @"SELECT Conf_Dyn_Filter.* FROM Conf_Dyn_Filter t WHERE t.TableId ='{0}'";
+			return string.Format(str, tableID);
+		}
+
+		#endregion
 	}
 }

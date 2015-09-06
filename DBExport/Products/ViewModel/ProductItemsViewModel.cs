@@ -41,6 +41,7 @@ namespace DBExport.Products
 		private ProductItemViewModel mvSelectedRowsItem;
 		private bool mvIsChanged;
 		private List<CCollumnItem> modColumns;
+		private string mvSearchString;
 
 		public ProductItemsViewModel(DbExport.Data.CTable table)
 		{
@@ -132,6 +133,40 @@ namespace DBExport.Products
 				mvIsLoading = value;
 
 				RaisePropertyChanged(() => this.IsLoading);
+			}
+		}
+
+
+		public string SearchString
+		{
+			get
+			{
+				return mvSearchString;
+			}
+			set
+			{
+				if (mvSearchString == value)
+					return;
+
+				mvSearchString = value;
+
+				FilterByName(mvSearchString);
+				RaiseRefresh();
+
+				this.RaisePropertyChanged(() => this.SearchString);
+			}
+		}
+
+		private void FilterByName(string searchString)
+		{
+			foreach (ProductItemViewModel item in RowItems)
+			{
+				item.IsVisible = false;
+
+				if (item.Name.StartsWith(searchString))
+				{
+					item.IsVisible = true;
+				}
 			}
 		}
 

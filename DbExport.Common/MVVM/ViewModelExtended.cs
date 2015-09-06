@@ -13,6 +13,13 @@ namespace DBExport.Common.MVVM
 	{
 		private Dispatcher mvDispatcher;
 		private string mvToken;
+		private bool mvIsVisible;
+
+		public ViewModelExtended()
+		{
+			mvIsVisible = true;
+		}
+
 		public string Token
 		{
 			get
@@ -23,6 +30,19 @@ namespace DBExport.Common.MVVM
 			{
 				mvToken = value;
 				OnTokenChanged();
+			}
+		}
+
+		public bool IsVisible
+		{
+			get
+			{
+				return mvIsVisible;
+			}
+			set
+			{
+				mvIsVisible = value;
+				RaisePropertyChanged(() => this.IsVisible);
 			}
 		}
 
