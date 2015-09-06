@@ -4,14 +4,15 @@
 		xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
 		WindowStartupLocation="CenterScreen"
         Title="wndSelectFilter" Height="300" Width="300">
-	<Border  BorderBrush="Black" BorderThickness="1">
 	<Grid>
 		<Grid.RowDefinitions>
 				<RowDefinition Height="80*"></RowDefinition>
 				<RowDefinition Height="20*"></RowDefinition>
 				<RowDefinition Height="35"></RowDefinition>
 		</Grid.RowDefinitions>
-		<ListBox ItemsSource="{Binding Filters}" SelectedItem="{Binding SelectedItem, Mode=TwoWay}">
+		<Border  BorderBrush="Black" BorderThickness="1">
+
+			<ListBox ItemsSource="{Binding Filters}" SelectedItem="{Binding SelectedItem, Mode=TwoWay}">
 			<ListBox.ItemTemplate>
 				<DataTemplate>
 					<!--<Border VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
@@ -41,7 +42,9 @@
 				</DataTemplate>
 			</ListBox.ItemTemplate>
 		</ListBox>
-			<StackPanel Grid.Column="2" Grid.Row="1" 
+		</Border>
+
+		<StackPanel Grid.Column="2" Grid.Row="1" 
 					VerticalAlignment="Center" HorizontalAlignment="Stretch"
 					Orientation="Horizontal" Margin="5 0">
 				<TextBlock Text="Params: "></TextBlock>
@@ -61,5 +64,4 @@
 					Style="{StaticResource btnStyle}"></Button>
 		</StackPanel>
 	</Grid>
-	</Border>
 </Controls:MetroWindow>
