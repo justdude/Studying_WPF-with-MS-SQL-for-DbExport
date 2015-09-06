@@ -1,8 +1,65 @@
-﻿<Window x:Class="DBExport.Windows.wndSelectFilter"
+﻿<Controls:MetroWindow x:Class="DBExport.Windows.wndSelectFilter"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+		xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+		WindowStartupLocation="CenterScreen"
         Title="wndSelectFilter" Height="300" Width="300">
-    <Grid>
-        
-    </Grid>
-</Window>
+	<Border  BorderBrush="Black" BorderThickness="1">
+	<Grid>
+		<Grid.RowDefinitions>
+				<RowDefinition Height="80*"></RowDefinition>
+				<RowDefinition Height="20*"></RowDefinition>
+				<RowDefinition Height="35"></RowDefinition>
+		</Grid.RowDefinitions>
+		<ListBox ItemsSource="{Binding Filters}" SelectedItem="{Binding SelectedItem, Mode=TwoWay}">
+			<ListBox.ItemTemplate>
+				<DataTemplate>
+					<!--<Border VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+						<Border.Style>
+							<Style TargetType="Border">
+								<Style.Triggers>
+									<DataTrigger Binding="{Binding IsHasErrors}">
+										<Setter Property="BorderBrush" Value="Red">
+										</Setter>
+									</DataTrigger>
+								</Style.Triggers>
+							</Style>
+						</Border.Style>-->
+						<Grid>
+							<Grid.ColumnDefinitions>
+								<ColumnDefinition Width="100"></ColumnDefinition>
+								<ColumnDefinition Width="150"></ColumnDefinition>
+							</Grid.ColumnDefinitions>
+							<TextBlock Grid.Column="0" 
+									   Width="250"
+									   Text="{Binding Name}"></TextBlock>
+							<!--<ComboBox Grid.Column="1"
+								 SelectedItem="{Binding CurrentType}"
+								  ItemsSource="{Binding DataContext.DataTypes, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}}"></ComboBox>-->
+						</Grid>
+					<!--</Border>-->
+				</DataTemplate>
+			</ListBox.ItemTemplate>
+		</ListBox>
+			<StackPanel Grid.Column="2" Grid.Row="1" 
+					VerticalAlignment="Center" HorizontalAlignment="Stretch"
+					Orientation="Horizontal" Margin="5 0">
+				<TextBlock Text="Params: "></TextBlock>
+				<TextBox Text="{Binding Params}"></TextBox>
+			</StackPanel>
+
+			<StackPanel Grid.Column="2" Grid.Row="2" 
+					VerticalAlignment="Center" HorizontalAlignment="Right"
+					Orientation="Horizontal" Margin="5 0">
+			<Button Content="Select filter" 
+					Command="{Binding SaveCommand}"
+					VerticalAlignment="Center" 
+					Style="{StaticResource btnStyle}"></Button>
+			<Button Content="Close" 
+					Command="{Binding CloseCommand}"
+					VerticalAlignment="Center" 
+					Style="{StaticResource btnStyle}"></Button>
+		</StackPanel>
+	</Grid>
+	</Border>
+</Controls:MetroWindow>

@@ -117,6 +117,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Filtering\ViewModel\SelectFilterViewModel.cs" />
+    <Compile Include="Filtering\ViewModel\FilterItemViewModel.cs" />
     <Compile Include="Helpers\CWindowHelper.cs" />
     <Compile Include="Main\enFormState.cs" />
     <Compile Include="Products\ViewModel\ProductItemsViewModel.cs" />
@@ -128,6 +130,9 @@
     <Compile Include="Settings\TableSettingViewModel.cs" />
     <Compile Include="Windows\wndProducts.xaml.cs">
       <DependentUpon>wndProducts.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\wndSelectFilter.xaml.cs">
+      <DependentUpon>wndSelectFilter.xaml</DependentUpon>
     </Compile>
     <Compile Include="Windows\wndSetTypes.xaml.cs">
       <DependentUpon>wndSetTypes.xaml</DependentUpon>
@@ -161,6 +166,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Windows\wndSelectFilter.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Windows\wndSetTypes.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -190,17 +199,19 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <AppDesigner Include="Properties\" />
-    <None Include="Task\Fitments.csv" />
-    <None Include="Task\NewData\Fitments.csv" />
-    <None Include="Task\NewData\Products.csv" />
-    <None Include="Task\Products.csv" />
+    <None Include="Task_\Fitments.csv" />
+    <None Include="Task_\NewData\Fitments.csv" />
+    <None Include="Task_\NewData\Products.csv" />
+    <None Include="Task_\Products.csv" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
-    <Resource Include="Task\ReadMe.txt" />
+    <Folder Include="Filtering\View\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Task_\ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DBExport.Common\DBExport.Common.csproj">
@@ -225,26 +236,26 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Library\Microsoft.Practices.Prism.Composition.dll" />
-    <Content Include="Library\Microsoft.Practices.Prism.Interactivity.dll" />
-    <Content Include="Library\Microsoft.Practices.Prism.Mvvm.Desktop.dll" />
-    <Content Include="Library\Microsoft.Practices.Prism.Mvvm.dll" />
-    <Content Include="Library\Microsoft.Practices.Prism.PubSubEvents.dll" />
-    <Content Include="Library\Microsoft.Practices.Prism.SharedInterfaces.dll" />
-    <Content Include="Library\Microsoft.Practices.Prism.UnityExtensions.dll" />
-    <Content Include="Library\Microsoft.Practices.ServiceLocation.dll" />
-    <Content Include="Library\Microsoft.Practices.Unity.Configuration.dll" />
-    <Content Include="Library\Microsoft.Practices.Unity.dll" />
-    <Content Include="Library\Microsoft.Practices.Unity.RegistrationByConvention.dll" />
-    <Content Include="Library\MVVM Light\GalaSoft.MvvmLight.dll" />
-    <Content Include="Library\MVVM Light\GalaSoft.MvvmLight.Extras.dll" />
-    <Resource Include="Library\MVVM Light\GalaSoft.MvvmLight.Extras.xml" />
-    <Content Include="Library\MVVM Light\GalaSoft.MvvmLight.Platform.dll" />
-    <Resource Include="Library\MVVM Light\GalaSoft.MvvmLight.Platform.xml" />
-    <Resource Include="Library\MVVM Light\GalaSoft.MvvmLight.xml" />
-    <Content Include="Library\MVVM Light\Microsoft.Practices.ServiceLocation.dll" />
-    <Resource Include="Library\MVVM Light\Microsoft.Practices.ServiceLocation.xml" />
-    <Content Include="Library\System.Windows.Interactivity.dll" />
+    <Content Include="Libraries_\Microsoft.Practices.Prism.Composition.dll" />
+    <Content Include="Libraries_\Microsoft.Practices.Prism.Interactivity.dll" />
+    <Content Include="Libraries_\Microsoft.Practices.Prism.Mvvm.Desktop.dll" />
+    <Content Include="Libraries_\Microsoft.Practices.Prism.Mvvm.dll" />
+    <Content Include="Libraries_\Microsoft.Practices.Prism.PubSubEvents.dll" />
+    <Content Include="Libraries_\Microsoft.Practices.Prism.SharedInterfaces.dll" />
+    <Content Include="Libraries_\Microsoft.Practices.Prism.UnityExtensions.dll" />
+    <Content Include="Libraries_\Microsoft.Practices.ServiceLocation.dll" />
+    <Content Include="Libraries_\Microsoft.Practices.Unity.Configuration.dll" />
+    <Content Include="Libraries_\Microsoft.Practices.Unity.dll" />
+    <Content Include="Libraries_\Microsoft.Practices.Unity.RegistrationByConvention.dll" />
+    <Content Include="Libraries_\MVVM Light\GalaSoft.MvvmLight.dll" />
+    <Content Include="Libraries_\MVVM Light\GalaSoft.MvvmLight.Extras.dll" />
+    <Resource Include="Libraries_\MVVM Light\GalaSoft.MvvmLight.Extras.xml" />
+    <Content Include="Libraries_\MVVM Light\GalaSoft.MvvmLight.Platform.dll" />
+    <Resource Include="Libraries_\MVVM Light\GalaSoft.MvvmLight.Platform.xml" />
+    <Resource Include="Libraries_\MVVM Light\GalaSoft.MvvmLight.xml" />
+    <Content Include="Libraries_\MVVM Light\Microsoft.Practices.ServiceLocation.dll" />
+    <Resource Include="Libraries_\MVVM Light\Microsoft.Practices.ServiceLocation.xml" />
+    <Content Include="Libraries_\System.Windows.Interactivity.dll" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.5">

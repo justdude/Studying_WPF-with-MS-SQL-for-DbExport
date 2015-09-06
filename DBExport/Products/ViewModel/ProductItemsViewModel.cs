@@ -15,6 +15,7 @@ using DbExport.Database;
 using DBExport.Common.Containers;
 using DBExport.Common.Messages;
 using DBExport.Common.MVVM;
+using DBExport.Helpers;
 using DBExport.Main;
 using DBExport.Main.ViewModel;
 using DBExport.Products.ViewModel;
@@ -42,6 +43,7 @@ namespace DBExport.Products
 		private bool mvIsChanged;
 		private List<CCollumnItem> modColumns;
 		private string mvSearchString;
+		private List<CFilter> modFilterQueries;
 
 		public ProductItemsViewModel(DbExport.Data.CTable table)
 		{
@@ -54,6 +56,7 @@ namespace DBExport.Products
 			mvRefreshCommand = new RelayCommand(OnRefresh, CanRefresh);
 			mvCloseCommand = new RelayCommand(OnClose);
 
+			modFilterQueries = new List<CFilter>();
 			RowItems = new ObservableCollection<ProductItemViewModel>();
 			base.SelectedItems = new ObservableCollection<ProductItemViewModel>();
 
@@ -379,9 +382,18 @@ namespace DBExport.Products
 
 			//ThreadPool.QueueUserWorkItem(new WaitCallback((par) =>
 			//{
-			IEnumerable<List<CValue>> dataRowsList = SelectedTable.Rows.GroupBy(p => p.RowNumb).Select(p => p.ToList());
 
+			List<string> hidedId = new List<string>();
+			ManualResetEvent resEvent = new ManualResetEvent(false);
+
+			LoadFilters(hidedId, resEvent);
+
+			IEnumerable<List<CValue>> dataRowsList = SelectedTable.Rows.Where(p=> !hidedId.Contains(p.Id)) 
+				.GroupBy(p => p.RowNumb)
+				.Select(p => p.ToList());
 			RowItems.Clear();
+			
+			resEvent.WaitOne(); //!!!!!!!! waiting for queries
 
 			foreach (var items in dataRowsList)
 			{
@@ -391,7 +403,6 @@ namespace DBExport.Products
 				RowItems.Add(pr);
 
 				pr.RaisePropertyesChanged();
-				//Application.Current.Dispatcher.Invoke(() => pr.RaisePropertyesChanged(), DispatcherPriority.Normal);
 			}
 
 			if (!IsCollumnsLoaded)
@@ -416,6 +427,26 @@ namespace DBExport.Products
 
 			}, DispatcherPriority.Normal);
 			//}));
+		}
+
+		private void LoadFilters(List<string> hidedId, ManualResetEvent resEvent)
+		{
+			ThreadPool.QueueUserWorkItem(new WaitCallback((p) =>
+			{
+				try
+				{
+					var tr = CDatabase.Instance.BeginTransaction();
+
+					foreach (CFilter item in modFilterQueries)
+					{
+						List<string> ids = item.ExecuteQuery(tr);
+						hidedId.AddRange(ids);
+					}
+				}
+				catch (Exception ex)
+				{ }
+				resEvent.Set();
+			}));
 		}
 
 		private void OnDataChanged(object obj)
@@ -471,7 +502,7 @@ namespace DBExport.Products
 
 		private bool CanFilter()
 		{
-			return IsEnabled && IsSelected && State == enFormState.None;
+			return IsEnabled && State == enFormState.None;
 		}
 
 		private bool CanDelete()
@@ -656,7 +687,14 @@ namespace DBExport.Products
 
 		private void OnFilterCommand()
 		{
+			CWindowHelper.ShowSelectFilterWindow(SelectedTable.Id, OnFilterSelected);
+		}
 
+		private void OnFilterSelected(string tableId, List<CFilter> newFilters)
+		{
+			modFilterQueries.Clear();
+			modFilterQueries.AddRange(newFilters);
+			LoadData();
 		}
 
 		private void ChangeState(bool isLoading)

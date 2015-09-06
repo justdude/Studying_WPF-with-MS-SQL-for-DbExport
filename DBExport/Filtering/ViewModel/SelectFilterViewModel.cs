@@ -64,6 +64,26 @@ namespace DBExport.Filtering.ViewModel
 			}
 		}
 
+		protected override void OnTokenChanged()
+		{
+			base.OnTokenChanged();
+
+			if (string.IsNullOrWhiteSpace(Token))
+				return;
+
+			LoadData();
+		}
+
+		private void LoadData()
+		{
+			IEnumerable<CFilter> filters = Engine.Instance.GetFilters(tableId);
+
+			foreach (CFilter item in filters)
+			{
+				FilterItemViewModel filterVM = new FilterItemViewModel(item);
+				Filters.Add(filterVM);
+			}
+		}
 
 		private bool CanSave()
 		{

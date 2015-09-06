@@ -14,13 +14,14 @@ using System.Windows.Shapes;
 using DBExport.Common.Messages;
 using DBExport.Common.MVVM;
 using GalaSoft.MvvmLight.Messaging;
+using MahApps.Metro.Controls;
 
 namespace DBExport.Windows
 {
 	/// <summary>
 	/// Логика взаимодействия для wndSelectFilter.xaml
 	/// </summary>
-	public partial class wndSelectFilter : Window
+	public partial class wndSelectFilter : MetroWindow
 	{
 		public wndSelectFilter()
 		{
