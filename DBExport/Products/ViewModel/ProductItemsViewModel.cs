@@ -154,7 +154,7 @@ namespace DBExport.Products
 				mvSearchString = value;
 
 				FilterByName(mvSearchString);
-				//RaiseRefresh();
+				RaiseRefresh();
 
 				this.RaisePropertyChanged(() => this.SearchString);
 			}
@@ -573,6 +573,7 @@ namespace DBExport.Products
 							continue;
 
 						item.RowItems.ForEach(p => CopyDataTo(p, SelectedRowsItem.RowItems));
+						Invoke(DispatcherPriority.Normal, () => item.RaisePropertyesChanged());
 					}
 
 					SelectedTable.Save();
@@ -597,6 +598,9 @@ namespace DBExport.Products
 		private object CopyDataTo(CValue target, List<CValue> list)
 		{
 			CValue source = list.FirstOrDefault(p => p.CollumnId == target.CollumnId);
+			if (source == null)
+				return null;
+
 			target.SetValue(source.GetValue());
 			target.Status = source.Status;
 			return target;

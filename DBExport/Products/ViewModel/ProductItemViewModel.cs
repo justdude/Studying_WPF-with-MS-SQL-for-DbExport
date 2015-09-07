@@ -73,6 +73,8 @@ namespace DBExport.Products.ViewModel
 			}
 
 			IsChanged = true;
+			RaisePropertyesChanged();
+
 			MessengerInstance.Send<PropertyChangedMessage>(new PropertyChangedMessage() { PropName = propName }, Token);
 		}
 
