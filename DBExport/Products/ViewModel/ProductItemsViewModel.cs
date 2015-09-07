@@ -497,7 +497,7 @@ namespace DBExport.Products
 
 		private bool CanRefresh()
 		{
-			return IsEnabled && !IsSelected || (IsSelected && State == enFormState.None);
+			return IsEnabled && State == enFormState.None;
 		}
 
 		private bool CanSave()
@@ -517,7 +517,7 @@ namespace DBExport.Products
 
 		private bool CanAdd()
 		{
-			return IsEnabled && !IsSelected || (IsSelected && State == enFormState.None);
+			return IsEnabled && State == enFormState.None;
 		}
 
 		private bool CanMerge()
