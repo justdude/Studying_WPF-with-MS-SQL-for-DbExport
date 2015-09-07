@@ -227,8 +227,9 @@ namespace DbExport.Data
 					if (isIgnoreExists)
 					{
 						var castedColumns = table.Columns;
-						coll = castedColumns.FirstOrDefault(p=>p.Name == dataTable.Columns[i].ColumnName 
-													&& p.GetCollType() == dataTable.Columns[i].DataType);
+						coll = castedColumns.FirstOrDefault(p=>p.Name == dataTable.Columns[i].ColumnName
+													&& p.GetCollType() == dataTable.Columns[i].DataType
+							);
 						if (coll != null)
 							continue;
 					}

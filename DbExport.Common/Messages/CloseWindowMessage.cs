@@ -9,5 +9,6 @@ namespace DBExport.Common.Messages
 {
 	public class CloseWindowMessage : MessageBase
 	{
+		public bool IsOk { get; set; }
 	}
 }

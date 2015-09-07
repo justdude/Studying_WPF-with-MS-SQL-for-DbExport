@@ -305,7 +305,7 @@ namespace DBExport.Main.ViewModel
 				//string dir = Directory.GetCurrentDirectory();
 				//string fileName = @"DbEData.sdf";
 				//CDatabase.Instance.TryOpenConnection(Path.Combine(dir, fileName));	
-				CDatabase.Instance.TryOpenConnection(CDatabaseManager.DbPathNoteBook);	
+				CDatabase.Instance.TryOpenConnection(CDatabaseManager.DbPathWork);	
 
 				tables = Engine.Instance.LoadTables().Select(p => new TableViewModel(p));
 
@@ -382,7 +382,7 @@ namespace DBExport.Main.ViewModel
 
 		private bool CanShowSettings()
 		{
-			return IsSelected && SelectedTable.IsCreate;
+			return IsSelected && IsEnabled && !IsHasError && SelectedTable.State != enFormState.None;
 		}
 
 		private bool CanEdit()
@@ -506,7 +506,6 @@ namespace DBExport.Main.ViewModel
 						SelectedTable.Current.Status = Status.Added;
 						
 						this.Tables.Add(SelectedTable);
-						RaiseRefresh();
 						this.RaisePropertyChanged(() => this.SelectedTableView);
 					});
 				}
@@ -531,7 +530,7 @@ namespace DBExport.Main.ViewModel
 				return;
 			}
 
-			IsLoading = true;
+			ChangeState(true);
 			SelectedTable.State = enFormState.EditTable;
 
 			ThreadPool.QueueUserWorkItem(new WaitCallback((par) =>
@@ -542,11 +541,13 @@ namespace DBExport.Main.ViewModel
 					bool res = CTable.FillColumns(data, SelectedTable.Current, true);
 					res &= CTable.FillRows(data, SelectedTable.Current);
 
+
+
 					BeginInvoke(DispatcherPriority.Normal, () =>
 					{
 						SelectedTable.IsAppenedSuccessfully = res;
-						RaiseRefresh();
 						this.RaisePropertyChanged(() => this.SelectedTableView);
+						SelectedTable.RaisePropertyesChanged();
 					});
 				}
 				catch (Exception ex)
@@ -570,8 +571,16 @@ namespace DBExport.Main.ViewModel
 			CWindowHelper.ShowEmployeWindow(SelectedTable.Current, null, OnSettingsTypesClosed);
 		}
 
-		private void OnSettingsTypesClosed()
+		private void OnSettingsTypesClosed(bool isRes)
 		{
+			if (!isRes)
+			{
+				SelectedTable.State = enFormState.EditTable;
+				ChangeState(false);
+				return;
+			}
+
+
 			ThreadPool.QueueUserWorkItem(new WaitCallback((par) =>
 			{
 				try
@@ -580,6 +589,12 @@ namespace DBExport.Main.ViewModel
 					SelectedTable.Current.Columns.Clear();
 					CTable.FillColumns(SelectedTable.Current.Data, SelectedTable.Current);
 					CTable.FillRows(SelectedTable.Current.Data, SelectedTable.Current);
+
+					if (SelectedTable.State != enFormState.Create)
+					{
+						SelectedTable.State = enFormState.EditTable;
+					}
+
 				}
 				catch (Exception ex)
 				{ }

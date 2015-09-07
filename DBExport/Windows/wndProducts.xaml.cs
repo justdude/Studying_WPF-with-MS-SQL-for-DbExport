@@ -30,6 +30,8 @@ namespace DBExport.Windows
 			Unloaded += wndProducts_Unloaded;
 		}
 
+		public bool IsOk { get; set; }
+
 		public void Init()
 		{
 			Messenger.Default.Register<DBExport.Common.Messages.CloseWindowMessage>(this,Token, OnWindowClose);
@@ -59,6 +61,7 @@ namespace DBExport.Windows
 
 		private void OnWindowClose(Common.Messages.CloseWindowMessage obj)
 		{
+			IsOk = obj.IsOk;
 			this.Close();
 		}
 

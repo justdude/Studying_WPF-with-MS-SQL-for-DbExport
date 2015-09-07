@@ -15,7 +15,7 @@ namespace DbExport.Database
 		//public static string ConnectionString = @"Data Source=C:\Users\ialbantov.LIZDEVNTD\Documents\DbExport\DbExport.Database\DbEData.sdf";
 		public static string ConnectionString = @"Data Source={0}";
 		public const string DbPathNoteBook = @"D:\Projects\DbExport\DbExport.Database\DbEData.sdf";
-		//public static string ConnectionString = @"Data Source=(localdb)\ProjectsV12;Initial Catalog=DbExportData;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False";
+		public static string DbPathWork = @"C:\Users\ialbantov.LIZDEVNTD\Documents\DbExport\DbExport.Database\DbEData.sdf";
 
 		public CDatabaseManager()
 		{

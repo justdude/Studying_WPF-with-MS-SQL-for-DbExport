@@ -41,6 +41,9 @@ namespace DBExport.Common.MVVM
 			}
 			set
 			{
+				if (mvIsVisible == value)
+					return;
+
 				mvIsVisible = value;
 				RaisePropertyChanged(() => this.IsVisible);
 			}

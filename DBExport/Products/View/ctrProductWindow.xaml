@@ -36,34 +36,34 @@
 			HorizontalAlignment="Stretch"
 			VerticalAlignment="Stretch">
 
-			<ListBox Name="lstBoxTables"
+			<ListView Name="lstBoxTables"
 				 IsEnabled="{Binding IsEnabled}"
 				 SelectedItem="{Binding SelectedRowsItem}"
 				 ItemsSource="{Binding RowItems}"
 				 Margin="5"
 				 beh:ListBoxBehaviour.SelectedItems="{Binding SelectedItems}"
 				 SelectionMode="Extended">
-				
-				<ListBox.ItemTemplate>
+
+				<ListView.ItemTemplate>
 					<DataTemplate>
 						<StackPanel Orientation="Horizontal">
 							<TextBlock Text="{Binding Name}"></TextBlock>
 						</StackPanel>
 					</DataTemplate>
-				</ListBox.ItemTemplate>
+				</ListView.ItemTemplate>
 
-				<ListBox.ItemContainerStyle>
-					<Style TargetType="{x:Type ListBoxItem}">
-						<Setter Property="IsSelected" Value="{Binding Mode=TwoWay, Path=IsSelected}"/>
+				<ListView.ItemContainerStyle>
+					<Style TargetType="{x:Type ListViewItem}">
+						<!--<Setter Property="IsSelected" Value="{Binding Mode=TwoWay, Path=IsSelected}"/>
 						<Style.Triggers>
 							<DataTrigger Binding="{Binding IsVisible}" Value="False">
 								<Setter Property="Visibility" Value="Collapsed"/>
 							</DataTrigger>
-						</Style.Triggers>
+						</Style.Triggers>-->
 					</Style>
-				</ListBox.ItemContainerStyle>
+				</ListView.ItemContainerStyle>
 
-			</ListBox>
+			</ListView>
 
 		</Border>
 

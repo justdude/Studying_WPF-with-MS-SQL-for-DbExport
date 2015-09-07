@@ -30,6 +30,8 @@ namespace DBExport.Windows
 			this.Closed += wndSetTypes_Closed;
 		}
 
+		public bool IsOk { get; set; }
+
 		void wndSetTypes_Loaded(object sender, RoutedEventArgs e)
 		{
 			Messenger.Default.Register<CloseWindowMessage>(this, Token, OnMessageCloseWind);
@@ -37,6 +39,7 @@ namespace DBExport.Windows
 
 		private void OnMessageCloseWind(CloseWindowMessage obj)
 		{
+			this.IsOk = obj.IsOk;
 			this.Close();
 		}
 

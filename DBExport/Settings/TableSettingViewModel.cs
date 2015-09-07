@@ -26,7 +26,7 @@ namespace DBExport.Settings.ViewModel
 		private Func<object, bool> modCheckIsRightCollumn;
 		private CTable modTable;
 		private string mvCurrentSeparator;
-
+		private bool modIsOkay = false;
 		public TableSettingViewModel(CTable table, Func<object, bool> checkIsRightCollumn)
 		{
 			mvSaveCommand = new RelayCommand(OnSaveSelected, CanSave);
@@ -118,13 +118,15 @@ namespace DBExport.Settings.ViewModel
 				}
 			
 				modTable.Data = CDataTableHelper.ConvertTableType(modTable.Data, dict);
+
+				modIsOkay = true;
 			}
 			catch (Exception ex)
 			{
-				
+				modIsOkay = false;
 			}
 
-			MessengerInstance.Send<CloseWindowMessage>(new CloseWindowMessage(), Token);
+			MessengerInstance.Send<CloseWindowMessage>(new CloseWindowMessage() { IsOk = modIsOkay }, Token);
 		}
 
 		private void SetCultureNumbSeparator(string numberDecimalSeparator)

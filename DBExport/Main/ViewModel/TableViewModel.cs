@@ -21,14 +21,6 @@ namespace DBExport.Main.ViewModel
 
 		public CTable Current { get; private set; }
 
-
-		public bool IsCreate
-		{
-			get
-			{
-				return State == enFormState.Create;
-			}
-		}
 		public enFormState State { get; set; }
 
 		public bool? IsAppenedSuccessfully

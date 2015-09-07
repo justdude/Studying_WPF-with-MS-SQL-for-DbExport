@@ -7,12 +7,13 @@ using System.Text;
 using System.Threading.Tasks;
 using DBExport.Products;
 using DBExport.Filtering.ViewModel;
+using System.Windows;
 
 namespace DBExport.Helpers
 {
 	public class CWindowHelper
 	{
-		public static void ShowEmployeWindow(CTable table, Func<object, bool> checkRightColl, Action onWindowClosed)
+		public static void ShowEmployeWindow(CTable table, Func<object, bool> checkRightColl, Action<bool> onWindowClosed)
 		{
 			var wind = new wndSetTypes();
 			//wind.Owner = App.Current.MainWindow;
@@ -29,7 +30,7 @@ namespace DBExport.Helpers
 			wind.Closed += (p, v) =>
 				{
 					if (onWindowClosed != null)
-						onWindowClosed();
+						onWindowClosed(wind.IsOk);
 				};
 
 			wind.Show();
@@ -50,11 +51,10 @@ namespace DBExport.Helpers
 			{
 				wind.Init();
 				wind.ctrProd.Init(wind.Token);
-				wind.DataContext = new ProductItemsViewModel(table)
-				{
-					Token = wind.Token,
-					Disp = wind.Dispatcher
-				};
+				var vm = new ProductItemsViewModel(table);
+				wind.DataContext = vm;
+				vm.Disp = wind.Dispatcher;
+				vm.Token = wind.Token;
 			};
 
 			wind.Show();
@@ -63,7 +63,7 @@ namespace DBExport.Helpers
 		public static void ShowSelectFilterWindow(string tableId, Action<string, List<CFilter>> onFilterSelected)
 		{
 			var wind = new wndSelectFilter();
-			wind.Owner = App.Current.MainWindow;
+			wind.Owner = App.Current.Windows.Cast<Window>().FirstOrDefault(p => p.IsActive);
 			wind.Closed += (e, a) =>
 			{
 				wind.Owner.Show();

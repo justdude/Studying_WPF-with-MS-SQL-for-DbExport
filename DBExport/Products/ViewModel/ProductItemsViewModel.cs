@@ -154,7 +154,7 @@ namespace DBExport.Products
 				mvSearchString = value;
 
 				FilterByName(mvSearchString);
-				RaiseRefresh();
+				//RaiseRefresh();
 
 				this.RaisePropertyChanged(() => this.SearchString);
 			}
@@ -164,12 +164,13 @@ namespace DBExport.Products
 		{
 			foreach (ProductItemViewModel item in RowItems)
 			{
-				item.IsVisible = false;
 
 				if (item.Name.StartsWith(searchString))
 				{
 					item.IsVisible = true;
 				}
+				else
+					item.IsVisible = false;
 			}
 		}
 
@@ -383,28 +384,6 @@ namespace DBExport.Products
 			//ThreadPool.QueueUserWorkItem(new WaitCallback((par) =>
 			//{
 
-			List<string> hidedId = new List<string>();
-			ManualResetEvent resEvent = new ManualResetEvent(false);
-
-			LoadFilters(hidedId, resEvent);
-
-			IEnumerable<List<CValue>> dataRowsList = SelectedTable.Rows.Where(p=> !hidedId.Contains(p.Id)) 
-				.GroupBy(p => p.RowNumb)
-				.Select(p => p.ToList());
-			RowItems.Clear();
-			
-			resEvent.WaitOne(); //!!!!!!!! waiting for queries
-
-			foreach (var items in dataRowsList)
-			{
-				ProductItemViewModel pr = new ProductItemViewModel();
-				pr.RowItems = items;
-				pr.Token = Token;
-				RowItems.Add(pr);
-
-				pr.RaisePropertyesChanged();
-			}
-
 			if (!IsCollumnsLoaded)
 			{
 				modColumns = SelectedTable.Columns.Select(p => new CCollumnItem()
@@ -418,21 +397,49 @@ namespace DBExport.Products
 				IsCollumnsLoaded = true;
 			}
 
-			Application.Current.Dispatcher.Invoke(() =>
-			{
-				IsEnabled = true;
-				IsLoading = false;
+			List<string> hidedId = new List<string>();
+			ManualResetEvent[] resEvent = new ManualResetEvent[] { new ManualResetEvent(false), new ManualResetEvent(false) };
+			IEnumerable<List<CValue>> dataRowsList = null;
 
-				RaiseRefresh();
+			BeginInvoke(DispatcherPriority.Background, () =>
+				{
+					LoadFilters(hidedId);
 
-			}, DispatcherPriority.Normal);
+					dataRowsList = SelectedTable.Rows.Where(p => !hidedId.Contains(p.Id))
+													.GroupBy(p => p.RowNumb)
+													.Select(p => p.ToList());
+													 RowItems.Clear();
+
+					 BeginInvoke(DispatcherPriority.Background, () =>
+						 {
+							 ProductItemViewModel pr = null;
+							 foreach (var items in dataRowsList)
+							 {
+								 pr = new ProductItemViewModel();
+								 pr.RowItems = items;
+								 pr.Token = Token;
+
+								 RowItems.Add(pr);
+								 //pr.RaisePropertyesChanged();
+							 }
+
+							 Application.Current.Dispatcher.Invoke(() =>
+							 {
+								 IsEnabled = true;
+								 IsLoading = false;
+
+								 RaiseRefresh();
+
+							 }, DispatcherPriority.Normal);
+						 });
+
+				});
+		
 			//}));
 		}
 
-		private void LoadFilters(List<string> hidedId, ManualResetEvent resEvent)
+		private void LoadFilters(List<string> hidedId)
 		{
-			ThreadPool.QueueUserWorkItem(new WaitCallback((p) =>
-			{
 				try
 				{
 					var tr = CDatabase.Instance.BeginTransaction();
@@ -445,8 +452,6 @@ namespace DBExport.Products
 				}
 				catch (Exception ex)
 				{ }
-				resEvent.Set();
-			}));
 		}
 
 		private void OnDataChanged(object obj)

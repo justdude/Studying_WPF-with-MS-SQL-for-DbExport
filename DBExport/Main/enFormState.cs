@@ -10,6 +10,6 @@ namespace DBExport.Main
 	{
 		None,
 		Create,
-		EditTable
+		EditTable,
 	}
 }
