@@ -40,6 +40,8 @@
 				 IsEnabled="{Binding IsEnabled}"
 				 SelectedItem="{Binding SelectedRowsItem}"
 				 ItemsSource="{Binding RowItems}"
+				 VirtualizingStackPanel.IsVirtualizing ="False"
+				 ScrollViewer.VerticalScrollBarVisibility="Visible"
 				 Margin="5"
 				 beh:ListBoxBehaviour.SelectedItems="{Binding SelectedItems}"
 				 SelectionMode="Extended">
@@ -54,7 +56,7 @@
 
 				<ListView.ItemContainerStyle>
 					<Style TargetType="{x:Type ListViewItem}">
-						<Setter Property="IsSelected" Value="{Binding Mode=TwoWay, Path=IsSelected}"/>
+						<!--<Setter Property="IsSelected" Value="{Binding Mode=TwoWay, Path=IsSelected}"/>-->
 						<Style.Triggers>
 							<DataTrigger Binding="{Binding IsVisible}" Value="False">
 								<Setter Property="Visibility" Value="Collapsed"/>
