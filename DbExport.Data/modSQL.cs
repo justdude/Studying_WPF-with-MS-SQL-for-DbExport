@@ -175,10 +175,10 @@ namespace CRM.Database
 								FROM  Conf_Dyn_Filter t
 								WHERE t.TableId =@TableId and t.CollId=@CollId and t.Float > @Float";
 
-		public static string SelectFilters(string tableID)
+		public static string SelectFilters(CTable table)
 		{
 			string str = @"SELECT * FROM Conf_Dyn_Filter t WHERE t.TableId ='{0}'";
-			return string.Format(str, tableID);
+			return string.Format(str, table.Name);
 		}
 
 		#endregion

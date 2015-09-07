@@ -8,6 +8,7 @@ using DbExport.Data;
 using DBExport.Common.Messages;
 using DBExport.Common.MVVM;
 using GalaSoft.MvvmLight.Command;
+using DbExport.Database;
 
 namespace DBExport.Filtering.ViewModel
 {
@@ -15,11 +16,12 @@ namespace DBExport.Filtering.ViewModel
 	{
 		private readonly RelayCommand mvSaveCommand;
 		private readonly RelayCommand mvCloseCommand;
-		private Action<string, List<CFilter>> onFilterSelected;
-		private string tableId;
+		private Action<CTable, List<string>> onFilterSelected;
+		private CTable table;
 		private FilterItemViewModel mvSelectedItem;
+		private string mvParams;
 
-		public SelectFilterViewModel(string tableId, Action<string, List<CFilter>> onFilterSelected)
+		public SelectFilterViewModel(CTable table, Action<CTable, List<string>> onFilterSelected)
 		{
 			mvSaveCommand = new RelayCommand(OnSaveSelected, CanSave);
 			mvCloseCommand = new RelayCommand(OnClose);
@@ -27,7 +29,7 @@ namespace DBExport.Filtering.ViewModel
 			Filters = new ObservableCollection<FilterItemViewModel>();
 
 			this.onFilterSelected = onFilterSelected;
-			this.tableId = tableId;
+			this.table = table;
 		}
 
 		public ObservableCollection<FilterItemViewModel> Filters { get; set; }
@@ -43,8 +45,27 @@ namespace DBExport.Filtering.ViewModel
 					return;
 
 				mvSelectedItem = value;
+				RefreshButtons();
 
 				RaisePropertyChanged(() => this.SelectedItem);
+			}
+		}
+
+		public string Params
+		{
+			get
+			{
+				return mvParams;
+			}
+			set
+			{
+				if (mvParams == value)
+					return;
+
+				mvParams = value;
+				RefreshButtons();
+
+				RaisePropertyChanged(() => Params);
 			}
 		}
 
@@ -64,6 +85,11 @@ namespace DBExport.Filtering.ViewModel
 			}
 		}
 
+		private bool CanSave()
+		{
+			return SelectedItem != null && !string.IsNullOrWhiteSpace(Params);
+		}
+
 		protected override void OnTokenChanged()
 		{
 			base.OnTokenChanged();
@@ -76,7 +102,7 @@ namespace DBExport.Filtering.ViewModel
 
 		private void LoadData()
 		{
-			IEnumerable<CFilter> filters = Engine.Instance.GetFilters(tableId);
+			IEnumerable<CFilter> filters = Engine.Instance.GetFilters(table);
 
 			foreach (CFilter item in filters)
 			{
@@ -85,18 +111,24 @@ namespace DBExport.Filtering.ViewModel
 			}
 		}
 
-		private bool CanSave()
+		private void RefreshButtons()
 		{
-			return SelectedItem!= null;
+			SaveCommand.RaiseCanExecuteChanged();
 		}
+
 
 		private void OnSaveSelected()
 		{
 			try
 			{
-				List<CFilter> items = new List<CFilter>();
-				items.Add(SelectedItem.Current);
-				RaiseOnFilterSelected(tableId, items);
+				List<string> items = null;
+
+				var tr = CDatabase.Instance.BeginTransaction();
+
+				SelectedItem.Current.Parameters.Add(Params);
+				items = SelectedItem.Current.ExecuteQuery(tr);
+
+				RaiseOnFilterSelected(table, items);
 			}
 			catch (Exception ex)
 			{
@@ -111,12 +143,12 @@ namespace DBExport.Filtering.ViewModel
 			MessengerInstance.Send<CloseWindowMessage>(new CloseWindowMessage(), Token);
 		}
 
-		private void RaiseOnFilterSelected(string tableId, List<CFilter> items)
+		private void RaiseOnFilterSelected(CTable table, List<string> items)
 		{
 			if (onFilterSelected == null)
 				return;
 
-			onFilterSelected(tableId, items);
+			onFilterSelected(table, items);
 		}
 
 	}

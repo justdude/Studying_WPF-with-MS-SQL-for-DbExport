@@ -5,25 +5,6 @@
 		xmlns:tr="clr-namespace:DBExport.Translates"
 		WindowStartupLocation="CenterScreen"
         Title="wndSelectFilter" Height="380" Width="500">
-	<Controls:MetroWindow.RightWindowCommands>
-		<Controls:WindowCommands>
-			<Button Content="settings" />
-			<Button>
-				<StackPanel Orientation="Horizontal">
-					<!--<Rectangle Width="20" Height="20"
-                   Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
-						<Rectangle.OpacityMask>
-							<VisualBrush Stretch="Fill"
-                         Visual="{StaticResource appbar_cupcake}" />
-						</Rectangle.OpacityMask>
-					</Rectangle>-->
-					<TextBlock Margin="4 0 0 0"
-                   VerticalAlignment="Center"
-                   Text="deploy cupcakes" />
-				</StackPanel>
-			</Button>
-		</Controls:WindowCommands>
-	</Controls:MetroWindow.RightWindowCommands>
 
 	<Grid>
 		<Grid.RowDefinitions>
@@ -31,9 +12,10 @@
 				<RowDefinition Height="30*"></RowDefinition>
 				<RowDefinition Height="35"></RowDefinition>
 		</Grid.RowDefinitions>
-		<Border  BorderBrush="#FF060606" BorderThickness="2" Background="Black">
+		<!--<Border  BorderBrush="#FF060606" BorderThickness="2" Background="Black">-->
 
-			<ListBox ItemsSource="{Binding Filters}" SelectedItem="{Binding SelectedItem, Mode=TwoWay}" Margin="2">
+			<ListBox ItemsSource="{Binding Filters}" 
+					 SelectedItem="{Binding SelectedItem, Mode=TwoWay}" Margin="2">
 			<ListBox.ItemTemplate>
 				<DataTemplate>
 					<!--<Border VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
@@ -49,13 +31,18 @@
 						</Border.Style>-->
 						<Grid>
 							<Grid.ColumnDefinitions>
-								<ColumnDefinition Width="*"></ColumnDefinition>
-							</Grid.ColumnDefinitions>
+							<ColumnDefinition Width="30"></ColumnDefinition>
+							<ColumnDefinition MaxWidth="160"></ColumnDefinition>
+						</Grid.ColumnDefinitions>
 							<TextBlock Grid.Column="0" 
 									   VerticalAlignment="Center"
 									   HorizontalAlignment="Left"
 									   Text="{Binding Name}"></TextBlock>
-							<!--<ComboBox Grid.Column="1"
+						<TextBlock Grid.Column="1" 
+									   VerticalAlignment="Center"
+									   HorizontalAlignment="Stretch"
+									   Text="{Binding QuerySQL}"></TextBlock>
+						<!--<ComboBox Grid.Column="1"
 								 SelectedItem="{Binding CurrentType}"
 								  ItemsSource="{Binding DataContext.DataTypes, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}}"></ComboBox>-->
 						</Grid>
@@ -63,7 +50,7 @@
 				</DataTemplate>
 			</ListBox.ItemTemplate>
 		</ListBox>
-		</Border>
+		<!--</Border>-->
 
 		<Grid Grid.Column="2" Grid.Row="1" 
 					VerticalAlignment="Stretch"
@@ -78,9 +65,9 @@
 				<RowDefinition Height="*"></RowDefinition>
 			</Grid.RowDefinitions>
 				<TextBlock Grid.Row="0" Grid.Column="0" Text="Params: "></TextBlock>
-				<TextBox Grid.Row="0" Grid.Column="1"  HorizontalAlignment="Stretch" Text="{Binding Params}" MinWidth="377"></TextBox>
+				<TextBox Grid.Row="0" Grid.Column="1"  HorizontalAlignment="Stretch" Text="{Binding Params,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" MinWidth="377"></TextBox>
 			<Border Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" VerticalAlignment="Stretch"
-					BorderThickness="2" BorderBrush="Black" CornerRadius="5">
+					BorderThickness="1" BorderBrush="Black" CornerRadius="5">
 				<TextBlock Text="{x:Static tr:CTranslates.HelpToFilterItems}"></TextBlock>
 			</Border>
 		</Grid>

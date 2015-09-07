@@ -13,7 +13,9 @@ namespace DBExport.Translates
 		public const string AddingNewTable = "Press setting to select table types and save";
 		public const string AddingAdditionalData = "Press Setting to select table types and Save to commit changes";
 		public const string TableIsNotSelected = "Select table or create new";
+		
+		public const string ItemIsNotSelected = "Select item or create new";
 
-		public static string IsHasErrors { get; set; }
+		public static string IsHasErrors = "Error occured. Restart app or try again";
 	}
 }

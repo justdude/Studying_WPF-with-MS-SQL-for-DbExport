@@ -21,6 +21,7 @@ using DBExport.Main.ViewModel;
 using DBExport.Products.ViewModel;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
+using DBExport.Translates;
 
 namespace DBExport.Products
 {
@@ -41,7 +42,7 @@ namespace DBExport.Products
 		private ProductItemViewModel mvSelectedRowsItem;
 		private List<CCollumnItem> modColumns;
 		private string mvSearchString;
-		private List<CFilter> modFilterQueries;
+		private List<string> modFilterQueries;
 
 		public ProductItemsViewModel(DbExport.Data.CTable table)
 		{
@@ -54,7 +55,7 @@ namespace DBExport.Products
 			mvRefreshCommand = new RelayCommand(OnRefresh, CanRefresh);
 			mvCloseCommand = new RelayCommand(OnClose);
 
-			modFilterQueries = new List<CFilter>();
+			modFilterQueries = new List<string>();
 			RowItems = new ObservableCollection<ProductItemViewModel>();
 			base.SelectedItems = new ObservableCollection<ProductItemViewModel>();
 
@@ -79,6 +80,10 @@ namespace DBExport.Products
 		}
 
 		#region Properties
+
+		public enFormState State { get; set; }
+
+		public bool IsCollumnsLoaded { get; set; }
 
 		public ProductItemViewModel SelectedRowsItem
 		{
@@ -382,6 +387,8 @@ namespace DBExport.Products
 			//ThreadPool.QueueUserWorkItem(new WaitCallback((par) =>
 			//{
 			SearchString = string.Empty;
+			modFilterQueries.Clear();
+			RowItems.Clear();
 
 			LoadColumns();
 
@@ -408,7 +415,6 @@ namespace DBExport.Products
 
 		private void LoadRows()
 		{
-			RowItems.Clear();
 
 			List<string> hidedId = new List<string>();
 			IEnumerable<List<CValue>> dataRowsList = null;
@@ -449,18 +455,13 @@ namespace DBExport.Products
 
 		private void LoadFilters(List<string> hidedId)
 		{
-				try
+				foreach (var item in RowItems)
 				{
-					var tr = CDatabase.Instance.BeginTransaction();
-
-					foreach (CFilter item in modFilterQueries)
+					if (item.RowItems.Any(p => modFilterQueries.Contains(p.Id)))
 					{
-						List<string> ids = item.ExecuteQuery(tr);
-						hidedId.AddRange(ids);
+						item.IsVisible = false;
 					}
 				}
-				catch (Exception ex)
-				{ }
 		}
 
 		private void OnDataChanged(object obj)
@@ -470,6 +471,7 @@ namespace DBExport.Products
 			{
 				this.RaisePropertyChanged(() => IsHasError);
 				RefreshCommands();
+				Translate();
 			}
 		}
 
@@ -486,6 +488,7 @@ namespace DBExport.Products
 		{
 			LoadSelectedRow(obj);
 			RefreshCommands();
+			Translate();
 		}
 
 		//private bool Filter(object obj)
@@ -560,6 +563,7 @@ namespace DBExport.Products
 		{
 			RaisePropertyesChanged();
 			RefreshCommands();
+			Translate();
 		}
 
 		private void OnSaveSelected()
@@ -705,14 +709,14 @@ namespace DBExport.Products
 
 		private void OnFilterCommand()
 		{
-			CWindowHelper.ShowSelectFilterWindow(SelectedTable.Id, OnFilterSelected);
+			CWindowHelper.ShowSelectFilterWindow(SelectedTable, OnFilterSelected);
 		}
 
-		private void OnFilterSelected(string tableId, List<CFilter> newFilters)
+		private void OnFilterSelected(CTable table, List<string> newFilters)
 		{
 			modFilterQueries.Clear();
 			modFilterQueries.AddRange(newFilters);
-			LoadData();
+			LoadFilters(newFilters);
 		}
 
 		private void ChangeState(bool isLoading)
@@ -725,10 +729,39 @@ namespace DBExport.Products
 			});
 		}
 
+		protected override void Translate()
+		{
+			if (IsSelected == false)
+			{
+				StateText = CTranslates.ItemIsNotSelected;
+				return;
+			}
+
+			//enFormState state, bool isSelected, bool isHasErrors
+			if (IsHasError == true)
+			{
+				StateText = CTranslates.IsHasErrors;
+				return;
+			}
+
+			switch (State)
+			{
+				case enFormState.None:
+					StateText = CTranslates.WaitingForStatesChanged;
+					break;
+				case enFormState.Create:
+					StateText = CTranslates.AddingNewTable;
+					break;
+				case enFormState.EditTable:
+					StateText = CTranslates.AddingAdditionalData;
+					break;
+				default:
+					break;
+			}
+		}
+
 		#endregion
 
-		public enFormState State { get; set; }
 
-		public bool IsCollumnsLoaded { get; set; }
 	}
 }

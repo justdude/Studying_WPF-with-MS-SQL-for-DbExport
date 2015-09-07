@@ -191,14 +191,14 @@ namespace DbExport.Data
 			return str.Substring(0, Math.Min(str.Length, 10));
 		}
 
-		public IEnumerable<CFilter> GetFilters(string id)
+		public IEnumerable<CFilter> GetFilters(CTable table)
 		{
 			List<CFilter> list = new List<CFilter>();
 			CFilter item = null;
 			SqlCeDataReader reader = null;
 			try
 			{
-				reader = CDatabase.Instance.Execute(modSQL.SelectFilters(id));
+				reader = CDatabase.Instance.Execute(modSQL.SelectFilters(table));
 
 				while (reader.Read())
 				{

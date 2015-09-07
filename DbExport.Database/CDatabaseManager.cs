@@ -45,16 +45,16 @@ namespace DbExport.Database
 			return reader;
 		}
 
-		public SqlCeDataReader ExecuteBG(string command)
+		public SqlCeDataReader Execute(SqlCeCommand cmd, SqlCeTransaction tr)
 		{
-			SqlCeCommand cmd = null;
 			SqlCeDataReader reader = null;
 
 			try
 			{
 				OpenIfClosed();
 
-				cmd = new SqlCeCommand(command, modConnection);
+				cmd.Connection = modConnection;
+				cmd.Transaction = tr;
 
 				reader = cmd.ExecuteReader();
 				return reader;

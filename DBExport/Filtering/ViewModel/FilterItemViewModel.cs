@@ -24,5 +24,13 @@ namespace DBExport.Filtering.ViewModel
 				return Current.Name;
 			}
 		}
+
+		public string QuerySQL
+		{
+			get
+			{
+				return Current.QuerySQL;
+			}
+		}
 	}
 }

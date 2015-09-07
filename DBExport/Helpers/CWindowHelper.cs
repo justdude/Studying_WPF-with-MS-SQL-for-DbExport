@@ -60,7 +60,7 @@ namespace DBExport.Helpers
 			wind.Show();
 		}
 
-		public static void ShowSelectFilterWindow(string tableId, Action<string, List<CFilter>> onFilterSelected)
+		public static void ShowSelectFilterWindow(CTable table, Action<CTable, List<string>> onFilterSelected)
 		{
 			var wind = new wndSelectFilter();
 			wind.Owner = App.Current.Windows.Cast<Window>().FirstOrDefault(p => p.IsActive);
@@ -72,7 +72,7 @@ namespace DBExport.Helpers
 
 			wind.Loaded += (p, e) =>
 			{
-				wind.DataContext = new SelectFilterViewModel(tableId, onFilterSelected)
+				wind.DataContext = new SelectFilterViewModel(table, onFilterSelected)
 				{
 					Token = wind.Token,
 					Disp = wind.Dispatcher

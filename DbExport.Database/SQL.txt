@@ -31,3 +31,5 @@ DELETE FROM Conf_Dyn_Tables;
 DELETE FROM Conf_Dyn_Properties;
 
 SELECT  Conf_Dyn_Filter.* FROM  Conf_Dyn_Filter t WHERE t.TableId =@TableId and t.CollId=@CollId and t.Float > @Float"
+
+1	Price filter	SELECT Conf_Dyn_Values.Id FROM Conf_Dyn_Values INNER JOIN Conf_Dyn_Properties ON Conf_Dyn_Properties.TableId = Conf_Dyn_Values.TableId AND Conf_Dyn_Properties.Id = Conf_Dyn_Values.CollId AND Conf_Dyn_Properties.Name = 'PRICE' AND Conf_Dyn_Values.Float=@Value	Products 
