@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
 			 xmlns:ctr="clr-namespace:DBExport.Common.Controls;assembly=DBExport.Common"
              xmlns:nav="clr-namespace:DbExport.Controls.Nav;assembly=DbExport.Controls"
+			 xmlns:tran="clr-namespace:DBExport.Translates"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="550">
 	<UserControl.Resources>

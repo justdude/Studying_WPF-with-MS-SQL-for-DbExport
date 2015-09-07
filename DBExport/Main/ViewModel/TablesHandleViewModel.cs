@@ -18,6 +18,7 @@ using System.Windows;
 using DBExport.Common.Messages;
 using DbExport.Database;
 using System.IO;
+using DBExport.Translates;
 //using Microsoft.Practices.Prism.Commands;
 //using Microsoft.Practices.Prism.Mvvm;
 
@@ -39,6 +40,7 @@ namespace DBExport.Main.ViewModel
 		private TableViewModel mvSelectedTable;
 		private bool mvIsMerge;
 		private bool mvIsLoading;
+		private string mvHelpState;
 
 		public TablesHandleViewModel()
 		{
@@ -350,6 +352,7 @@ namespace DBExport.Main.ViewModel
 		private void OnSelectedChanged(TableViewModel obj)
 		{
 			RefreshCommands();
+			Translate();
 		}
 
 		//private bool Filter(object obj)
@@ -397,7 +400,7 @@ namespace DBExport.Main.ViewModel
 
 		private bool CanAdd()
 		{
-			return IsEnabled && !IsSelected || (IsSelected &&  SelectedTable.State != enFormState.Create);
+			return IsEnabled && !IsSelected || (IsSelected && SelectedTable.State == enFormState.None);
 		}
 
 		private bool CanMerge()
@@ -430,6 +433,7 @@ namespace DBExport.Main.ViewModel
 		{
 			RaisePropertyesChanged();
 			RefreshCommands();
+			Translate();
 		}
 
 		private void OnSaveSelected()
@@ -613,6 +617,38 @@ namespace DBExport.Main.ViewModel
 			});
 		}
 
+		protected override void Translate()
+		{
+			//enFormState state, bool isSelected, bool isHasErrors
+			if (IsSelected == false)
+			{
+				StateText = CTranslates.TableIsNotSelected;
+				return;
+			}
+
+			if (IsHasError == true)
+			{
+				StateText = CTranslates.IsHasErrors;
+				return;
+			}
+
+			switch (SelectedTable.State)
+			{
+				case enFormState.None:
+					StateText = CTranslates.WaitingForStatesChanged;
+					break;
+				case enFormState.Create:
+					StateText = CTranslates.AddingNewTable;
+					break;
+				case enFormState.EditTable:
+					StateText = CTranslates.AddingAdditionalData;					
+					break;
+				default:
+					break;
+			}
+		}
+
 		#endregion
+
 	}
 }

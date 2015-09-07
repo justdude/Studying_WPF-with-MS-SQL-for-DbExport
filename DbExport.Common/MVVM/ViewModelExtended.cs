@@ -14,6 +14,7 @@ namespace DBExport.Common.MVVM
 		private Dispatcher mvDispatcher;
 		private string mvToken;
 		private bool mvIsVisible;
+		private string mvHelpState;
 
 		public ViewModelExtended()
 		{
@@ -60,6 +61,28 @@ namespace DBExport.Common.MVVM
 				mvDispatcher = value;
 				RaiseOnDispatcherChaned(mvDispatcher);
 			}
+		}
+
+		public virtual string StateText
+		{
+			get
+			{
+				return mvHelpState;
+			}
+			set
+			{
+				if (mvHelpState == value)
+					return;
+
+				mvHelpState = value;
+
+				this.RaisePropertyChanged(() => this.StateText);
+			}
+		}
+
+		protected virtual void Translate()
+		{ 
+		
 		}
 
 		protected virtual void OnTokenChanged()

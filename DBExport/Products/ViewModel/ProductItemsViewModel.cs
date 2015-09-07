@@ -507,7 +507,7 @@ namespace DBExport.Products
 
 		private bool CanFilter()
 		{
-			return IsEnabled && State == enFormState.None;
+			return IsEnabled &&  State == enFormState.None;
 		}
 
 		private bool CanDelete()

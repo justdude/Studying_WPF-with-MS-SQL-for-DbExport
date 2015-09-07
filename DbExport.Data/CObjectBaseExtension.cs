@@ -20,6 +20,8 @@ namespace DbExport.Data
 			{
 				foreach (var item in items)
 				{
+					if (item.Status == Status.Normal)
+						continue;
 					//item.Status = status;
 					res &= item.Save(tr);
 					count++;
