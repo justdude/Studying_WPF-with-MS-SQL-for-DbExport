@@ -48,9 +48,9 @@
 
 				<ListView.ItemTemplate>
 					<DataTemplate>
-						<StackPanel Orientation="Horizontal">
+						<!--<StackPanel Orientation="Horizontal">-->
 							<TextBlock Text="{Binding Name}"></TextBlock>
-						</StackPanel>
+						<!--</StackPanel>-->
 					</DataTemplate>
 				</ListView.ItemTemplate>
 
@@ -76,6 +76,7 @@
 			Grid.Row="2"
 			Grid.RowSpan="1"
 			Margin="5 0 0 5"
+			IsEnabled="{Binding IsEnabled}"
 			Text="{Binding SearchString,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
 			HorizontalAlignment="Stretch"
 			VerticalAlignment="Stretch"/>

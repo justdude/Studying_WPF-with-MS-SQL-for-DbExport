@@ -36,11 +36,9 @@ namespace DBExport.Products
 		private readonly RelayCommand mvCloseCommand;
 
 		private bool mvIsBlocked;
-		private bool mvIsHasError;
 		private bool mvIsMerge;
 		private bool mvIsLoading;
 		private ProductItemViewModel mvSelectedRowsItem;
-		private bool mvIsChanged;
 		private List<CCollumnItem> modColumns;
 		private string mvSearchString;
 		private List<CFilter> modFilterQueries;
@@ -383,7 +381,17 @@ namespace DBExport.Products
 
 			//ThreadPool.QueueUserWorkItem(new WaitCallback((par) =>
 			//{
+			SearchString = string.Empty;
 
+			LoadColumns();
+
+			LoadRows();
+		
+			//}));
+		}
+
+		private void LoadColumns()
+		{
 			if (!IsCollumnsLoaded)
 			{
 				modColumns = SelectedTable.Columns.Select(p => new CCollumnItem()
@@ -396,46 +404,47 @@ namespace DBExport.Products
 				MessengerInstance.Send<Common.Messages.LoadCollumnsMessage>(new LoadCollumnsMessage() { Collumns = modColumns }, Token);
 				IsCollumnsLoaded = true;
 			}
+		}
+
+		private void LoadRows()
+		{
+			RowItems.Clear();
 
 			List<string> hidedId = new List<string>();
-			ManualResetEvent[] resEvent = new ManualResetEvent[] { new ManualResetEvent(false), new ManualResetEvent(false) };
 			IEnumerable<List<CValue>> dataRowsList = null;
 
 			BeginInvoke(DispatcherPriority.Background, () =>
+			{
+				LoadFilters(hidedId);
+
+				dataRowsList = SelectedTable.Rows.Where(p => !hidedId.Contains(p.Id))
+												.GroupBy(p => p.RowNumb)
+												.Select(p => p.ToList());
+
+				BeginInvoke(DispatcherPriority.DataBind, () =>
 				{
-					LoadFilters(hidedId);
+					ProductItemViewModel pr = null;
+					foreach (var items in dataRowsList)
+					{
+						pr = new ProductItemViewModel();
+						pr.RowItems = items;
+						pr.Token = Token;
 
-					dataRowsList = SelectedTable.Rows.Where(p => !hidedId.Contains(p.Id))
-													.GroupBy(p => p.RowNumb)
-													.Select(p => p.ToList());
-													 RowItems.Clear();
+						RowItems.Add(pr);
+						//pr.RaisePropertyesChanged();
+					}
 
-					 BeginInvoke(DispatcherPriority.Background, () =>
-						 {
-							 ProductItemViewModel pr = null;
-							 foreach (var items in dataRowsList)
-							 {
-								 pr = new ProductItemViewModel();
-								 pr.RowItems = items;
-								 pr.Token = Token;
+					Application.Current.Dispatcher.Invoke(() =>
+					{
+						IsEnabled = true;
+						IsLoading = false;
 
-								 RowItems.Add(pr);
-								 //pr.RaisePropertyesChanged();
-							 }
+						RaiseRefresh();
 
-							 Application.Current.Dispatcher.Invoke(() =>
-							 {
-								 IsEnabled = true;
-								 IsLoading = false;
-
-								 RaiseRefresh();
-
-							 }, DispatcherPriority.Normal);
-						 });
-
+					}, DispatcherPriority.Normal);
 				});
-		
-			//}));
+
+			});
 		}
 
 		private void LoadFilters(List<string> hidedId)
