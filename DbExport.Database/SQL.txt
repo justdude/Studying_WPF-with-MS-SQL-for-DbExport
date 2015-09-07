@@ -29,3 +29,5 @@ CREATE TABLE [dbo].[Conf_Dyn_Properties] (
 DELETE FROM Conf_Dyn_Values;
 DELETE FROM Conf_Dyn_Tables;
 DELETE FROM Conf_Dyn_Properties;
+
+SELECT  Conf_Dyn_Filter.* FROM  Conf_Dyn_Filter t WHERE t.TableId =@TableId and t.CollId=@CollId and t.Float > @Float"

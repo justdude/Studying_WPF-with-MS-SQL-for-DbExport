@@ -171,6 +171,10 @@ namespace CRM.Database
 
 		#region Filtration
 
+		const string QUERY1 = @"SELECT  Conf_Dyn_Filter.*
+								FROM  Conf_Dyn_Filter t
+								WHERE t.TableId =@TableId and t.CollId=@CollId and t.Float > @Float";
+
 		public static string SelectFilters(string tableID)
 		{
 			string str = @"SELECT * FROM Conf_Dyn_Filter t WHERE t.TableId ='{0}'";
