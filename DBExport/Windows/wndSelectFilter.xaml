@@ -9,7 +9,7 @@
 	<Grid>
 		<Grid.RowDefinitions>
 				<RowDefinition Height="70*"></RowDefinition>
-				<RowDefinition Height="30*"></RowDefinition>
+				<RowDefinition Height="10*"></RowDefinition>
 				<RowDefinition Height="35"></RowDefinition>
 		</Grid.RowDefinitions>
 		<!--<Border  BorderBrush="#FF060606" BorderThickness="2" Background="Black">-->
@@ -39,6 +39,7 @@
 									   HorizontalAlignment="Left"
 									   Text="{Binding Name}"></TextBlock>
 						<TextBlock Grid.Column="1" 
+									 Margin="10 0 0 0"
 									   VerticalAlignment="Center"
 									   HorizontalAlignment="Stretch"
 									   Text="{Binding QuerySQL}"></TextBlock>
@@ -66,10 +67,10 @@
 			</Grid.RowDefinitions>
 				<TextBlock Grid.Row="0" Grid.Column="0" Text="Params: "></TextBlock>
 				<TextBox Grid.Row="0" Grid.Column="1"  HorizontalAlignment="Stretch" Text="{Binding Params,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" MinWidth="377"></TextBox>
-			<Border Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" VerticalAlignment="Stretch"
+			<!--<Border Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" VerticalAlignment="Stretch"
 					BorderThickness="1" BorderBrush="Black" CornerRadius="5">
 				<TextBlock Text="{x:Static tr:CTranslates.HelpToFilterItems}"></TextBlock>
-			</Border>
+			</Border>-->
 		</Grid>
 
 			<StackPanel Grid.Column="2" Grid.Row="2" 

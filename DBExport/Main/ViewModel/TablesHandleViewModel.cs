@@ -304,10 +304,10 @@ namespace DBExport.Main.ViewModel
 			ThreadPool.QueueUserWorkItem(new WaitCallback((par) =>
 			{
 
-				//string dir = Directory.GetCurrentDirectory();
-				//string fileName = @"DbEData.sdf";
-				//CDatabase.Instance.TryOpenConnection(Path.Combine(dir, fileName));	
-				CDatabase.Instance.TryOpenConnection(CDatabaseManager.DbPathNoteBook);	
+				string dir = Directory.GetCurrentDirectory();
+				string fileName = @"DbEData.sdf";
+				CDatabase.Instance.TryOpenConnection(Path.Combine(dir, fileName));	
+				//CDatabase.Instance.TryOpenConnection(CDatabaseManager.DbPathNoteBook);	
 
 				tables = Engine.Instance.LoadTables().Select(p => new TableViewModel(p));
 
@@ -489,18 +489,16 @@ namespace DBExport.Main.ViewModel
 		
 		private void OnAdd()
 		{
-			IsEnabled = false;
+			ChangeState(true);
 
 			CParserGenericAdapter proccesor = new CParserGenericAdapter();
 			string path = CFileHelper.GetPathFromDialog();
 
 			if (string.IsNullOrWhiteSpace(path))
 			{
-				IsEnabled = true;
+				ChangeState(false);
 				return;
 			}
-
-			IsLoading = true;
 
 			ThreadPool.QueueUserWorkItem(new WaitCallback((par) =>
 			{
