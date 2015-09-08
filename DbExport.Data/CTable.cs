@@ -76,6 +76,8 @@ namespace DbExport.Data
 			return table;
 		}
 
+		public Action<DataVasedArgument> OnDataSaving { get; set; }
+
 		#region Converters
 
 		public static DataTable ToDataTable(CTable table)
@@ -287,8 +289,8 @@ namespace DbExport.Data
 						Status = Common.Interfaces.Status.Normal;
 						break;
 				}
-				res &= Columns.SaveList(Status, tr);
-				res &= Rows.SaveList(Status, tr);
+				res &= Columns.SaveList(Status, tr, OnDataSaving);
+				res &= Rows.SaveList(Status, tr, OnDataSaving);
 
 					if (res)
 				{

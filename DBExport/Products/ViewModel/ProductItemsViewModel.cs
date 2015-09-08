@@ -643,7 +643,7 @@ namespace DBExport.Products
 				foreach (ProductItemViewModel item in selectionCopy)
 				{
 					item.RowItems.ForEach(p => p.Status = Status.Deleted);
-					res = item.RowItems.SaveList(Status.Deleted, tr);
+					res = item.RowItems.SaveList(Status.Deleted, tr, OnDataSaving);
 					SelectedTable.Rows.RemoveAll(p => ClearTable(item));
 					if (res)
 					{
@@ -665,6 +665,11 @@ namespace DBExport.Products
 			{ }
 
 			ChangeState(false);
+		}
+
+		private void OnDataSaving(DataVasedArgument obj)
+		{
+			BeginInvoke(DispatcherPriority.Background, () => this.StateText = obj.ToString());
 		}
 
 		private static bool ClearTable(ProductItemViewModel item)

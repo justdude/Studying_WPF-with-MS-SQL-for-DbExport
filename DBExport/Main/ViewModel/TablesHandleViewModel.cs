@@ -93,7 +93,7 @@ namespace DBExport.Main.ViewModel
 				if (!IsSelected || !SelectedTable.IsExist)
 					return null;
 
-				return CDataTableHelper.GetItems(SelectedTable.Current.Data, 0, 20).DefaultView;
+				return CDataTableHelper.GetItems(SelectedTable.Current.Data, 0, 1000).DefaultView;
 			}
 		}
 
@@ -307,7 +307,7 @@ namespace DBExport.Main.ViewModel
 				//string dir = Directory.GetCurrentDirectory();
 				//string fileName = @"DbEData.sdf";
 				//CDatabase.Instance.TryOpenConnection(Path.Combine(dir, fileName));	
-				CDatabase.Instance.TryOpenConnection(CDatabaseManager.DbPathWork);	
+				CDatabase.Instance.TryOpenConnection(CDatabaseManager.DbPathNoteBook);	
 
 				tables = Engine.Instance.LoadTables().Select(p => new TableViewModel(p));
 
@@ -448,6 +448,7 @@ namespace DBExport.Main.ViewModel
 			//SelectedTable.Current.CountryID = SelectedCountry.Current.Id;
 			ThreadPool.QueueUserWorkItem(new WaitCallback((par) =>
 			{
+				SelectedTable.Current.OnDataSaving += OnDataSaving;
 				bool res = SelectedTable.Current.Save();
 
 				Application.Current.Dispatcher.Invoke(() =>
@@ -468,6 +469,11 @@ namespace DBExport.Main.ViewModel
 				SelectedTable.State = enFormState.None;
 			}));
 
+		}
+
+		private void OnDataSaving(DataVasedArgument obj)
+		{
+			BeginInvoke(DispatcherPriority.Background, ()=> this.StateText = obj.ToString());
 		}
 
 		private void OnDeleteSelected()
