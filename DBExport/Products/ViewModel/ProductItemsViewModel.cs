@@ -345,7 +345,8 @@ namespace DBExport.Products
 
 		private void OnPropertiesChanged(PropertyChangedMessage obj)
 		{
-			State = enFormState.EditTable;
+			if (State!= enFormState.Create)
+				State = enFormState.EditTable;
 
 			RaisePropertyesChanged();
 			RefreshCommands();
@@ -689,6 +690,7 @@ namespace DBExport.Products
 
 			var newListItem = new ProductItemViewModel();
 			newListItem.Token = Token;
+			State = enFormState.Create;
 
 			ThreadPool.QueueUserWorkItem(new WaitCallback((par) =>
 			{
