@@ -38,10 +38,11 @@ namespace DBExport
 
 		void MainWindow_Loaded(object sender, RoutedEventArgs e)
 		{
-			Messenger.Default.Register<DBExport.Common.Messages.CloseWindowMessage>(Token, OnWindowClose);
+			Messenger.Default.Register<DBExport.Common.Messages.CloseWindowMessage>(this, Token, OnWindowClose);
 
 			var viewModel = new TablesHandleViewModel();
 			viewModel.Disp = this.Dispatcher;
+			viewModel.Token = Token;
 
 			DataContext = viewModel;
 		}
