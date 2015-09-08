@@ -56,12 +56,19 @@ namespace DBExport.Main.ViewModel
 			mvSetMergeCommand = new RelayCommand(SetMerge, CanMerge);
 			//eventAggregator.GetEvent<StateChangedEvent>().Subscribe(OnDataChanged);
 			//eventAggregator.GetEvent<ItemChangedEvent>().Subscribe(OnSelectedChanged, ThreadOption.PublisherThread, true, Filter);
-			OnDispatcherChanged += OnDispatcherChange;
+			//OnDispatcherChanged += OnDispatcherChange;
 		}
 
 		private void OnDispatcherChange(System.Windows.Threading.Dispatcher obj)
 		{
-			LoadData();
+		}
+
+		protected override void OnTokenChanged()
+		{
+			base.OnTokenChanged();
+
+			if (!string.IsNullOrWhiteSpace(Token))
+				LoadData();
 		}
 
 		public ObservableCollection<TableViewModel> Tables { get; set; }
@@ -82,19 +89,34 @@ namespace DBExport.Main.ViewModel
 				OnSelectedChanged(value);
 
 				this.RaisePropertyChanged(() => this.SelectedTable);
-				this.RaisePropertyChanged(() => this.SelectedTableView);
 			}
 		}
 
-		public DataView SelectedTableView
-		{
-			get
-			{
-				if (!IsSelected || !SelectedTable.IsExist)
-					return null;
+		//public DataView SelectedTableView
+		//{
+		//	get
+		//	{
+		//		if (!IsSelected || !SelectedTable.IsExist)
+		//			return null;
 
-				return CDataTableHelper.GetItems(SelectedTable.Current.Data, 0, 1000).DefaultView;
-			}
+		//		try
+		//		{
+		//			var view = UpdateListView();
+		//			return view;
+		//		}
+		//		catch (Exception ex)
+		//		{
+		//			return null;
+		//		}
+		//	}
+		//}
+
+		private void UpdateListView()
+		{
+			var view = CDataTableHelper.GetItems(SelectedTable.Current.Data, 0, 20);
+			Invoke(DispatcherPriority.Normal, () =>
+			MessengerInstance.Send<DBExport.Common.Messages.LoadTableViewMessage>(new LoadTableViewMessage() { Data = view }, Token));
+			//return view;
 		}
 
 		public bool IsLoading
@@ -304,10 +326,10 @@ namespace DBExport.Main.ViewModel
 			ThreadPool.QueueUserWorkItem(new WaitCallback((par) =>
 			{
 
-				//string dir = Directory.GetCurrentDirectory();
-				//string fileName = @"DbEData.sdf";
-				//CDatabase.Instance.TryOpenConnection(Path.Combine(dir, fileName));	
-				CDatabase.Instance.TryOpenConnection(CDatabaseManager.DbPathNoteBook);	
+				string dir = Directory.GetCurrentDirectory();
+				string fileName = @"DbEData.sdf";
+				CDatabase.Instance.TryOpenConnection(Path.Combine(dir, fileName));	
+				//CDatabase.Instance.TryOpenConnection(CDatabaseManager.ConnectionString);	
 
 				tables = Engine.Instance.LoadTables().Select(p => new TableViewModel(p));
 
@@ -489,18 +511,16 @@ namespace DBExport.Main.ViewModel
 		
 		private void OnAdd()
 		{
-			IsEnabled = false;
+			ChangeState(true);
 
 			CParserGenericAdapter proccesor = new CParserGenericAdapter();
 			string path = CFileHelper.GetPathFromDialog();
 
 			if (string.IsNullOrWhiteSpace(path))
 			{
-				IsEnabled = true;
+				ChangeState(false);
 				return;
 			}
-
-			IsLoading = true;
 
 			ThreadPool.QueueUserWorkItem(new WaitCallback((par) =>
 			{
@@ -516,13 +536,15 @@ namespace DBExport.Main.ViewModel
 						SelectedTable.Current.Status = Status.Added;
 						
 						this.Tables.Add(SelectedTable);
-						this.RaisePropertyChanged(() => this.SelectedTableView);
+						UpdateListView();
+						//this.RaisePropertyChanged(() => this.SelectedTableView);
+						ChangeState(false);
+
 					});
 				}
 				catch (Exception ex)
 				{ }
 
-				ChangeState(false);
 			}));
 
 		}
@@ -556,7 +578,7 @@ namespace DBExport.Main.ViewModel
 					BeginInvoke(DispatcherPriority.Normal, () =>
 					{
 						SelectedTable.IsAppenedSuccessfully = res;
-						this.RaisePropertyChanged(() => this.SelectedTableView);
+						UpdateListView();//this.RaisePropertyChanged(() => this.SelectedTableView);
 						SelectedTable.RaisePropertyesChanged();
 					});
 				}
